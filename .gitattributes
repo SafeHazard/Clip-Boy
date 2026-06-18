@@ -3,3 +3,4 @@
 release/SHA256SUMS         -text
 release/SHA256SUMS.minisig -text
 keys/clipboy-release.pub   -text
+acceptable_use.md          text eol=lf
