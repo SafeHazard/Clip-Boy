@@ -1,0 +1,5 @@
+# Signed release artifacts: the minisign signature is over EXACT bytes, and the
+# flasher verifies over the raw git-blob this repo serves. NO EOL conversion.
+release/SHA256SUMS         -text
+release/SHA256SUMS.minisig -text
+keys/clipboy-release.pub   -text
