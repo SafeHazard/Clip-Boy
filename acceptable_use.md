@@ -1,8 +1,10 @@
 # Acceptable Use — CANONICAL source of truth
 
-**Version:** v0.2 · **Status:** counsel-reviewed 2026-06-18 (Jira **DC34-99**);
+**Version:** v0.3 · **Status:** counsel-reviewed 2026-06-18 (Jira **DC34-99**);
 adopts counsel's approved wording (indemnity expanded per counsel's note,
-owner-approved). · **This is not legal advice.**
+owner-approved). v0.3 (DC34-128): §2c Sn34k framing corrected — "passive ≠
+harmless" (stock build's EAPOL/PMKID/PCAP capture can intercept). · **This is not
+legal advice.**
 
 > **Naming note:** counsel's returned draft referred to **Sn33k-Boy / L33t-Boy**
 > (the pre-rename build names). This canonical uses the current product names
@@ -125,7 +127,13 @@ disabled (dimmed) until the body is scrolled to the end** ("scroll-to-enable"),
 then arms — this is the single highest-value enforceability hardening. Persist the
 acceptance to NVS with a **policy version** + timestamp so re-flashing updated
 terms re-prompts. **Two variants by SKU define:**
-- **Sn34k-Boy:** passive framing; no active-tool wording (the tools aren't there).
+- **Sn34k-Boy:** lawful-use + authorized-target + **interception-responsibility**
+  umbrella. Do **NOT** imply "passive = harmless": the stock build captures
+  EAPOL/PMKID handshakes and raw PCAP — non-transmitting at RF, but capable of
+  intercepting credentials and PII (the §1 Wiretap-Act territory). Frame it as
+  "these capture tools can intercept — use only on networks and devices you own or
+  are authorized to test." No transmit/FCC escalation wording (those tools aren't
+  in this build), but **not** a "relax, this one's safe" tone.
 - **Res34rch-Boy:** an explicit "this build can **transmit** — use only on targets you
   own or are authorized in writing to test" block, and a confirmatory button label
   (e.g. *"I Accept — Authorized Targets Only"*). Scroll-to-enable is **mandatory**
