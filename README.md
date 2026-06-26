@@ -1,2 +1,2 @@
 # Clip-Boy
-This repo will be updated with the source for Clip-Boy after DEF CON 34 has concluded. Have fun at the con!
+This repo will be updated with the source for Clip-Boy when DEF CON 34 kicks off. See you there!
