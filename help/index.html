@@ -164,6 +164,10 @@
           <div class="a">DATA &gt; Settings &gt; Terminal Text sets the tool log to Small, Medium or Large. Themes include Flashbang, a high-contrast black-on-white palette, and Brightness is adjustable.</div>
         </li>
         <li class="item">
+          <div class="q">Any Color Vision</div>
+          <div class="a">The whole interface is monochrome by design — one color on a dark (or, in Flashbang, a light) background — so nothing on screen depends on telling two colors apart. A theme only changes the hue, never the meaning; brightness and outline carry the information. The NeoPixel LEDs are decorative — no status is conveyed by their color.</div>
+        </li>
+        <li class="item">
           <div class="q">Forgiving Controls</div>
           <div class="a">Touch targets are sized for taps, not fine aim. HR codes scan as long as the sensor and code are parallel, and can be entered by hand if a tag won&#x27;t cooperate; the radio tuning dial snaps in when you get close — or set Settings &gt; Radio Tuning to lock stations instantly.</div>
         </li>
@@ -728,7 +732,7 @@
         </li>
         <li class="item">
           <div class="q">Serial Debug</div>
-          <div class="a">USB-C serial at 115200 baud, 8N1. Useful for catching boot logs and runtime debug output.</div>
+          <div class="a">Plug in USB-C and open a serial terminal at 115200 baud, 8 data bits, no parity, 1 stop bit (8N1). Good for boot logs and runtime output — and it&#x27;s how the ARG&#x27;s terminal puzzles talk to the badge. New to serial? On Windows try PuTTY or Tera Term; on macOS/Linux run &#x27;screen /dev/tty.usbmodem* 115200&#x27; or use minicom; or the Serial Monitor built into the Arduino IDE (cross-platform). Pick the COM/tty port that appears when you plug the badge in.</div>
         </li>
       </ul>
     </details>
@@ -1274,7 +1278,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>924380b</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>ee51ca8</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
