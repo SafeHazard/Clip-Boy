@@ -165,7 +165,7 @@
         </li>
         <li class="item">
           <div class="q">Forgiving Controls</div>
-          <div class="a">Touch targets are sized for taps, not fine aim. HR codes scan at any angle, and the radio tuning dial snaps in when you get close — or set Settings &gt; Radio Tuning to lock stations instantly.</div>
+          <div class="a">Touch targets are sized for taps, not fine aim. HR codes scan as long as the sensor and code are parallel, and can be entered by hand if a tag won&#x27;t cooperate; the radio tuning dial snaps in when you get close — or set Settings &gt; Radio Tuning to lock stations instantly.</div>
         </li>
         <li class="item">
           <div class="q">Sound On Your Terms</div>
@@ -1274,39 +1274,36 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>5704144</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>924380b</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
 <script>
 (function(){
   var q = document.getElementById('q');
-  var header = document.querySelector('header');
   var cats = Array.prototype.slice.call(document.querySelectorAll('details.cat'));
   var none = document.getElementById('noresults');
   var savedOpen = null;                 // pre-search open state, restored on clear
 
   function searching(){ return q.value.trim() !== ''; }
-  // scrollIntoView scrolls the nearest scrollable ancestor -- robust inside
-  // iframes/preview sandboxes where window.scrollTo silently no-ops. The sticky
-  // header offset comes from CSS scroll-margin-top on details.cat.
-  function scrollToCat(c){ c.scrollIntoView({ behavior:'smooth', block:'start' }); }
-  // Single-open accordion: opening one section closes the rest and brings it into
-  // view under the sticky header. Suppressed while a search is active.
+  // Accordion: opening one section closes the others (skipped during search).
   cats.forEach(function(c){
     c.addEventListener('toggle', function(){
       if(!c.open || searching()) return;
       cats.forEach(function(o){ if(o !== c) o.open = false; });
-      scrollToCat(c);
     });
   });
-  // TOC chip: open the target (accordion handler scrolls) or just scroll if open.
+  // TOC pills: open the target section, then let the browser's NATIVE #hash jump
+  // scroll to it -- crucially NO preventDefault. Native anchor scrolling works even
+  // where programmatic JS scroll is blocked (sandboxed preview iframes); calling
+  // preventDefault + a JS scroll was the "click and nothing happens" bug.
+  // scroll-margin-top on details.cat offsets the sticky header for the landing.
   document.querySelectorAll('.chip').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
+    a.addEventListener('click', function(){
       var c = document.getElementById(a.getAttribute('href').slice(1));
       if(!c) return;
-      if(c.open) scrollToCat(c); else c.open = true;
+      cats.forEach(function(o){ if(o !== c) o.open = false; });
+      c.open = true;
     });
   });
 
