@@ -9,10 +9,10 @@
   :root {
     --bg:#0b0d0a; --panel:#12160f; --panel2:#171c12; --line:#2c3a22;
     --amber:#ffb642; --amber-dim:#c98f34; --green:#7ee081; --text:#e8dcc0;
-    --muted:#9a9070; --tagbg:#3a2a12; --tagfg:#ffcf7a;
+    --muted:#9a9070; --tagbg:#3a2a12; --tagfg:#ffcf7a; --hh:96px;
   }
   * { box-sizing:border-box; }
-  html { -webkit-text-size-adjust:100%; }
+  html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
   body {
     margin:0; background:var(--bg); color:var(--text);
     font:16px/1.55 ui-monospace,"Cascadia Mono",Consolas,"DejaVu Sans Mono",monospace;
@@ -42,7 +42,7 @@
   main { max-width:820px; margin:0 auto; padding:6px 12px 40px; }
   details.cat {
     background:var(--panel); border:1px solid var(--line); border-radius:10px;
-    margin:10px 0; overflow:hidden;
+    margin:10px 0; overflow:hidden; scroll-margin-top:var(--hh);
   }
   summary {
     cursor:pointer; list-style:none; padding:14px 16px; font-size:16.5px;
@@ -71,7 +71,6 @@
     max-width:820px; margin:0 auto; padding:18px 16px 40px; color:var(--muted);
     font-size:12px; border-top:1px solid var(--line);
   }
-  mark { background:#ffb64244; color:#fff; border-radius:2px; }
   @media (max-width:480px) { body { font-size:15px; } h1 { font-size:18px; } }
 </style>
 </head>
@@ -83,27 +82,30 @@
          placeholder="Search help (e.g. scan, deauth, battery)&hellip;" aria-label="Search help">
 </header>
 <nav class="toc">
-      <a class="chip" href="#cat-0">Getting Started</a>
-      <a class="chip" href="#cat-1">Navigation</a>
-      <a class="chip" href="#cat-2">STATS</a>
-      <a class="chip" href="#cat-3">Glossary</a>
-      <a class="chip" href="#cat-4">Tutorials</a>
-      <a class="chip" href="#cat-5">Collectibles</a>
-      <a class="chip" href="#cat-6">Tools</a>
-      <a class="chip" href="#cat-7">Theremin</a>
-      <a class="chip" href="#cat-8">Simulated Radio</a>
-      <a class="chip" href="#cat-9">Radiation</a>
-      <a class="chip" href="#cat-10">LEDs</a>
-      <a class="chip" href="#cat-11">Settings</a>
-      <a class="chip" href="#cat-12">Screensaver</a>
-      <a class="chip" href="#cat-13">SD Card Mods</a>
-      <a class="chip" href="#cat-14">SAOs</a>
-      <a class="chip" href="#cat-15">Open Source</a>
-      <a class="chip" href="#cat-16">Trouble?</a>
-      <a class="chip" href="#cat-17">Battery/Power</a>
+      <a class="chip" href="#cat-getting-started">Getting Started</a>
+      <a class="chip" href="#cat-accessibility">Accessibility</a>
+      <a class="chip" href="#cat-navigation">Navigation</a>
+      <a class="chip" href="#cat-stats">STATS</a>
+      <a class="chip" href="#cat-glossary">Glossary</a>
+      <a class="chip" href="#cat-tutorials">Tutorials</a>
+      <a class="chip" href="#cat-collectibles">Collectibles</a>
+      <a class="chip" href="#cat-tools">Tools</a>
+      <a class="chip" href="#cat-theremin">Theremin</a>
+      <a class="chip" href="#cat-simulated-radio">Simulated Radio</a>
+      <a class="chip" href="#cat-radiation">Radiation</a>
+      <a class="chip" href="#cat-leds">LEDs</a>
+      <a class="chip" href="#cat-settings">Settings</a>
+      <a class="chip" href="#cat-screensaver">Screensaver</a>
+      <a class="chip" href="#cat-sd-card-mods">SD Card Mods</a>
+      <a class="chip" href="#cat-saos">SAOs</a>
+      <a class="chip" href="#cat-open-source">Open Source</a>
+      <a class="chip" href="#cat-trouble">Trouble?</a>
+      <a class="chip" href="#cat-battery-power">Battery/Power</a>
+      <a class="chip" href="#sec-credits">Credits</a>
+      <a class="chip" href="#sec-legal">Legal &amp; Licensing</a>
 </nav>
 <main>
-    <details class="cat" id="cat-0" open>
+    <details class="cat" id="cat-getting-started" open>
       <summary>Getting Started</summary>
       <ul>
         <li class="item">
@@ -136,7 +138,36 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-1">
+    <details class="cat" id="cat-accessibility">
+      <summary>Accessibility</summary>
+      <ul>
+        <li class="item">
+          <div class="q">More Than One Way In</div>
+          <div class="a">Clip-Boy tries to never make sound the only channel. Where something is audio, there&#x27;s usually a way to see or read it too.</div>
+        </li>
+        <li class="item">
+          <div class="q">Read the Broadcast</div>
+          <div class="a">Every &#x27;Whether Radio&#x27; station with speech carries a Transcript button — a live, scrolling readout of what&#x27;s playing — so you can follow a station with the sound all the way off.</div>
+        </li>
+        <li class="item">
+          <div class="q">See It, Don&#x27;t Hear It</div>
+          <div class="a">The radio&#x27;s oscilloscope shows at a glance when a station is tuned in, and the Radiation screen&#x27;s gauge shows the deauth rate as a moving needle. Both read fine with audio muted.</div>
+        </li>
+        <li class="item">
+          <div class="q">Text Size &amp; Contrast</div>
+          <div class="a">DATA &gt; Settings &gt; Terminal Text sets the tool log to Small, Medium or Large. Themes include Flashbang, a high-contrast black-on-white palette, and Brightness is adjustable.</div>
+        </li>
+        <li class="item">
+          <div class="q">Forgiving Controls</div>
+          <div class="a">Touch targets are sized for taps, not fine aim. HR codes scan at any angle, and the radio tuning dial snaps in when you get close — or set Settings &gt; Radio Tuning to lock stations instantly.</div>
+        </li>
+        <li class="item">
+          <div class="q">Sound On Your Terms</div>
+          <div class="a">Tap, Scanning and Unlock cues each toggle independently, with a hard Mute — add the audio feedback you want, or turn it all off.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-navigation">
       <summary>Navigation</summary>
       <ul>
         <li class="item">
@@ -161,7 +192,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-2">
+    <details class="cat" id="cat-stats">
       <summary>STATS</summary>
       <ul>
         <li class="item">
@@ -174,7 +205,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-3">
+    <details class="cat" id="cat-glossary">
       <summary>Glossary</summary>
       <ul>
         <li class="item">
@@ -247,7 +278,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-4">
+    <details class="cat" id="cat-tutorials">
       <summary>Tutorials</summary>
       <ul>
         <li class="item">
@@ -272,7 +303,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-5">
+    <details class="cat" id="cat-collectibles">
       <summary>Collectibles</summary>
       <ul>
         <li class="item">
@@ -317,7 +348,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-6">
+    <details class="cat" id="cat-tools">
       <summary>Tools</summary>
       <ul>
         <li class="item">
@@ -354,7 +385,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-7">
+    <details class="cat" id="cat-theremin">
       <summary>Theremin</summary>
       <ul>
         <li class="item">
@@ -391,7 +422,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-8">
+    <details class="cat" id="cat-simulated-radio">
       <summary>Simulated Radio</summary>
       <ul>
         <li class="item">
@@ -408,7 +439,7 @@
         </li>
         <li class="item">
           <div class="q">The Scope</div>
-          <div class="a">The oscilloscope shows the tuned signal&#x27;s shape — voice, music, numbers, or dead air — and reacts as audio plays.</div>
+          <div class="a">The oscilloscope is a visual tuning cue: the waveform comes alive once &#x27;Whether Radio&#x27; is tuned in and settles toward a flat line on dead air. It&#x27;s a picture of the station, not a live feed of radio waves. Want the actual words? Stations with speech carry a Transcript (below) that shows the contents of the &#x27;broadcast&#x27;.</div>
         </li>
         <li class="item">
           <div class="q">Transcript</div>
@@ -420,7 +451,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-9">
+    <details class="cat" id="cat-radiation">
       <summary>Radiation</summary>
       <ul>
         <li class="item">
@@ -441,7 +472,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-10">
+    <details class="cat" id="cat-leds">
       <summary>LEDs</summary>
       <ul>
         <li class="item">
@@ -474,7 +505,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-11">
+    <details class="cat" id="cat-settings">
       <summary>Settings</summary>
       <ul>
         <li class="divider">DISPLAY</li>
@@ -580,7 +611,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-12">
+    <details class="cat" id="cat-screensaver">
       <summary>Screensaver</summary>
       <ul>
         <li class="item">
@@ -605,7 +636,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-13">
+    <details class="cat" id="cat-sd-card-mods">
       <summary>SD Card Mods</summary>
       <ul>
         <li class="item">
@@ -622,7 +653,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-14">
+    <details class="cat" id="cat-saos">
       <summary>SAOs</summary>
       <ul>
         <li class="item">
@@ -631,7 +662,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-15">
+    <details class="cat" id="cat-open-source">
       <summary>Open Source</summary>
       <ul>
         <li class="item">
@@ -648,7 +679,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-16">
+    <details class="cat" id="cat-trouble">
       <summary>Trouble?</summary>
       <ul>
         <li class="item">
@@ -673,7 +704,7 @@
         </li>
       </ul>
     </details>
-    <details class="cat" id="cat-17">
+    <details class="cat" id="cat-battery-power">
       <summary>Battery/Power</summary>
       <ul>
         <li class="item">
@@ -686,50 +717,132 @@
         </li>
       </ul>
     </details>
+    <details class="cat" id="sec-credits">
+      <summary>Credits</summary>
+      <ul>
+        <li class="divider">Thanks</li>
+        <li class="item"><div class="a">YOU - for supporting me</div></li>
+        <li class="item"><div class="a">My family - for surviving another year of Badge Life</div></li>
+        <li class="item"><div class="a">BenevolentWorm - our beta tester, for finding the bugs so you don&#x27;t have to</div></li>
+        <li class="divider">Founding Backers</li>
+        <li class="item"><div class="a">Aaron Lafferty</div></li>
+        <li class="item"><div class="a">Andrew Pinzler</div></li>
+        <li class="item"><div class="a">Asmodeus</div></li>
+        <li class="item"><div class="a">David Ortiz</div></li>
+        <li class="item"><div class="a">Definitely not a Fed Jake</div></li>
+        <li class="item"><div class="a">Fink</div></li>
+        <li class="item"><div class="a">K4rm4</div></li>
+        <li class="item"><div class="a">kryptokat</div></li>
+        <li class="item"><div class="a">LMAS</div></li>
+        <li class="item"><div class="a">SiliconOddity</div></li>
+        <li class="item"><div class="a">wonkygecko</div></li>
+        <li class="divider">Technical Credits</li>
+        <li class="item"><div class="a">JustCallMeKoko - for ESP32Marauder &amp; SwitchLib, the backbone of our wireless recon toolset</div></li>
+        <li class="item"><div class="a">Phil Schatzmann - for audio-tools, and lieff - for the minimp3 decoder, giving Clip-Boy a voice</div></li>
+        <li class="item"><div class="a">Gabor Kiss-Vamosi &amp; the LVGL team - for the UI framework that makes 320x240 feel huge</div></li>
+        <li class="item"><div class="a">lovyan03 &amp; tobozo - for LovyanGFX, our display driver</div></li>
+        <li class="item"><div class="a">h2zero - for NimBLE-Arduino and painless Bluetooth</div></li>
+        <li class="item"><div class="a">SparkFun - for VL53L5CX support that powers the theremin and HR scanner</div></li>
+        <li class="item"><div class="a">Adafruit - for NeoPixel, BusIO &amp; MAX1704X libraries</div></li>
+        <li class="item"><div class="a">Larabie Fonts - for Monofonto, the UI typeface; Google - for the Noto Emoji fallback (OFL)</div></li>
+        <li class="item"><div class="a">Benoit Blanchon - for ArduinoJson</div></li>
+        <li class="item"><div class="a">Me-No-Dev &amp; Mathieu Carbou - for AsyncTCP &amp; ESPAsyncWebServer</div></li>
+        <li class="item"><div class="a">Yann Collet - for LZ4 compression</div></li>
+        <li class="item"><div class="a">Jeff Kaale (via upbeat.io) - for the scanner soundscape</div></li>
+        <li class="item"><div class="a">And every other open-source contributor: Ivan Seidel, Daniele Colanardi, Steve Marple, Peter Lerup, STMicroelectronics, and more</div></li>
+        <li class="item"><div class="a">Gemini, Adobe Firefly &amp; ChatGPT (images)</div></li>
+        <li class="item"><div class="a">Suno (music) &amp; ElevenLabs (synthetic voices) - SegFault-Tec FM radio</div></li>
+        <li class="item"><div class="a">Claude Code / Anthropic (code, plus this very screen)</div></li>
+        <li class="item"><div class="a">and every human whose work trained them</div></li>
+        <li class="divider">Special Mentions</li>
+        <li class="item"><div class="a">Every IP owner and creator who inspired a piece of this project</div></li>
+        <li class="item"><div class="a">Our suppliers - Waveshare, MakerHawk &amp; Amazon</div></li>
+        <li class="item"><div class="a">Anyone whose forum post, blog, or Stack Overflow answer saved me at 2 AM</div></li>
+        <li class="item"><div class="a">Anyone I forgot - you know who you are, and I owe you a drink</div></li>
+      </ul>
+    </details>
+    <details class="cat" id="sec-legal">
+      <summary>Legal &amp; Licensing</summary>
+      <ul>
+        <li class="item"><div class="q">The short version</div>
+          <div class="a">Use these tools only on hardware you own or are explicitly authorized to test. You are responsible for how you use the badge.</div></li>
+        <li class="item"><div class="q">Passive isn't automatically harmless</div>
+          <div class="a">Capturing handshakes or packets can be interception under wiretap law even without transmitting. Know the rules where you are.</div></li>
+        <li class="item"><div class="q">Parody &amp; no affiliation</div>
+          <div class="a">Collectibles and SAOs are fan-made parody. Properties belong to their respective owners; Clip-Boy is not affiliated with or endorsed by any of them.</div></li>
+        <li class="item"><div class="q">Radios &amp; RF</div>
+          <div class="a">This device complies with FCC Part 15. Users outside the US are responsible for local RF regulations. The "Whether Radio" is simulated -- pre-recorded audio, no receiver.</div></li>
+        <li class="item"><div class="q">AI disclosure</div>
+          <div class="a">Some art and the SegFault-Tec FM audio are AI-generated under commercial licenses; synthetic voices are original, never clones of real people. Details in the on-device Legal screen and the repo.</div></li>
+        <li class="item"><div class="q">License &amp; source</div>
+          <div class="a">Clip-Boy firmware is open source under GPLv3. Read it, fork it, contribute back.</div></li>
+        <li class="divider">Full documents</li>
+        <li class="item"><div class="a"><a href="https://github.com/SafeHazard/Clip-Boy/blob/main/acceptable_use.md">Acceptable Use notice</a> &middot; <a href="https://github.com/SafeHazard/Clip-Boy/blob/main/SECURITY.md">Security policy</a> &middot; <a href="https://github.com/SafeHazard/Clip-Boy/blob/main/LICENSE">License (GPLv3)</a> &middot; <a href="https://github.com/SafeHazard/Clip-Boy">Source code</a></div></li>
+      </ul>
+    </details>
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>6754b17</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>6ce703e</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
 <script>
 (function(){
   var q = document.getElementById('q');
+  var header = document.querySelector('header');
   var cats = Array.prototype.slice.call(document.querySelectorAll('details.cat'));
   var none = document.getElementById('noresults');
-  var openState = null;
-  function clearMarks(el){
-    el.querySelectorAll('mark').forEach(function(m){
-      m.replaceWith(document.createTextNode(m.textContent));
-    });
+  var savedOpen = null;                 // pre-search open state, restored on clear
+
+  function searching(){ return q.value.trim() !== ''; }
+  function scrollToCat(c){
+    var y = c.getBoundingClientRect().top + window.pageYOffset - (header.offsetHeight + 8);
+    window.scrollTo({ top:y, behavior:'smooth' });
   }
+  // Single-open accordion: opening one section closes the rest and brings it into
+  // view under the sticky header. Suppressed while a search is active.
+  cats.forEach(function(c){
+    c.addEventListener('toggle', function(){
+      if(!c.open || searching()) return;
+      cats.forEach(function(o){ if(o !== c) o.open = false; });
+      scrollToCat(c);
+    });
+  });
+  // TOC chip: open the target (accordion handler scrolls) or just scroll if open.
+  document.querySelectorAll('.chip').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if(!c) return;
+      if(c.open) scrollToCat(c); else c.open = true;
+    });
+  });
+
   function run(){
     var term = q.value.trim().toLowerCase();
     if(!term){
-      if(openState){ cats.forEach(function(c,i){ c.open = openState[i]; }); openState=null; }
+      if(savedOpen){ cats.forEach(function(c,i){ c.open = savedOpen[i]; }); savedOpen = null; }
       cats.forEach(function(c){
-        c.style.display='';
-        c.querySelectorAll('li.item,li.divider').forEach(function(li){ li.style.display=''; clearMarks(li); });
+        c.style.display = '';
+        c.querySelectorAll('li.item,li.divider').forEach(function(li){ li.style.display=''; });
       });
-      none.style.display='none';
+      none.style.display = 'none';
       return;
     }
-    if(!openState){ openState = cats.map(function(c){ return c.open; }); }
+    if(!savedOpen){ savedOpen = cats.map(function(c){ return c.open; }); }
     var anyCat = false;
     cats.forEach(function(c){
       var anyItem = false;
       c.querySelectorAll('li.item').forEach(function(li){
-        clearMarks(li);
         var hit = li.textContent.toLowerCase().indexOf(term) !== -1;
         li.style.display = hit ? '' : 'none';
-        if(hit){ anyItem = true; }
+        if(hit) anyItem = true;
       });
-      // Dividers only show when the section has visible items.
       c.querySelectorAll('li.divider').forEach(function(d){ d.style.display = anyItem ? '' : 'none'; });
       c.style.display = anyItem ? '' : 'none';
       c.open = anyItem;
-      if(anyItem){ anyCat = true; }
+      if(anyItem) anyCat = true;
     });
     none.style.display = anyCat ? 'none' : '';
   }
