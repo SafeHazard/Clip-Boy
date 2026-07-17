@@ -9,7 +9,7 @@
   :root {
     --bg:#0b0d0a; --panel:#12160f; --panel2:#171c12; --line:#2c3a22;
     --amber:#ffb642; --amber-dim:#c98f34; --green:#7ee081; --text:#e8dcc0;
-    --muted:#9a9070; --tagbg:#3a2a12; --tagfg:#ffcf7a; --hh:96px;
+    --muted:#9a9070; --tagbg:#3a2a12; --tagfg:#ffcf7a; --hh:124px;
   }
   * { box-sizing:border-box; }
   html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
@@ -1278,7 +1278,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>ee51ca8</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>7819465</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
@@ -1287,7 +1287,13 @@
   var q = document.getElementById('q');
   var cats = Array.prototype.slice.call(document.querySelectorAll('details.cat'));
   var none = document.getElementById('noresults');
-  var savedOpen = null;                 // pre-search open state, restored on clear
+  var savedOpen = null;
+  // Match the anchor-scroll offset to the ACTUAL sticky-header height (varies with
+  // font size / viewport / a wrapped title) so a pill lands its section just below
+  // the header instead of under it. scroll-margin-top: var(--hh) does the rest.
+  var header = document.querySelector('header');
+  function setHH(){ document.documentElement.style.setProperty('--hh', (header.offsetHeight + 10) + 'px'); }
+  setHH(); window.addEventListener('resize', setHH);                 // pre-search open state, restored on clear
 
   function searching(){ return q.value.trim() !== ''; }
   // Accordion: opening one section closes the others (skipped during search).
