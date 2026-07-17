@@ -56,6 +56,8 @@
   li.item { padding:11px 4px; border-top:1px solid #ffffff0d; }
   .q { color:var(--green); font-weight:600; margin-bottom:3px; }
   .a { color:var(--text); }
+  .tif { color:var(--text); margin-top:4px; font-size:14px; }
+  .tif b { color:var(--amber-dim); font-weight:600; }
   li.divider {
     margin:12px 4px 2px; padding:5px 8px; color:var(--amber-dim); font-size:12px;
     letter-spacing:2px; text-transform:uppercase; border-left:2px solid var(--amber-dim);
@@ -101,6 +103,7 @@
       <a class="chip" href="#cat-open-source">Open Source</a>
       <a class="chip" href="#cat-trouble">Trouble?</a>
       <a class="chip" href="#cat-battery-power">Battery/Power</a>
+      <a class="chip" href="#sec-tools">Tool Reference</a>
       <a class="chip" href="#sec-credits">Credits</a>
       <a class="chip" href="#sec-legal">Legal &amp; Licensing</a>
 </nav>
@@ -308,15 +311,15 @@
       <ul>
         <li class="item">
           <div class="q">How to Scan</div>
-          <div class="a">Go to ITEMS &gt; Collectibles and tap Scan. Hold the badge about 3 in. (8 cm) from the code and line the code&#x27;s 3 corners up with the 3 guide boxes at the grid corners (each corner is about four squares). Hold steady until it locks. Matte codes read best; glossy ones don&#x27;t.</div>
+          <div class="a">Go to ITEMS &gt; Collectibles and tap Scan. Hold the badge about 3 in. (8 cm) from the code and line the code&#x27;s 3 corners (Top Left, Top Right, Bottom Right) up with the 3 guide boxes at the grid corners (each corner is about four squares). Hold steady until it locks. Matte codes read best; glossy ones don&#x27;t. The &#x27;Trilancer&#x27; part of your wristband is ~3&quot;/8cm.</div>
         </li>
         <li class="item">
           <div class="q">Reading the Scanner</div>
-          <div class="a">The 8x8 grid is a live read-out with a legend on the right: one shade marks empty space, another marks the code surface, and a BOLD WHITE OUTLINE marks each of the 3 corners it has found (the exact colors follow your theme — read the on-screen legend). Aim to get an outlined corner into each corner of the grid. The prompt at the bottom of the panel tells you what to fix - Back up (too close), Move closer (too far), Square up &amp; hold (flatter / steadier), then Locked. It won&#x27;t lock a shaky or half-seen code. By DEFAULT it then shows you the decoded bump pattern to confirm before the item unlocks (see Verify Each Scan). The little bubble is just a level guide - you can scan at ANY angle (codes on stands are often read from above); what matters is holding the badge parallel to the code&#x27;s face, not level to the ground.</div>
+          <div class="a">The 8x8 grid is a live read-out with a legend on the right: one shade marks empty space, another marks the code surface, and a BOLD WHITE OUTLINE marks each of the 3 corners it has found (the exact colors follow your theme — read the on-screen legend). Aim to get an outlined corner into each corner of the grid. Hold the scanner ~3&quot; (8 cm) from the code. The &#x27;Trilancer&#x27; part of the wrist strap is that length. The prompt at the bottom of the panel tells you what to fix - Back up (too close), Move closer (too far), Square up &amp; hold (flatter / steadier), then Locked. It won&#x27;t lock a shaky or half-seen code. By DEFAULT it then shows you the decoded bump pattern to confirm before the item unlocks (see Verify Each Scan). The little bubble is just a level guide - you can scan from any angle; what matters is holding the badge&#x27;s sensor parallel to the code&#x27;s face, not level to the ground.</div>
         </li>
         <li class="item">
           <div class="q">Scanner Calibration</div>
-          <div class="a">If scans are unreliable (odd lighting, a new surface), flat-field-calibrate the LiDAR: DATA &gt; Settings &gt; Scanner Calibration, fill the sensor&#x27;s view with a flat surface, tap Calibrate and hold ~5s. Clear reverts to defaults.</div>
+          <div class="a">If scans are unreliable (odd lighting, a new surface), flat-field-calibrate the LiDAR: DATA &gt; Settings &gt; Scanner Calibration, fill the sensor&#x27;s view with a flat surface (ideally the back of a &#x27;Scan me with your Clip-Boy&#x27; tag) at ~3&quot; (8 cm) away, tap Calibrate and hold ~5s. Clear reverts to defaults. Note that the &#x27;Trilancer&#x27; part of your wrist strap is 3&quot;/8cm.</div>
         </li>
         <li class="item">
           <div class="q">Verify Each Scan</div>
@@ -331,12 +334,20 @@
           <div class="a">If a scan or manual entry unlocks the wrong item, tap &#x27;Not this? Fix&#x27; on the reveal to undo it. It only removes the item that scan/entry just added — it can never erase something you already had.</div>
         </li>
         <li class="item">
+          <div class="q">Collected Items</div>
+          <div class="a">After collecting an item, the badge scrolls to that item&#x27;s entry. You&#x27;ll see a preview image, a description of it and its &#x27;effects&#x27;, and the unlock pattern to share with friends or friends-to-be in line. Your STATS &gt; Status screen shows all &#x27;effects&#x27; you&#x27;ve acquired via your collectibles.</div>
+        </li>
+        <li class="item">
           <div class="q">Rarity Tiers</div>
-          <div class="a">Four tiers in order of rarity: Common, Rare, Legendary, and 0-Day. 0-Day is the rarest — the ones that make you ask &#x27;why did you do this.&#x27;</div>
+          <div class="a">Four tiers in order of rarity: Common, Rare, Legendary, and 0-Day. 0-Day is the rarest.</div>
         </li>
         <li class="item">
           <div class="q">Locked Items</div>
-          <div class="a">Uncollected items show &#x27;??? Locked&#x27;. Find HR codes around the CON to unlock them.</div>
+          <div class="a">Uncollected items show &#x27;??? Locked&#x27;. Find HR codes around the CON to unlock them. Tap &#x27;All&#x27; on the Collectibles screen to hide these entries; tap &#x27;Found&#x27; to re-display.</div>
+        </li>
+        <li class="item">
+          <div class="q">Missing Tags</div>
+          <div class="a">Missed a tag at the CON? That&#x27;s rough. But we&#x27;re not monsters. After DC34 you can visit github.com/safehazard/clip-boy to find unlock codes for any you may have missed.</div>
         </li>
         <li class="item">
           <div class="q">Stat Bonuses</div>
@@ -351,6 +362,10 @@
     <details class="cat" id="cat-tools">
       <summary>Tools</summary>
       <ul>
+        <li class="item">
+          <div class="q">Responsible Use</div>
+          <div class="a">Use these tools only on hardware you own or are authorized to touch. Per-tool guidance is in each tool&#x27;s More Info.</div>
+        </li>
         <li class="item">
           <div class="q">Overview</div>
           <div class="a">Wireless recon and analysis tools forked from the ESP32 Marauder project. Includes WiFi scanning (APs, stations, beacons, probes), detection of deauth frames and pwnagotchi devices, Bluetooth/BLE scanning, packet capture, plus joining a WiFi network and managing saved networks. Each tool has a More Info panel with details.</div>
@@ -378,10 +393,6 @@
         <li class="item">
           <div class="q">Airplane Mode</div>
           <div class="a">When airplane mode is on, tools that need WiFi or Bluetooth show a confirm dialog before launching. Choose Turn Off to disable airplane and re-tap the tool to launch it.</div>
-        </li>
-        <li class="item">
-          <div class="q">Responsible Use</div>
-          <div class="a">Use these tools only on hardware you own or are authorized to touch. Per-tool guidance is in each tool&#x27;s More Info.</div>
         </li>
       </ul>
     </details>
@@ -640,6 +651,10 @@
       <summary>SD Card Mods</summary>
       <ul>
         <li class="item">
+          <div class="q">Getting Started</div>
+          <div class="a">You&#x27;ll need collectibles.csv and png_to_a8.py from github.com/safehazard/clip-boy.</div>
+        </li>
+        <li class="item">
           <div class="q">Custom Items</div>
           <div class="a">Place collectibles.csv at the SD card root. Same CSV format as built-in data: ID, Title, Source, Tier, Description, then up to three Mod/Stat pairs.</div>
         </li>
@@ -659,6 +674,10 @@
         <li class="item">
           <div class="q">SAOs</div>
           <div class="a">The dim items under ITEMS &gt; SAOs are jokes about gear that doesn&#x27;t exist — enjoy the descriptions. The one exception is &#x27;Whether Radio&#x27; (not dimmed): tap it to open a simulated radio — styled stations playing pre-recorded audio, not a real receiver. See the Simulated Radio section.</div>
+        </li>
+        <li class="item">
+          <div class="q">SAO Port</div>
+          <div class="a">Clip-Boy supports real SAOs compliant with v1.69bis via the SAO port on the right side of the enclosure. 3V3, GND, SDA and SCL are active; GPIO 1 &amp; 2 are not.</div>
         </li>
       </ul>
     </details>
@@ -717,13 +736,476 @@
         </li>
       </ul>
     </details>
+    <details class="cat" id="sec-tools">
+      <summary>Tool Reference</summary>
+      <ul>
+        <li class="item"><div class="a">Each tool also has an on-badge "More Info" panel; this mirrors it. Tools under the Res34rch-only categories are absent from the listen-only Sn34k-Boy build. For the serial command line, see the <a href="https://github.com/justcallmekoko/ESP32Marauder/wiki/cli">ESP32 Marauder CLI wiki</a>.</div></li>
+        <li class="divider">Detect</li>
+        <li class="item">
+          <div class="q">AirTag</div>
+          <div class="a">Detect Apple AirTags tracking nearby.</div>
+          <div class="tif"><b>What:</b> Continuous AirTag detection with alerting. Filters the BLE stream to AirTag&#x27;s advertising pattern. Only sees tags advertising publicly (lost-mode or separated from their owner); tags actively paired to a phone in range mostly stay silent.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists AirTags with persistence indicators. A tag that appears repeatedly as you move is the worrying pattern.</div>
+          <div class="tif"><b>Use responsibly:</b> If you find a tag that isn&#x27;t yours, use Apple&#x27;s official &#x27;Find Nearby Item&#x27; tooling and contact authorities if needed. Don&#x27;t confront a stranger over a stray detection.</div>
+        </li>
+        <li class="item">
+          <div class="q">Skimmer Check</div>
+          <div class="a">Heuristic check for known BLE skimmer module names.</div>
+          <div class="tif"><b>What:</b> Heuristic check for BLE devices that match historically-known credit-card-skimmer module names (HC-03/05/06 and similar). Modern skimmers don&#x27;t use these defaults, and the same module names show up on hobby projects, fitness gear, and old IoT devices. Treat hits as suspicious, not as evidence.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output flags BLE devices whose advertised name matches the heuristic list. False positives are common - a hit at a gas pump is a reason to pay inside or use tap, not a reason to call anyone.</div>
+          <div class="tif"><b>Use responsibly:</b> Don&#x27;t act on a hit beyond your own personal-safety choice. The signatures are stale and the false-positive rate is high enough that calling authorities or confronting staff is far more likely to cause trouble than catch a real skimmer.</div>
+        </li>
+        <li class="item">
+          <div class="q">Flipper Zero</div>
+          <div class="a">Detect Flipper Zero devices in range.</div>
+          <div class="tif"><b>What:</b> Detects Flipper Zero devices by their characteristic BLE advertising pattern. Handy for finding other hackers at a con.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists Flipper MACs and advertised names.</div>
+        </li>
+        <li class="item">
+          <div class="q">Flock Safety</div>
+          <div class="a">Detect Flock Safety tracking devices.</div>
+          <div class="tif"><b>What:</b> Detects Flock Safety automated license-plate-reader devices by their Bluetooth broadcast. Flock ALPRs are deployed by some municipal police and HOAs; this is a passive detector for their BLE signature.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists detected Flock devices with MAC and RSSI.</div>
+          <div class="tif"><b>Use responsibly:</b> Detection only. Don&#x27;t interfere with or damage any infrastructure - tampering is a serious crime and won&#x27;t help your case.</div>
+        </li>
+        <li class="item">
+          <div class="q">Rogue AP</div>
+          <div class="a">Flag APs that answer probes for SSIDs they shouldn&#x27;t know.</div>
+          <div class="tif"><b>What:</b> Flags APs that respond to probe requests for SSIDs they shouldn&#x27;t know - the behavior a WiFi Pineapple exhibits when it&#x27;s set to &#x27;be every network&#x27;. Some legitimate captive portal hotspots also probe-answer, so a hit is suspicious but not proof.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output flags suspect APs by BSSID. Success criteria: the same BSSID answering probes for two or more unrelated SSIDs is the strong signal.</div>
+          <div class="tif"><b>Use responsibly:</b> Detection only, no action taken. If you want to report a suspected device, tell venue staff in private rather than calling it out publicly.</div>
+        </li>
+        <li class="item">
+          <div class="q">Evil Twin</div>
+          <div class="a">Flag duplicate SSIDs across multiple BSSIDs (evil-twin signal).</div>
+          <div class="tif"><b>What:</b> Flags duplicate SSIDs across multiple BSSIDs and multi-SSID broadcasters: one BSSID broadcasting many SSIDs, or many APs claiming the same SSID. The latter is what an evil-twin looks like, but it&#x27;s also what corporate guest+staff splits look like at this layer.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. Works best in dense networks where duplicates stand out.</div>
+          <div class="tif"><b>You'll see:</b> Output lists the SSIDs and the BSSIDs broadcasting them. Success criteria for evil-twin suspicion: same SSID, different vendor OUIs, wildly different RSSI - then walk the floor with RSSI Monitor on the outlier to see if it physically moves.</div>
+          <div class="tif"><b>Use responsibly:</b> Detection only. False positives are common at scale, so don&#x27;t accuse anyone in public based on a single hit - report to venue staff if needed.</div>
+        </li>
+        <li class="divider">Scan</li>
+        <li class="item">
+          <div class="q">APs (full)</div>
+          <div class="a">Full AP scan. Passive recon of all nearby access points.</div>
+          <div class="tif"><b>What:</b> Passively listens for all nearby WiFi access points (routers, hotspots) and records their names, signal strength, and channel. Doesn&#x27;t transmit anything - it&#x27;s just eavesdropping on beacons that APs already broadcast.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. Airplane mode disables this.</div>
+          <div class="tif"><b>You'll see:</b> The output log fills with AP entries - SSID, RSSI, channel, BSSID. Strong signals appear first. Scan runs until you stop it.</div>
+          <div class="tif"><b>Use responsibly:</b> Passive listening on broadcast management frames is legal almost everywhere. Aggregating SSIDs/BSSIDs into a published dataset can run into wiretap-style statutes in a few states (CA, FL among them). When in doubt, keep it on-device.</div>
+        </li>
+        <li class="item">
+          <div class="q">APs + Stations</div>
+          <div class="a">Scan APs and connected stations at the same time.</div>
+          <div class="tif"><b>What:</b> Like APs (full) but also identifies stations (phones, laptops) currently connected to each AP. Builds a map of who&#x27;s talking to what.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. Gets richer data in dense areas like conference floors.</div>
+          <div class="tif"><b>You'll see:</b> Output shows both APs and the stations (client MACs) associated with them.</div>
+          <div class="tif"><b>Use responsibly:</b> Tracking specific stations can leak personal movement patterns. Keep any logs you save local to your badge.</div>
+        </li>
+        <li class="item">
+          <div class="q">Stations</div>
+          <div class="a">Scan for connected stations on nearby networks.</div>
+          <div class="tif"><b>What:</b> Listens only for stations - devices that are associated with or probing for WiFi networks. Useful when you want to see who&#x27;s around without caring which AP they&#x27;re on.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows station MAC addresses and any AP they&#x27;re currently bound to.</div>
+          <div class="tif"><b>Use responsibly:</b> Don&#x27;t use this to single out specific people - at a con, at a coffee shop, anywhere. That&#x27;s creepy regardless of venue.</div>
+        </li>
+        <li class="item">
+          <div class="q">BT Devices</div>
+          <div class="a">Full Bluetooth plus BLE device scan.</div>
+          <div class="tif"><b>What:</b> Full Bluetooth + BLE scan. Builds a running list of every Bluetooth device the radio sees, classic and low-energy both. Passive, no pairing attempted.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists device name (if advertised), MAC, and RSSI. Many devices use rotating MACs so the list grows faster than the actual device count.</div>
+          <div class="tif"><b>Use responsibly:</b> Passive discovery is generally safe, but aggregating BT MACs over time is a tracking vector. Don&#x27;t save or share the output.</div>
+        </li>
+        <li class="item">
+          <div class="q">BLE Adverts</div>
+          <div class="a">BLE advertisement counter. Packets only, no device details.</div>
+          <div class="tif"><b>What:</b> Counts BLE advertisement packets per second. No per-device detail - just the raw rate. Useful for a quick &#x27;how many BLE-chatty things are around me&#x27; reading.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows a single running counter. Quiet room ~10/s. Conference floor 500+/s.</div>
+        </li>
+        <li class="divider">Monitor</li>
+        <li class="item">
+          <div class="q">Packets</div>
+          <div class="a">Live packet count monitor across all channels.</div>
+          <div class="tif"><b>What:</b> Live tally of the management frames the radio sees - beacons, deauths, and probe requests - shown as three bars. A quick read on how busy the air is.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows counts for beacon / deauth / probe frames. A quiet room vs the DEFCON floor looks very different.</div>
+        </li>
+        <li class="item">
+          <div class="q">Packet Rate</div>
+          <div class="a">Monitor packets/sec with rolling graph.</div>
+          <div class="tif"><b>What:</b> Rate of management frames (beacons, deauths, probes) per second, as a rolling graph. It is NOT tied to one AP or channel: the radio sweeps channels 1-14 at about one per second, so each point reflects whatever channel it was on then.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output is frames/sec over roughly the last 24 seconds. Because it hops channels, the line is naturally bumpy; a high plateau sustained across the sweep means a busy or flooded area nearby.</div>
+        </li>
+        <li class="item">
+          <div class="q">RSSI</div>
+          <div class="a">Monitor signal strength of selected AP over time.</div>
+          <div class="tif"><b>What:</b> Tracks signal strength (RSSI) of a selected AP over time. Useful for walking around to find the physical location of an AP, or to see how stable a connection would be.</div>
+          <div class="tif"><b>Setup:</b> Select the AP first. WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows dBm readings as they change. Closer to the AP - higher (less negative) numbers. Around -30 dBm is right next to it; -90 is barely alive.</div>
+        </li>
+        <li class="item">
+          <div class="q">Channel Stats</div>
+          <div class="a">Histogram of channel utilization (1-14).</div>
+          <div class="tif"><b>What:</b> Live histogram of activity across WiFi channels 1 through 14. Shows where the RF noise is concentrated - useful for picking a quiet channel for your own AP, or spotting someone camping a single channel.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows per-channel packet counts updating in real time. Most traffic clusters on 1/6/11 in the US; noise on 2/3/4/5 often means something misbehaving.</div>
+        </li>
+        <li class="item">
+          <div class="q">MAC Tracker</div>
+          <div class="a">Top talker MACs ranked by frame count.</div>
+          <div class="tif"><b>What:</b> Ranks the loudest MAC addresses by how many frames each has sent - a live leaderboard of who&#x27;s talking most on the air. No target entry needed.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists the top talker MACs with their frame counts, refreshed every few seconds. The busiest radios (APs, active clients) rise to the top.</div>
+          <div class="tif"><b>Use responsibly:</b> Watching who is transmitting IS a form of presence tracking. Only use on hardware you own or devices whose owners have explicitly consented.</div>
+        </li>
+        <li class="divider">Analyze</li>
+        <li class="item">
+          <div class="q">Beacons</div>
+          <div class="a">Capture beacon frames from nearby APs.</div>
+          <div class="tif"><b>What:</b> Captures WiFi beacon frames - the periodic &#x27;I exist&#x27; broadcasts every AP sends ~10 times per second. Passive and non-interactive.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Frame counter climbs steadily. Useful for understanding how saturated the local radio spectrum is.</div>
+        </li>
+        <li class="item">
+          <div class="q">Probes</div>
+          <div class="a">Capture probe request frames from stations.</div>
+          <div class="tif"><b>What:</b> Captures probe request frames - these are emitted by phones and laptops when they&#x27;re searching for known networks. Each probe often includes an SSID the device has connected to in the past.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows probing station MACs and the SSIDs they&#x27;re searching for. This can reveal a person&#x27;s home/work network names.</div>
+          <div class="tif"><b>Use responsibly:</b> Probe data is surprisingly personal - the SSID list is effectively a history of every place a device has connected. Treat it like location data: keep it local, don&#x27;t aggregate or share it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Deauth</div>
+          <div class="a">Sniff deauth packets in the area.</div>
+          <div class="tif"><b>What:</b> Listens for deauthentication frames - management frames that disconnect a station from an AP. Also drives the STATS &gt; Radiation geiger display: the deauth rate maps to the geiger &#x27;radiation level&#x27; so you can hear and see when something noisy is happening nearby.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output shows src/dst MACs, channel, RSSI. Background deauth is common in dense RF environments; a sustained burst from one source is unusual.</div>
+          <div class="tif"><b>Use responsibly:</b> Pure listener, no transmission risk. Acting on what you find (e.g. publicly accusing a &#x27;suspected bad actor&#x27;) is a different judgment call - tell venue staff, not the internet.</div>
+        </li>
+        <li class="item">
+          <div class="q">Raw/PCAP</div>
+          <div class="a">Raw WiFi packet capture to SD card.</div>
+          <div class="tif"><b>What:</b> Raw 802.11 packet capture to SD card (pcap). Grabs every frame the radio sees, not just management types. Use the Channel selector: &#x27;Hop (all)&#x27; sweeps the band; lock a channel to focus one network. Much heavier on storage.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. SD card inserted and mounted. REQUIRES DATA &gt; Settings &gt; Allow PCAP Saving = ON, or nothing is written.</div>
+          <div class="tif"><b>You'll see:</b> Output shows captured frame counts (BCN/PRB/DEA/EAP). Best-effort: under heavy traffic a burst can outrun the SD write and gap a few frames — for reliable WPA handshakes use Analyze &gt; EAPOL/PMKID (it locks to the target&#x27;s channel). Analyze the pcap in Wireshark.</div>
+          <div class="tif"><b>Use responsibly:</b> Packet captures can contain identifying metadata even when payloads are encrypted. Don&#x27;t share raw pcaps from public places without scrubbing.</div>
+        </li>
+        <li class="item">
+          <div class="q">Pwnagotchi</div>
+          <div class="a">Detect and log nearby Pwnagotchi devices.</div>
+          <div class="tif"><b>What:</b> Detects nearby Pwnagotchi devices by recognizing their characteristic probe and beacon signature. Pwnagotchis are automated WPA handshake collectors with an AI-themed personality layer.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists detected Pwnagotchi MACs, names, and version (only if the Pwnagotchi advertises it - many forks strip the version field).</div>
+        </li>
+        <li class="item">
+          <div class="q">Espressif</div>
+          <div class="a">Sniff for Espressif (ESP8266/ESP32) devices.</div>
+          <div class="tif"><b>What:</b> Identifies ESP8266 and ESP32 devices by their MAC address prefix (the first three bytes of a MAC, called the OUI, identify the chip vendor). Useful for counting badges and other ESP-based projects at a hacker con.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists MACs whose OUI is registered to Espressif. Expect a lot of these at DEFCON.</div>
+        </li>
+        <li class="item">
+          <div class="q">SAE Commit</div>
+          <div class="a">Sniff WPA3 SAE commit frames.</div>
+          <div class="tif"><b>What:</b> Captures WPA3 SAE commit frames. SAE (Simultaneous Authentication of Equals) is WPA3&#x27;s password-authenticated key exchange, based on Dragonfly. Commits are the first round and require an EC point validation per message. WPA3-specific variant of handshake sniffing.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. Target must be WPA3-capable.</div>
+          <div class="tif"><b>You'll see:</b> Output shows SAE commit/confirm frames by station. Both commit AND confirm are needed to attempt offline password recovery; commit alone is partial.</div>
+          <div class="tif"><b>Use responsibly:</b> Same WPA-cracking caveat as EAPOL/PMKID: offline analysis only, and only on networks you own or are explicitly authorized to test.</div>
+        </li>
+        <li class="item">
+          <div class="q">EAPOL/PMKID</div>
+          <div class="a">Capture WPA handshakes for offline analysis. Select target AP.</div>
+          <div class="tif"><b>What:</b> Captures WPA/WPA2 4-way handshakes (EAPOL) or PMKIDs from a selected network. These can be used offline to attempt to recover the network&#x27;s password by guessing (an offline dictionary run).</div>
+          <div class="tif"><b>Setup:</b> Select the AP first (Utilities/Lists &gt; Select AP). WiFi antenna enabled. SD card recommended for the pcap output. REQUIRES DATA &gt; Settings &gt; Allow PCAP Saving = ON, or nothing is written.</div>
+          <div class="tif"><b>You'll see:</b> Capture saved to SD (or internal storage) as /raw_&lt;n&gt;.pcap. You need to actually crack the file offline with hashcat or similar - the badge doesn&#x27;t do the cracking. Success criteria: a complete EAPOL handshake needs all four messages (M1-M4) from the same MAC pair to be crackable; M1+M2 alone is a partial and won&#x27;t crack. PMKID is opportunistic and can come from the AP alone, no station required. EAPOL needs a station to (re)authenticate during your capture window - on a network you own, briefly toggle a device&#x27;s WiFi off/on yourself to force a reconnect.</div>
+          <div class="tif"><b>Use responsibly:</b> Only run against networks you own or have explicit written authorization to test. Cracking WPA on someone else&#x27;s AP is a crime in most places.</div>
+        </li>
+        <li class="divider">Utilities/Lists</li>
+        <li class="item">
+          <div class="q">List APs</div>
+          <div class="a">View scanned access points.</div>
+        </li>
+        <li class="item">
+          <div class="q">List SSIDs</div>
+          <div class="a">View current SSID list.</div>
+        </li>
+        <li class="item">
+          <div class="q">List Stations</div>
+          <div class="a">View scanned stations.</div>
+        </li>
+        <li class="item">
+          <div class="q">List BT Devices</div>
+          <div class="a">View scanned Bluetooth devices.</div>
+        </li>
+        <li class="item">
+          <div class="q">List AirTags</div>
+          <div class="a">View detected AirTags.</div>
+        </li>
+        <li class="item">
+          <div class="q">List Flippers</div>
+          <div class="a">View detected Flipper Zero devices.</div>
+        </li>
+        <li class="item">
+          <div class="q">Saved Networks</div>
+          <div class="a">View or manage saved WiFi networks (SSID and password).</div>
+        </li>
+        <li class="item">
+          <div class="q">Add SSID</div>
+          <div class="a">Add a custom SSID to the SSID list.</div>
+          <div class="tif"><b>What:</b> Add a custom SSID to the SSID list used by Beacon SSID List and other list-driven spam tools.</div>
+          <div class="tif"><b>You'll see:</b> Keyboard prompt appears. Type the SSID, tap OK. New entry shows up next time you open List SSIDs.</div>
+        </li>
+        <li class="item">
+          <div class="q">Gen Rnd SSIDs</div>
+          <div class="a">Generate random SSIDs and add them to the list.</div>
+          <div class="tif"><b>What:</b> Generate 20 random SSIDs and add them to the SSID list in one go. Quick way to populate the list for testing Beacon SSID List.</div>
+          <div class="tif"><b>You'll see:</b> Status updates briefly. New entries visible in List SSIDs.</div>
+        </li>
+        <li class="item">
+          <div class="q">Select AP</div>
+          <div class="a">Select an AP from scan results for targeting.</div>
+          <div class="tif"><b>What:</b> Pick an AP from the scan results to set as the selected AP for tools that need one (EAPOL capture, RSSI monitor, etc.).</div>
+          <div class="tif"><b>Setup:</b> Run an AP scan first so there are APs to choose from.</div>
+          <div class="tif"><b>You'll see:</b> AP list opens; tap one to select. Selection persists across tools until you change it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Clear All</div>
+          <div class="a">Clear all scanned data (APs, stations, SSIDs).</div>
+          <div class="tif"><b>What:</b> Wipe all collected scan data: AP list, Station list, SSID list. Starts fresh - useful between tests or when leaving a venue.</div>
+          <div class="tif"><b>You'll see:</b> Lists empty immediately. No device-level effect.</div>
+        </li>
+        <li class="item">
+          <div class="q">Set Channel</div>
+          <div class="a">Set WiFi monitor channel (1 to 14, or Auto).</div>
+          <div class="tif"><b>What:</b> Pick a specific WiFi channel (1-14) to monitor, or &#x27;Auto&#x27; for channel hopping. Affects subsequent passive scans - fixed channel sees more detail there, &#x27;Auto&#x27; is broad but shallow. Auto hops every ~250 ms.</div>
+          <div class="tif"><b>You'll see:</b> Dropdown with the choice. Takes effect on the next scan started. For EAPOL/PMKID/RSSI on a known AP, set the AP&#x27;s channel explicitly first - Auto&#x27;s hop interval is too short to reliably catch a four-way handshake.</div>
+        </li>
+        <li class="divider">Network</li>
+        <li class="item">
+          <div class="q">Join WiFi</div>
+          <div class="a">Connect to a WiFi network (SSID and password).</div>
+          <div class="tif"><b>What:</b> Connect to a WiFi network by SSID and password. After connecting, the badge can use the internet for networked features.</div>
+          <div class="tif"><b>Setup:</b> SSID list populated (run an AP scan or type one in). Password known. Badge reboots to connect.</div>
+          <div class="tif"><b>You'll see:</b> Keyboard prompts for SSID + password. Badge restarts and reconnects. Status bar WiFi icon shows the connection.</div>
+          <div class="tif"><b>Use responsibly:</b> Credentials are stored unencrypted in NVS. A badge that boots can be flashed and read in seconds - don&#x27;t save creds for networks you wouldn&#x27;t write on a sticky note. Use Saved Networks &gt; delete to remove stored entries when finished.</div>
+        </li>
+        <li class="item">
+          <div class="q">Rnd AP MAC</div>
+          <div class="a">Randomize the AP MAC address.</div>
+          <div class="tif"><b>What:</b> Randomize the AP-mode MAC address. When the badge later acts as an AP, it uses the new MAC.</div>
+          <div class="tif"><b>You'll see:</b> Status message confirms the new MAC. No visible external effect until you run an AP-mode tool.</div>
+        </li>
+        <li class="item">
+          <div class="q">Rnd STA MAC</div>
+          <div class="a">Randomize the station MAC address.</div>
+          <div class="tif"><b>What:</b> Randomize the station-mode MAC address. Changes the MAC used when the badge connects as a client to another AP (Join WiFi).</div>
+          <div class="tif"><b>You'll see:</b> Status message confirms the new MAC.</div>
+          <div class="tif"><b>Use responsibly:</b> MAC randomization is a privacy feature, not a license to impersonate. Don&#x27;t deliberately spoof a specific known MAC you don&#x27;t own.</div>
+        </li>
+        <li class="divider">Deauth (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">! Discovered<span class="tag">Res34rch-only</span></div>
+          <div class="a">Deauth all clients from discovered access points.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Transmits spoofed deauthentication frames that disconnect every client from the selected access point(s). Clients try to reconnect, so this is a denial-of-service that recovers when you stop.</div>
+          <div class="tif"><b>Setup:</b> Select the AP(s) first (Utilities/Lists &gt; Select AP). WiFi antenna enabled. You must own or have written authorization to disrupt the network.</div>
+          <div class="tif"><b>You'll see:</b> Counter climbs showing deauth frames sent. On affected networks, phones and laptops drop WiFi and re-associate until you stop.</div>
+          <div class="tif"><b>Use responsibly:</b> Do NOT run against networks you don&#x27;t own. Transmitting deauth frames against networks you aren&#x27;t authorized to test is illegal under computer-misuse laws in the US, UK, EU, and most other places. Testing your own home AP is fine.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Manual<span class="tag">Res34rch-only</span></div>
+          <div class="a">Manual deauth with AP selection.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Like Discovered, but you specify the exact AP and station pair. Precise, single-client denial-of-service.</div>
+          <div class="tif"><b>Setup:</b> Select the AP first (Utilities/Lists &gt; Select AP). WiFi antenna enabled. You must own or have authorization to disrupt the affected device.</div>
+          <div class="tif"><b>You'll see:</b> Output shows frame count sent to that specific client.</div>
+          <div class="tif"><b>Use responsibly:</b> Disrupting one client is more invasive than knocking down a whole AP - it cuts off a specific person&#x27;s connection. Authorized test rigs and your own devices only.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Stations<span class="tag">Res34rch-only</span></div>
+          <div class="a">Deauth specific stations from their networks.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Deauth aimed at one or more specific STATIONS (client devices) regardless of which AP they&#x27;re on. Disconnects the station from whatever it&#x27;s currently using.</div>
+          <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
+          <div class="tif"><b>You'll see:</b> Output shows per-station frame counts.</div>
+          <div class="tif"><b>Use responsibly:</b> Stations are people&#x27;s phones and laptops. Cutting off a specific one is the most personal use of this tool. Don&#x27;t do it to anyone who hasn&#x27;t agreed in advance.</div>
+        </li>
+        <li class="divider">Flood (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">! Auth<span class="tag">Res34rch-only</span></div>
+          <div class="a">Flood selected AP with authentication frames.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Floods a selected AP with authentication requests from spoofed MAC addresses. Can overwhelm the AP&#x27;s association table and cause it to refuse new legitimate clients.</div>
+          <div class="tif"><b>Setup:</b> Select the AP first (Utilities/Lists &gt; Select AP). WiFi antenna enabled. Authorization required.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows frames sent. Selected AP may slow down, drop clients, or stop accepting new associations entirely.</div>
+          <div class="tif"><b>Use responsibly:</b> This IS a denial-of-service against someone else&#x27;s equipment. Don&#x27;t run it against networks you don&#x27;t own.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Bad Msg<span class="tag">Res34rch-only</span></div>
+          <div class="a">Send malformed management frames (broadcast).</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE, BROADCAST. Transmits malformed WiFi management frames as broadcast - they reach every WiFi device in range, not just an intended recipient. Some older or poorly-written drivers mis-handle the frames and lock up or crash the WiFi stack.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Bystander warning: any device in range that has a vulnerable driver could see WiFi freeze, drop, or need a reboot - including phones, laptops, smart-home gear, and your own equipment. Counter shows frames sent.</div>
+          <div class="tif"><b>Use responsibly:</b> Broadcast crash bug, no targeting. Don&#x27;t run it anywhere bystanders&#x27; devices could catch the broadcast (cons, coffee shops, your apartment building, etc.). In a pen-test lab where you&#x27;ve scoped every device on the air, fine.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Bad Msg Target<span class="tag">Res34rch-only</span></div>
+          <div class="a">Send malformed mgmt frames to specific stations.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Like Bad Msg, but aimed at one or more specific stations rather than broadcast. Precise driver-confusion technique.</div>
+          <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent.</div>
+          <div class="tif"><b>Use responsibly:</b> You are pointing a known crash bug at a specific person&#x27;s device. Authorized hardware only - this can leave a phone in a state that needs a reboot to recover.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Sleep<span class="tag">Res34rch-only</span></div>
+          <div class="a">Broadcast power-save poll frames to all stations.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Broadcasts power-save-poll frames addressed to every station in range. Stations that honor them believe they have queued data and stay awake, draining batteries.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows frames sent. No dramatic visible effect on targets - just unexpectedly short battery life until the flood stops. To verify it&#x27;s actually working, sniff in another instance / Wireshark for the PS-Poll frames you&#x27;re transmitting, or watch a known target&#x27;s battery telemetry.</div>
+          <div class="tif"><b>Use responsibly:</b> Battery drain is a denial-of-service even when it&#x27;s subtle, and the broadcast form hits everyone in range. Only on your own hardware.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Sleep Target<span class="tag">Res34rch-only</span></div>
+          <div class="a">Send sleep frames to specific stations.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Sleep aimed at specific stations. Same battery-drain mechanism as the broadcast version, narrower target.</div>
+          <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent.</div>
+          <div class="tif"><b>Use responsibly:</b> Targeted battery drain is still a denial-of-service against someone else&#x27;s device. Not okay without explicit authorization.</div>
+        </li>
+        <li class="divider">Beacon Spam (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">Random<span class="tag">Res34rch-only</span></div>
+          <div class="a">Flood with random fake SSIDs.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacon frames with randomly-generated SSIDs. Fills nearby phones&#x27; WiFi scan lists with garbage. Doesn&#x27;t connect to or disrupt anything - just noise.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> On phones in range, the Available Networks list fills with random names that change every refresh. FPS drops while running (expected).</div>
+          <div class="tif"><b>Use responsibly:</b> Spectrum pollution — annoying to nearby operators. Don&#x27;t run it for extended periods in spaces where it would interfere with legitimate WiFi setup (venue networks, medical, etc.).</div>
+        </li>
+        <li class="item">
+          <div class="q">List<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam beacons from the SSID list.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacons with SSIDs drawn from your saved SSID list. Use Utilities &gt; Add SSID to populate the list first.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. SSID list must be populated (see Add SSID).</div>
+          <div class="tif"><b>You'll see:</b> Chosen SSIDs appear on nearby WiFi scan lists.</div>
+          <div class="tif"><b>Use responsibly:</b> Same spectrum-pollution caveat as Beacon Random. Using real or recognizable SSID names can confuse people and may qualify as spoofing in some jurisdictions - keep your list to obviously-fake names.</div>
+        </li>
+        <li class="item">
+          <div class="q">AP Clone<span class="tag">Res34rch-only</span></div>
+          <div class="a">Clone selected AP beacons with fake BSSIDs.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Clones a real AP&#x27;s SSID and BSSID into fake beacons. Creates apparent duplicates of legitimate networks at slightly different signal strengths.</div>
+          <div class="tif"><b>Setup:</b> Select the AP first. WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Phones see multiple &#x27;copies&#x27; of the selected AP. Some phones may probe your fake beacons trying to decide which to use.</div>
+          <div class="tif"><b>Use responsibly:</b> This is evil-twin groundwork. Running it near a real network could confuse users into connecting to your radio. Only do this on networks you own or control.</div>
+        </li>
+        <li class="item">
+          <div class="q">Rick Roll<span class="tag">Res34rch-only</span></div>
+          <div class="a">Never gonna give you up. Never gonna let you down.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacon frames with SSID names drawn from a certain song&#x27;s lyrics. The names will sit in any nearby phone&#x27;s WiFi scan cache for a while - clearable in WiFi settings if it bothers anyone.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Nearby phones see ~64 beacons named after that song. FPS drops (heavy).</div>
+          <div class="tif"><b>Use responsibly:</b> Spectrum pollution, same as Beacon Random. Keep it short - the joke wears off faster than the beacons do.</div>
+        </li>
+        <li class="item">
+          <div class="q">Funny<span class="tag">Res34rch-only</span></div>
+          <div class="a">Broadcast humorous SSIDs to nearby devices.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacon frames with humorous / pop-culture SSIDs (FBI Van, Get off my LAN, etc.). The harmless spiritual cousin of the classic meme.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Nearby phones see funny names. FPS drops (heavy).</div>
+          <div class="tif"><b>Use responsibly:</b> Annoying but usually harmless. Don&#x27;t run it during a real emergency when venue staff need WiFi to coordinate.</div>
+        </li>
+        <li class="divider">BLE Spam (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">! Sour Apple<span class="tag">Res34rch-only</span></div>
+          <div class="a">Send spoofed Apple BLE notification packets.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Transmits spoofed BLE advertisements that trigger iOS pairing popups on nearby iPhones. Known as &#x27;Sour Apple&#x27;. Can leave phones unresponsive while in range.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: iOS devices.</div>
+          <div class="tif"><b>You'll see:</b> iPhones near you show &#x27;Not Your AirPods?&#x27; / other pairing dialogs repeatedly. FPS drops while running.</div>
+          <div class="tif"><b>Use responsibly:</b> This is harassment if directed at strangers, and it can render a phone effectively unusable until it leaves radio range. Demo on your own devices only.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Swiftpair<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam Windows Swiftpair Bluetooth popups.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Windows Swiftpair spoofing. Triggers &#x27;Found new Bluetooth device&#x27; popups on Windows laptops and tablets in range.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: Windows devices.</div>
+          <div class="tif"><b>You'll see:</b> Windows machines show pairing dialogs repeatedly. Less disruptive than Sour Apple but still annoying.</div>
+          <div class="tif"><b>Use responsibly:</b> Pop-up spam aimed at strangers is harassment regardless of how mild the dialog is. Your own test rig only.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Samsung<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam Samsung BLE pairing popups.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Samsung-style BLE pairing popups. Affects Samsung Android devices.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: Samsung Android devices.</div>
+          <div class="tif"><b>You'll see:</b> Samsung phones show Fast-Pair style popups.</div>
+          <div class="tif"><b>Use responsibly:</b> Pop-up spam in a crowd of unsuspecting Samsung users is harassment. Demo on devices you own, ideally with the owner watching.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Google<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam Google Fast Pair BLE popups.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Google Fast Pair popups. Affects Android devices that support Fast Pair (Pixel and similar).</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: Android devices with Fast Pair.</div>
+          <div class="tif"><b>You'll see:</b> Affected Android phones show pairing popups.</div>
+          <div class="tif"><b>Use responsibly:</b> Same harassment caveat as the other BT spam variants - don&#x27;t aim it at strangers&#x27; phones.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Flipper<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam Flipper Zero style BLE notifications.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Flipper-Zero-style BLE notifications. A novelty mode that spoofs Flipper-themed advertisements; it doesn&#x27;t do anything a real Flipper does. A novelty for Flipper meetups.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Nearby phones may see Flipper-themed pairing popups depending on OS.</div>
+          <div class="tif"><b>Use responsibly:</b> Mostly harmless but still spammy. Quick demos only - don&#x27;t sit anywhere running this at strangers for an hour, Flipper meetup or not.</div>
+        </li>
+        <li class="item">
+          <div class="q">! All<span class="tag">Res34rch-only</span></div>
+          <div class="a">Spam all BT notification types at once.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Runs all five BT spam variants at once (Sour Apple, Swiftpair, Samsung, Google, Flipper). Maximum disruption for demonstration purposes - affects every nearby phone simultaneously.</div>
+          <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: all phones and laptops in range.</div>
+          <div class="tif"><b>You'll see:</b> Phones in range light up with overlapping pairing popups from every vendor they recognize. Visible from across a room. On recent iOS versions Sour Apple alone can render a phone unusable until it leaves radio range; layered with the others it&#x27;s significantly worse.</div>
+          <div class="tif"><b>Use responsibly:</b> Demo only on devices you control or with full-room consent. The broadcast nature means nearby strangers&#x27; phones get hit too.</div>
+        </li>
+        <li class="divider">SAE (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">! Commit Flood<span class="tag">Res34rch-only</span></div>
+          <div class="a">WPA3 SAE commit flood against selected AP.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE (WPA3). Floods a selected AP with SAE commit frames, which are computationally expensive to validate. Can DoS the AP by exhausting its CPU.</div>
+          <div class="tif"><b>Setup:</b> Select the AP first (Utilities/Lists &gt; Select AP). AP must support WPA3-SAE. WiFi antenna enabled. Authorization required.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows frames sent. Selected AP may become unresponsive for new connections. Legitimate clients may fail to associate.</div>
+          <div class="tif"><b>Use responsibly:</b> This is a documented research technique against WPA3 but it&#x27;s still a denial-of-service against someone else&#x27;s infrastructure. Only use on your own WPA3 equipment.</div>
+        </li>
+        <li class="divider">Evil Portal (Res34rch-only)</li>
+        <li class="item">
+          <div class="q">! Start Default<span class="tag">Res34rch-only</span></div>
+          <div class="a">Launch default captive portal for credential harvesting.</div>
+          <div class="tif"><b>What:</b> ACTIVE - PHISHING. Hosts a captive-portal page that prompts connecting users for credentials. This is a credential-harvesting / phishing setup.</div>
+          <div class="tif"><b>Setup:</b> No prerequisites - uses a built-in HTML portal. WiFi antenna enabled.</div>
+          <div class="tif"><b>You'll see:</b> Any device connecting to the badge&#x27;s AP is redirected to the portal. Captured input is shown on-screen in the scan output (CRED: user / pass) and held in memory only - it is NOT written to the SD card, and it clears when you stop the portal or reboot.</div>
+          <div class="tif"><b>Use responsibly:</b> This is straightforwardly phishing. Running it against anyone who didn&#x27;t explicitly agree is a crime. Use only for scoped red-team engagements or blue-team training where every participant knows the portal is fake.</div>
+        </li>
+        <li class="item">
+          <div class="q">! Start Custom<span class="tag">Res34rch-only</span></div>
+          <div class="a">Launch custom HTML portal from SD card.</div>
+          <div class="tif"><b>What:</b> ACTIVE - PHISHING. Same as Start Default but loads your own HTML from SD. Lets you tailor portals for a specific engagement.</div>
+          <div class="tif"><b>Setup:</b> SD card with an .html file in the card&#x27;s ROOT (e.g. /myportal.html). WiFi antenna enabled. The page must submit the fields named &#x27;email&#x27; and &#x27;password&#x27; (to /get) to be captured. Asset folders (CSS/JS/images) aren&#x27;t supported - inline everything in the HTML.</div>
+          <div class="tif"><b>You'll see:</b> File picker appears (lists the .html files in the SD root). Pick the HTML, portal starts. Otherwise identical to Start Default - captured input shows on-screen, not saved to SD.</div>
+          <div class="tif"><b>Use responsibly:</b> A custom portal is still phishing. Authorized red-team or training use only - don&#x27;t &#x27;test&#x27; tailored phishing pages on any network where unsuspecting people could connect.</div>
+        </li>
+        <li class="item">
+          <div class="q">Stop<span class="tag">Res34rch-only</span></div>
+          <div class="a">Stop the running evil portal.</div>
+          <div class="tif"><b>What:</b> Stop any running Evil Portal and tear down the AP. Use this after finishing a test engagement.</div>
+          <div class="tif"><b>You'll see:</b> Badge stops broadcasting its AP. Any connected clients drop. Captured credentials are held in memory only and are cleared on stop or reboot - nothing is written to the SD card.</div>
+        </li>
+      </ul>
+    </details>
     <details class="cat" id="sec-credits">
       <summary>Credits</summary>
       <ul>
         <li class="divider">Thanks</li>
         <li class="item"><div class="a">YOU - for supporting me</div></li>
         <li class="item"><div class="a">My family - for surviving another year of Badge Life</div></li>
-        <li class="item"><div class="a">BenevolentWorm - our beta tester, for finding the bugs so you don&#x27;t have to</div></li>
+        <li class="item"><div class="a">BenevolentWorm - our beta tester and the one who got me interested in DEF CON in the first place!</div></li>
         <li class="divider">Founding Backers</li>
         <li class="item"><div class="a">Aaron Lafferty</div></li>
         <li class="item"><div class="a">Andrew Pinzler</div></li>
@@ -783,7 +1265,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>6ce703e</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>b1e6607</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
@@ -796,10 +1278,10 @@
   var savedOpen = null;                 // pre-search open state, restored on clear
 
   function searching(){ return q.value.trim() !== ''; }
-  function scrollToCat(c){
-    var y = c.getBoundingClientRect().top + window.pageYOffset - (header.offsetHeight + 8);
-    window.scrollTo({ top:y, behavior:'smooth' });
-  }
+  // scrollIntoView scrolls the nearest scrollable ancestor -- robust inside
+  // iframes/preview sandboxes where window.scrollTo silently no-ops. The sticky
+  // header offset comes from CSS scroll-margin-top on details.cat.
+  function scrollToCat(c){ c.scrollIntoView({ behavior:'smooth', block:'start' }); }
   // Single-open accordion: opening one section closes the rest and brings it into
   // view under the sticky header. Suppressed while a search is active.
   cats.forEach(function(c){
