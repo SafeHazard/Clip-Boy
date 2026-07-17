@@ -58,6 +58,9 @@
   .a { color:var(--text); }
   .tif { color:var(--text); margin-top:4px; font-size:14px; }
   .tif b { color:var(--amber-dim); font-weight:600; }
+  .fig { margin:10px 0 14px; }
+  .fig img { width:100%; max-width:520px; display:block; border:1px solid var(--line); border-radius:8px; }
+  figcaption { color:var(--muted); font-size:13px; margin-top:5px; max-width:520px; }
   li.divider {
     margin:12px 4px 2px; padding:5px 8px; color:var(--amber-dim); font-size:12px;
     letter-spacing:2px; text-transform:uppercase; border-left:2px solid var(--amber-dim);
@@ -309,6 +312,12 @@
     <details class="cat" id="cat-collectibles">
       <summary>Collectibles</summary>
       <ul>
+        <li class="item">
+          <div class="q">Scan, Visually</div>
+          <figure class="fig"><img src="https://raw.githubusercontent.com/SafeHazard/Clip-Boy/main/help/img/scan-distance.jpg" loading="lazy" alt="Trilancer strap spanning the 3-inch gap between sensor and tag"><figcaption>Distance: the "Trilancer" wrist strap is exactly 3"/8 cm -- the ideal gap between the sensor and the tag.</figcaption></figure>
+          <figure class="fig"><img src="https://raw.githubusercontent.com/SafeHazard/Clip-Boy/main/help/img/scan-parallel.jpg" loading="lazy" alt="Sensor face and tag face on a red line marked Parallel"><figcaption>Parallel: keep the sensor face flat to the tag's face. You can scan at any angle -- what matters is the two faces staying parallel, not level to the ground.</figcaption></figure>
+          <figure class="fig"><img src="https://raw.githubusercontent.com/SafeHazard/Clip-Boy/main/help/img/scan-alignment.png" loading="lazy" alt="On-screen scan legend aligned to the tag corners"><figcaption>Alignment: line the three on-screen corner markers up with the tag's three corners (Top Left, Top Right, Bottom Right).</figcaption></figure>
+        </li>
         <li class="item">
           <div class="q">How to Scan</div>
           <div class="a">Go to ITEMS &gt; Collectibles and tap Scan. Hold the badge about 3 in. (8 cm) from the code and line the code&#x27;s 3 corners (Top Left, Top Right, Bottom Right) up with the 3 guide boxes at the grid corners (each corner is about four squares). Hold steady until it locks. Matte codes read best; glossy ones don&#x27;t. The &#x27;Trilancer&#x27; part of your wristband is ~3&quot;/8cm.</div>
@@ -1265,7 +1274,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>b1e6607</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>5704144</code>, 2026-07-17).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
