@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Clip-Boy Help</title>
+<style>
+  :root {
+    --bg:#0b0d0a; --panel:#12160f; --panel2:#171c12; --line:#2c3a22;
+    --amber:#ffb642; --amber-dim:#c98f34; --green:#7ee081; --text:#e8dcc0;
+    --muted:#9a9070; --tagbg:#3a2a12; --tagfg:#ffcf7a;
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font:16px/1.55 ui-monospace,"Cascadia Mono",Consolas,"DejaVu Sans Mono",monospace;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  a { color:var(--amber); }
+  header {
+    position:sticky; top:0; z-index:5; background:linear-gradient(#0b0d0aee,#0b0d0acc);
+    backdrop-filter:blur(4px); border-bottom:1px solid var(--line);
+    padding:14px 16px 10px; padding-top:calc(14px + env(safe-area-inset-top));
+  }
+  h1 { margin:0; font-size:20px; letter-spacing:1px; color:var(--amber);
+        text-shadow:0 0 8px #ffb64233; }
+  .sub { margin:2px 0 10px; color:var(--muted); font-size:12.5px; }
+  #q {
+    width:100%; padding:11px 12px; font:inherit; color:var(--text);
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  }
+  #q::placeholder { color:var(--muted); }
+  #q:focus { outline:none; border-color:var(--amber-dim); box-shadow:0 0 0 2px #ffb64222; }
+  .toc { display:flex; flex-wrap:wrap; gap:7px; padding:12px 16px 4px; }
+  .chip {
+    font-size:12.5px; text-decoration:none; color:var(--amber-dim);
+    border:1px solid var(--line); border-radius:999px; padding:5px 11px; white-space:nowrap;
+  }
+  .chip:active { background:var(--panel2); }
+  main { max-width:820px; margin:0 auto; padding:6px 12px 40px; }
+  details.cat {
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    margin:10px 0; overflow:hidden;
+  }
+  summary {
+    cursor:pointer; list-style:none; padding:14px 16px; font-size:16.5px;
+    color:var(--amber); font-weight:600; letter-spacing:.4px;
+    display:flex; align-items:center; gap:10px; user-select:none;
+  }
+  summary::-webkit-details-marker { display:none; }
+  summary::before { content:"\25B8"; color:var(--amber-dim); transition:transform .15s; }
+  details[open] > summary::before { transform:rotate(90deg); }
+  ul { list-style:none; margin:0; padding:0 12px 8px; }
+  li.item { padding:11px 4px; border-top:1px solid #ffffff0d; }
+  .q { color:var(--green); font-weight:600; margin-bottom:3px; }
+  .a { color:var(--text); }
+  li.divider {
+    margin:12px 4px 2px; padding:5px 8px; color:var(--amber-dim); font-size:12px;
+    letter-spacing:2px; text-transform:uppercase; border-left:2px solid var(--amber-dim);
+    background:#ffb6420a;
+  }
+  .tag {
+    font-size:10.5px; letter-spacing:.5px; color:var(--tagfg); background:var(--tagbg);
+    border:1px solid #6a4a1a; border-radius:5px; padding:1px 6px; margin-left:8px;
+    vertical-align:middle; white-space:nowrap;
+  }
+  #noresults { display:none; color:var(--muted); text-align:center; padding:30px 10px; }
+  footer {
+    max-width:820px; margin:0 auto; padding:18px 16px 40px; color:var(--muted);
+    font-size:12px; border-top:1px solid var(--line);
+  }
+  mark { background:#ffb64244; color:#fff; border-radius:2px; }
+  @media (max-width:480px) { body { font-size:15px; } h1 { font-size:18px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>CLIP-BOY &middot; HELP</h1>
+  <div class="sub">The same in-badge Help, easier to read on a phone. Tap a section, or search.</div>
+  <input id="q" type="search" inputmode="search" autocomplete="off"
+         placeholder="Search help (e.g. scan, deauth, battery)&hellip;" aria-label="Search help">
+</header>
+<nav class="toc">
+      <a class="chip" href="#cat-0">Getting Started</a>
+      <a class="chip" href="#cat-1">Navigation</a>
+      <a class="chip" href="#cat-2">STATS</a>
+      <a class="chip" href="#cat-3">Glossary</a>
+      <a class="chip" href="#cat-4">Tutorials</a>
+      <a class="chip" href="#cat-5">Collectibles</a>
+      <a class="chip" href="#cat-6">Tools</a>
+      <a class="chip" href="#cat-7">Theremin</a>
+      <a class="chip" href="#cat-8">Radio</a>
+      <a class="chip" href="#cat-9">Radiation</a>
+      <a class="chip" href="#cat-10">LEDs</a>
+      <a class="chip" href="#cat-11">Settings</a>
+      <a class="chip" href="#cat-12">Screensaver</a>
+      <a class="chip" href="#cat-13">SD Card Mods</a>
+      <a class="chip" href="#cat-14">SAOs</a>
+      <a class="chip" href="#cat-15">Open Source</a>
+      <a class="chip" href="#cat-16">Trouble?</a>
+      <a class="chip" href="#cat-17">Battery/Power</a>
+</nav>
+<main>
+    <details class="cat" id="cat-0" open>
+      <summary>Getting Started</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Guided Tour</div>
+          <div class="a">First boot runs a quick Clip-Boy walkthrough. Replay it any time from DATA &gt; Settings &gt; Help.</div>
+        </li>
+        <li class="item">
+          <div class="q">About</div>
+          <div class="a">DATA &gt; Settings &gt; About shows your firmware build, which SKU you have, and the build date.</div>
+        </li>
+        <li class="item">
+          <div class="q">Two Builds</div>
+          <div class="a">Clip-Boy ships as Sn34k-Boy (listen-only; active transmit tools compiled out) and Res34rch-Boy (adds active research tools). Missing tools means you&#x27;re on Sn34k — by design, not a bug. About tells you which you have.</div>
+        </li>
+        <li class="item">
+          <div class="q">Reflash</div>
+          <div class="a">Update or switch builds at flash.brycebadges.com from a computer using Chrome or Edge. Avoid &#x27;Erase All Flash&#x27; — it wipes your collectibles; a normal update keeps them.</div>
+        </li>
+        <li class="item">
+          <div class="q">First-Boot Notice</div>
+          <div class="a">On first boot, and again after the terms change, scroll the security-tools notice to the end and accept it before using the badge.</div>
+        </li>
+        <li class="item">
+          <div class="q">Credits</div>
+          <div class="a">DATA &gt; Settings &gt; Credits lists the people, libraries and open-source tools behind Clip-Boy, plus the contact path for IP inquiries.</div>
+        </li>
+        <li class="item">
+          <div class="q">Legal</div>
+          <div class="a">DATA &gt; Settings &gt; Legal has the full acceptable-use and interception notice. Short version: only use the tools on hardware you own or are authorized to test.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-1">
+      <summary>Navigation</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Divisions</div>
+          <div class="a">Three divisions on the bottom bar: STATS, ITEMS, DATA. Tap to switch. The lit dot shows which is active.</div>
+        </li>
+        <li class="item">
+          <div class="q">Tabs</div>
+          <div class="a">Each division has 3 tabs along the top. Tabs change when you switch divisions.</div>
+        </li>
+        <li class="item">
+          <div class="q">Split Pane</div>
+          <div class="a">List on the left, details on right. Tap a list item to view its details.</div>
+        </li>
+        <li class="item">
+          <div class="q">Status Bar</div>
+          <div class="a">Top bar shows battery %, active task, free RAM, a WiFi icon when connected, and an FL button on the right that toggles the front-LED flashlight.</div>
+        </li>
+        <li class="item">
+          <div class="q">Flashlight</div>
+          <div class="a">Tap FL in the status bar to turn the four front LEDs to full white. Tap again to turn them off. State persists across screens.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-2">
+      <summary>STATS</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Status Page</div>
+          <div class="a">STATS &gt; Status shows the Clip-Boy mascot and totals up the stat bonuses from every collectible you&#x27;ve found.</div>
+        </li>
+        <li class="item">
+          <div class="q">L.E.E.T.</div>
+          <div class="a">STATS &gt; L.E.E.T. is the badge&#x27;s tongue-in-cheek riff on a classic RPG character-stats screen. The four rows spell it: cpu Load, mEmory (free DRAM/PSRAM), storagE (flash), upTime — live system vitals dressed as &#x27;stats&#x27;, plus battery. The CPU load is a wink, not a real reading.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-3">
+      <summary>Glossary</summary>
+      <ul>
+        <li class="item">
+          <div class="q">AP</div>
+          <div class="a">Access Point. The router-side of WiFi - the device that hands out connections.</div>
+        </li>
+        <li class="item">
+          <div class="q">BSSID</div>
+          <div class="a">The MAC address of an access point&#x27;s radio. Identifies a specific physical AP, even when two APs share an SSID.</div>
+        </li>
+        <li class="item">
+          <div class="q">SSID</div>
+          <div class="a">The name a WiFi network advertises. The thing you tap on a phone.</div>
+        </li>
+        <li class="item">
+          <div class="q">Station</div>
+          <div class="a">Any device that connects to an AP - your phone, laptop, smart bulb, etc.</div>
+        </li>
+        <li class="item">
+          <div class="q">Beacon</div>
+          <div class="a">A short broadcast packet APs send roughly 10 times per second to announce themselves.</div>
+        </li>
+        <li class="item">
+          <div class="q">Probe</div>
+          <div class="a">A request a phone or laptop sends asking &#x27;is network X here?&#x27; for every WiFi name it remembers.</div>
+        </li>
+        <li class="item">
+          <div class="q">Deauth</div>
+          <div class="a">A management frame that tells a station to disconnect from its AP. Spoofed deauths are how a device gets knocked off WiFi.</div>
+        </li>
+        <li class="item">
+          <div class="q">EAPOL</div>
+          <div class="a">The four-message handshake used when a device authenticates to a WPA/WPA2 network. Captured handshakes can be cracked offline.</div>
+        </li>
+        <li class="item">
+          <div class="q">PMKID</div>
+          <div class="a">A field optionally included in the AP&#x27;s first WPA message. Can sometimes be cracked offline without needing a station to connect.</div>
+        </li>
+        <li class="item">
+          <div class="q">RSSI</div>
+          <div class="a">Received Signal Strength Indicator. How loud an AP or station looks to your radio. Closer to zero = stronger.</div>
+        </li>
+        <li class="item">
+          <div class="q">WPA / WPA2 / WPA3</div>
+          <div class="a">Successive WiFi security protocols. WPA3 uses a different handshake (SAE) than WPA/WPA2 (EAPOL).</div>
+        </li>
+        <li class="item">
+          <div class="q">Pineapple</div>
+          <div class="a">A Hak5 product known for answering every probe request and pretending to be whatever network the phone is looking for. Also slang for any AP exhibiting that behavior.</div>
+        </li>
+        <li class="item">
+          <div class="q">Evil Twin</div>
+          <div class="a">A rogue AP that broadcasts the same SSID as a legitimate one to lure devices into connecting.</div>
+        </li>
+        <li class="item">
+          <div class="q">Captive Portal</div>
+          <div class="a">The login page some hotspots show before letting you online.</div>
+        </li>
+        <li class="item">
+          <div class="q">BLE</div>
+          <div class="a">Bluetooth Low Energy. The low-power flavor of Bluetooth used by AirTags, fitness trackers, beacons, and modern peripherals.</div>
+        </li>
+        <li class="item">
+          <div class="q">OUI</div>
+          <div class="a">Organizationally Unique Identifier. The first three bytes of a MAC address, which identify the chip vendor (Apple, Espressif, etc.).</div>
+        </li>
+        <li class="item">
+          <div class="q">pcap</div>
+          <div class="a">Packet capture file format. What Wireshark and similar tools read.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-4">
+      <summary>Tutorials</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Capture WPA Handshake (own AP)</div>
+          <div class="a">0) Enable DATA &gt; Settings &gt; Allow PCAP Saving (off by default on Sn34k) or nothing gets written to file. 1) Tools &gt; Utilities/Lists &gt; Set Channel to your AP&#x27;s channel. 2) Tools &gt; Scan &gt; APs (full), let it find your AP. 3) Tools &gt; Utilities/Lists &gt; Select AP, pick yours. 4) Tools &gt; Analyze &gt; EAPOL/PMKID, Start. 5) From another device you control on your own network, force a reconnect (toggle its WiFi off/on). 6) Stop, pull the SD card, crack the pcap with hashcat.</div>
+        </li>
+        <li class="item">
+          <div class="q">Find an AP physically</div>
+          <div class="a">1) Tools &gt; Scan &gt; APs (full), find the BSSID you care about. 2) Utilities/Lists &gt; Select AP, pick it. 3) Tools &gt; Monitor &gt; RSSI, Start. 4) Walk around and watch the dBm value: closer to 0 = closer to the AP.</div>
+        </li>
+        <li class="item">
+          <div class="q">Populate Beacon List then spam<span class="tag">Res34rch-only</span></div>
+          <div class="a">1) Tools &gt; Utilities/Lists &gt; Add SSID (type entries) or Gen Rnd SSIDs. 2) Tools &gt; Utilities/Lists &gt; List SSIDs to verify. 3) Tools &gt; Beacon Spam &gt; List, Start. Stop when bored.</div>
+        </li>
+        <li class="item">
+          <div class="q">Is something tracking me?</div>
+          <div class="a">1) Tools &gt; Detect &gt; AirTag. 2) Walk a different route. 3) An AirTag that keeps appearing across moves is the worrying signal. Use Apple&#x27;s &#x27;Find Nearby Item&#x27; on an iPhone if you have one.</div>
+        </li>
+        <li class="item">
+          <div class="q">Walk the spectrum</div>
+          <div class="a">1) Tools &gt; Monitor &gt; Channel Stats. 2) Watch the per-channel rate update live. 3) Quiet conference rooms vs. main floors look very different - calibrates your sense of &#x27;busy&#x27;.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-5">
+      <summary>Collectibles</summary>
+      <ul>
+        <li class="item">
+          <div class="q">How to Scan</div>
+          <div class="a">Go to ITEMS &gt; Collectibles and tap Scan. Hold the badge about 3 in. (8 cm) from the code and line the code&#x27;s 3 corners up with the 3 guide boxes at the grid corners (each corner is about four squares). Hold steady until it locks. Matte codes read best; glossy ones don&#x27;t.</div>
+        </li>
+        <li class="item">
+          <div class="q">Reading the Scanner</div>
+          <div class="a">The 8x8 grid is a live read-out with a legend on the right: one shade marks empty space, another marks the code surface, and a BOLD WHITE OUTLINE marks each of the 3 corners it has found (the exact colors follow your theme — read the on-screen legend). Aim to get an outlined corner into each corner of the grid. The prompt at the bottom of the panel tells you what to fix - Back up (too close), Move closer (too far), Square up &amp; hold (flatter / steadier), then Locked. It won&#x27;t lock a shaky or half-seen code. By DEFAULT it then shows you the decoded bump pattern to confirm before the item unlocks (see Verify Each Scan). The little bubble is just a level guide - you can scan at ANY angle (codes on stands are often read from above); what matters is holding the badge parallel to the code&#x27;s face, not level to the ground.</div>
+        </li>
+        <li class="item">
+          <div class="q">Scanner Calibration</div>
+          <div class="a">If scans are unreliable (odd lighting, a new surface), flat-field-calibrate the LiDAR: DATA &gt; Settings &gt; Scanner Calibration, fill the sensor&#x27;s view with a flat surface, tap Calibrate and hold ~5s. Clear reverts to defaults.</div>
+        </li>
+        <li class="item">
+          <div class="q">Verify Each Scan</div>
+          <div class="a">On by default (DATA &gt; Settings &gt; Verify each scan). After a scan locks, the badge shows the decoded 4x4 bump pattern on a CONFIRM SCAN grid so you can check it before the item unlocks: tap Confirm to accept, or tap cells to fix a mis-read bump, then Confirm. Turn it off to unlock the instant a scan locks (faster, but no safety net).</div>
+        </li>
+        <li class="item">
+          <div class="q">Manual Entry</div>
+          <div class="a">For a tag that won&#x27;t scan (worn, glossy, awkward angle), hand-enter its pattern instead: on the Scan screen tap MANUAL ENTRY, or press and HOLD the Scan button (~1s). Read the tag&#x27;s raised bumps into the 4x4 grid, then Confirm — it unlocks just like a scan.</div>
+        </li>
+        <li class="item">
+          <div class="q">Fix a Wrong Result</div>
+          <div class="a">If a scan or manual entry unlocks the wrong item, tap &#x27;Not this? Fix&#x27; on the reveal to undo it. It only removes the item that scan/entry just added — it can never erase something you already had.</div>
+        </li>
+        <li class="item">
+          <div class="q">Rarity Tiers</div>
+          <div class="a">Four tiers in order of rarity: Common, Rare, Legendary, and 0-Day. 0-Day is the rarest — the ones that make you ask &#x27;why did you do this.&#x27;</div>
+        </li>
+        <li class="item">
+          <div class="q">Locked Items</div>
+          <div class="a">Uncollected items show &#x27;??? Locked&#x27;. Find HR codes around the CON to unlock them.</div>
+        </li>
+        <li class="item">
+          <div class="q">Stat Bonuses</div>
+          <div class="a">Collected items grant stat bonuses visible on STATS &gt; Status page.</div>
+        </li>
+        <li class="item">
+          <div class="q">SD Modding</div>
+          <div class="a">Drop a collectibles.csv and 200x200 .a8 images on the SD card to add or override items. See the SD Card Mods section for format details.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-6">
+      <summary>Tools</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Overview</div>
+          <div class="a">Wireless recon and analysis tools forked from the ESP32 Marauder project. Includes WiFi scanning (APs, stations, beacons, probes), detection of deauth frames and pwnagotchi devices, Bluetooth/BLE scanning, packet capture, plus joining a WiFi network and managing saved networks. Each tool has a More Info panel with details.</div>
+        </li>
+        <li class="item">
+          <div class="q">Active Research !<span class="tag">Res34rch-only</span></div>
+          <div class="a">Tools whose name starts with &#x27;!&#x27; are active research tools - they transmit frames that can disrupt, spoof, or annoy other devices, so they are for authorized testing only. Per-tool guidance is in each tool&#x27;s More Info.</div>
+        </li>
+        <li class="item">
+          <div class="q">Categories</div>
+          <div class="a">Tap a category header to expand or collapse it. Tap a tool to open its detail page; tap Start (or Scan) on that page to actually run it. Output appears in the right pane.</div>
+        </li>
+        <li class="item">
+          <div class="q">WiFi</div>
+          <div class="a">WiFi is off by default to save power. It turns on automatically when you start a scan and turns off again when the scan stops.</div>
+        </li>
+        <li class="item">
+          <div class="q">Live Table</div>
+          <div class="a">During AP, station or Bluetooth scans (the Scan tools, Analyze &gt; Beacons/Espressif, and Detect &gt; Skimmer Check) the output pane has a Live Devices (table) button that opens a full-screen, Wireshark-style table: columns for type, signal, channel and name. Tap a row for its full detail; use &lt; PREV / NEXT &gt; to step through results, or LATEST to follow the newest as they arrive.</div>
+        </li>
+        <li class="item">
+          <div class="q">Network Names</div>
+          <div class="a">SSIDs and device names render in the badge&#x27;s terminal font, which covers Latin, accented, Greek, Cyrillic and common symbols, plus a small set of popular emoji. A glyph it can&#x27;t draw (other emoji, CJK) shows as a hollow box. Control, zero-width or text-direction characters - tricks used to spoof or hide text - show as a solid box and turn the whole name red. That&#x27;s on purpose, so an oddball or hostile name can&#x27;t draw fake or hidden text on screen.</div>
+        </li>
+        <li class="item">
+          <div class="q">Airplane Mode</div>
+          <div class="a">When airplane mode is on, tools that need WiFi or Bluetooth show a confirm dialog before launching. Choose Turn Off to disable airplane and re-tap the tool to launch it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Responsible Use</div>
+          <div class="a">Use these tools only on hardware you own or are authorized to touch. Per-tool guidance is in each tool&#x27;s More Info.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-7">
+      <summary>Theremin</summary>
+      <ul>
+        <li class="item">
+          <div class="q">How to Play</div>
+          <div class="a">Pick a waveform for at least one band on the left. Tap Enable, then move a hand over that band of the LiDAR. Closer hand = higher pitch.</div>
+        </li>
+        <li class="item">
+          <div class="q">Voice Zones</div>
+          <div class="a">The LiDAR grid is split into 4 vertical bands left-to-right (L, CL, CR, R). Each band can drive its own voice. Hand height inside a band sets pitch.</div>
+        </li>
+        <li class="item">
+          <div class="q">Waveforms</div>
+          <div class="a">Each voice can be None, Sine, Square, Saw, or Triangle. Changes save immediately.</div>
+        </li>
+        <li class="item">
+          <div class="q">Bars + Readouts</div>
+          <div class="a">Each bar fills downward as your hand approaches. Numbers under each bar show distance (mm) and frequency (Hz) for that band. OFF = no voice loaded; --- = voice loaded but no hand detected.</div>
+        </li>
+        <li class="item">
+          <div class="q">Volume</div>
+          <div class="a">Slider sets loudness. Distance affects pitch only — not volume — so notes stay even across the play range. The Settings volume slider stays in sync.</div>
+        </li>
+        <li class="item">
+          <div class="q">Hold on Dropout</div>
+          <div class="a">If the sensor briefly loses your hand, the last note holds for ~100 ms before going silent. Smooths over single-frame sensor blinks during play.</div>
+        </li>
+        <li class="item">
+          <div class="q">Tuning (k + ag)</div>
+          <div class="a">Under the Enable button. k = how many sensors must agree before a band fires (1=fastest, 8=strictest, default 2). ag = max distance spread allowed among those sensors (5-50mm, default 20). Bigger k or smaller ag rejects glitches but needs a more solid hand presentation.</div>
+        </li>
+        <li class="item">
+          <div class="q">Shared Sensor</div>
+          <div class="a">Theremin and HR code scanner share the VL53L5CX LiDAR. Only one can be active at a time. Leaving the Theremin tab disables it automatically.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-8">
+      <summary>Radio</summary>
+      <ul>
+        <li class="item">
+          <div class="q">SegFault-Tec FM</div>
+          <div class="a">A working radio hiding in ITEMS &gt; SAOs. Tap &#x27;Whether Radio&#x27; (the one SAO that isn&#x27;t a joke) to open the dial.</div>
+        </li>
+        <li class="item">
+          <div class="q">Stations</div>
+          <div class="a">Five stations along the dial. One is always live; the rest unlock as your collectible count climbs — the rarest signal only after you&#x27;ve collected most of the set.</div>
+        </li>
+        <li class="item">
+          <div class="q">Tuning In</div>
+          <div class="a">Drag the tuning dial to a station&#x27;s mark. It&#x27;s forgiving: get close and hold steady, or release near the mark, and it snaps in. See Settings &gt; Radio Tuning to make stations lock instantly instead.</div>
+        </li>
+        <li class="item">
+          <div class="q">The Scope</div>
+          <div class="a">The oscilloscope shows the tuned signal&#x27;s shape — voice, music, numbers, or dead air — and reacts as audio plays.</div>
+        </li>
+        <li class="item">
+          <div class="q">Transcript</div>
+          <div class="a">Some stations carry a Transcript button. Tap it for a scrollable readout of what&#x27;s playing — captions for every clip, updated live, so the audio is never the only way in.</div>
+        </li>
+        <li class="item">
+          <div class="q">Volume + Leaving</div>
+          <div class="a">The dial&#x27;s volume slider stays in sync with the main Volume setting. Leaving the radio (Back, or any nav) stops playback.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-9">
+      <summary>Radiation</summary>
+      <ul>
+        <li class="item">
+          <div class="q">What It Is</div>
+          <div class="a">Not a real Geiger counter. Detects WiFi deauthentication packets in the area.</div>
+        </li>
+        <li class="item">
+          <div class="q">The Gauge</div>
+          <div class="a">The arc gauge rises as deauth packet rate increases. Think of it as measuring local chaos.</div>
+        </li>
+        <li class="item">
+          <div class="q">Geiger Audio</div>
+          <div class="a">The gauge also clicks like a Geiger counter — faster ticks as the deauth rate climbs, across five levels. Honors the Volume slider and goes silent on Mute.</div>
+        </li>
+        <li class="item">
+          <div class="q">Start/Stop</div>
+          <div class="a">STATS &gt; Radiation. Tap Start to begin monitoring, Stop to end.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-10">
+      <summary>LEDs</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Fuse Lights</div>
+          <div class="a">The four fuse and edison lights on the side, labeled by corner — Fuse TL, BL, TR, BR — inspired by 1950s retro-future aesthetics.</div>
+        </li>
+        <li class="item">
+          <div class="q">Front LEDs</div>
+          <div class="a">Front 1-4 are on the front of the enclosure (left to right). The Flashlight (FL) status-bar button overrides whatever color/animation these are set to and forces them to full white until you toggle it off.</div>
+        </li>
+        <li class="item">
+          <div class="q">Controls</div>
+          <div class="a">Color (RGB sliders) and brightness editing is part of the Custom theme: on the All LEDs row pick Custom. That screen then gives you one master set of brightness/color/animation controls that drive every LED at once; tap any individual LED in the list to fine-tune just that one. Built-in presets drive all LEDs together.</div>
+        </li>
+        <li class="item">
+          <div class="q">Animations</div>
+          <div class="a">None (static color), Breathe (sinusoidal pulse), or Chase (rotating palette). Speed: 1=slow (10s), 10=fast (2s).</div>
+        </li>
+        <li class="item">
+          <div class="q">Chase Mode</div>
+          <div class="a">Colors crossfade smoothly between chase-enabled LEDs. Fuse LEDs chase in warp-core order (through the fiber optic pairs). Speed uses the slowest chase LED.</div>
+        </li>
+        <li class="item">
+          <div class="q">All LEDs</div>
+          <div class="a">Chase Speed slider sets the pace for all 8 LEDs (Tunnel Runner = fastest ... Severely Overburdened = slowest); it sticks when you switch presets. Presets apply a color scheme to all 8 at once: Mojave (amber chase), Ribbit City (green chase), Flashbang (white chase), Rainbow (ROYGBIV chase), Custom (unlocks the master + per-LED editing — see Controls), Off.</div>
+        </li>
+        <li class="item">
+          <div class="q">Default</div>
+          <div class="a">Out of the box, LEDs use the Mojave amber chase preset.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-11">
+      <summary>Settings</summary>
+      <ul>
+        <li class="divider">DISPLAY</li>
+        <li class="item">
+          <div class="q">Themes</div>
+          <div class="a">Mojave: amber. Ribbit City: green. Flashbang: black on white (bring sunglasses). A fourth, Custom, unlocks once you&#x27;ve found every collectible — pick any hue from a color picker and the whole palette derives itself.</div>
+        </li>
+        <li class="item">
+          <div class="q">Brightness</div>
+          <div class="a">Slider sets the display backlight brightness from 10% to 100%. Reading from a meter? You&#x27;re stalling.</div>
+        </li>
+        <li class="item">
+          <div class="q">Terminal Text</div>
+          <div class="a">Sets the font size of the tool scan/output log: Small, Medium or Large. Larger is easier on the eyes; smaller fits more lines on screen.</div>
+        </li>
+        <li class="divider">AUDIO</li>
+        <li class="item">
+          <div class="q">Volume</div>
+          <div class="a">Slider sets the audio output volume. Drives the theremin and any audio cues. Stays in sync with the slider on the Theremin page.</div>
+        </li>
+        <li class="item">
+          <div class="q">Mute</div>
+          <div class="a">Switch hard-mutes audio output regardless of the Volume slider position. Volume is preserved when you unmute.</div>
+        </li>
+        <li class="item">
+          <div class="q">Tap Sounds</div>
+          <div class="a">Click feedback when you tap buttons and controls. Turn off to silence taps while keeping theremin, geiger and other audio. Mute overrides this.</div>
+        </li>
+        <li class="item">
+          <div class="q">Scanning Sounds</div>
+          <div class="a">Plays an ambient tone bed while the Collectibles HR-code scanner is searching, so you can tell it&#x27;s working without watching the screen. Turn off to scan silently. Respects Volume and Mute.</div>
+        </li>
+        <li class="item">
+          <div class="q">Unlock Tone</div>
+          <div class="a">Plays a rising tone while you hold to unlock the screensaver, so you know the badge heard you. Pitch climbs as the bar fills, with a chirp when it unlocks. Respects Volume and Mute.</div>
+        </li>
+        <li class="divider">SCREEN &amp; CRT</li>
+        <li class="item">
+          <div class="q">Screensaver</div>
+          <div class="a">Two rows: &#x27;Screensaver&#x27; is the timeout (15s to Never), &#x27;Screensaver Style&#x27; picks Clip-Boy mascot or Blank.</div>
+        </li>
+        <li class="item">
+          <div class="q">Idle Brightness</div>
+          <div class="a">Slider (1-100%) sets how dim the Clip-Boy mascot gets when the screensaver is up. Default 10%. Has no effect when Style is Blank (which always goes fully dark).</div>
+        </li>
+        <li class="item">
+          <div class="q">Dim LEDs When Idle</div>
+          <div class="a">When on, the NeoPixels turn off as the screensaver activates. They come back when you wake the screen. Off by default — the badge looks more alive on a shelf with the LEDs running through the screensaver.</div>
+        </li>
+        <li class="item">
+          <div class="q">CRT Scanlines</div>
+          <div class="a">Adds semi-transparent horizontal lines over the display for a retro CRT look. Toggle on/off.</div>
+        </li>
+        <li class="item">
+          <div class="q">CRT V-Roll</div>
+          <div class="a">Occasionally the display slips vertically like a CRT losing V-sync, then snaps back. Random 1-10 min intervals.</div>
+        </li>
+        <li class="divider">SYSTEM</li>
+        <li class="item">
+          <div class="q">Verify Each Scan</div>
+          <div class="a">On by default. After a Collectibles scan locks, the badge shows the decoded bump pattern to confirm (or correct) before the item unlocks. Turn off to unlock the instant a scan locks. Full detail under ITEMS &gt; Collectibles &gt; Verify Each Scan.</div>
+        </li>
+        <li class="item">
+          <div class="q">Help Button</div>
+          <div class="a">When on, a &#x27;?&#x27; icon appears in the status bar that opens this Help system from anywhere. On by default. Toggle off if you find it distracting.</div>
+        </li>
+        <li class="item">
+          <div class="q">Radio Tuning</div>
+          <div class="a">Controls the radio&#x27;s tune-in feel. Disabled: stations lock the moment you pick them — set it here if you&#x27;d rather skip the dial. Once Per Boot: tune each station in once per power-up, then it stays locked. Every Access: re-tune every time. The dial is forgiving — get close and hold, or release near the mark, and it snaps in.</div>
+        </li>
+        <li class="item">
+          <div class="q">Radio Alerts</div>
+          <div class="a">When on, the badge nudges you to check the SegFault-Tec FM radio and pops a note when your collectibles unlock a new station. Turn off to silence both — you can turn it back on here any time.</div>
+        </li>
+        <li class="item">
+          <div class="q">Airplane Mode</div>
+          <div class="a">Disables WiFi and Bluetooth. Tools that need radios are blocked until you turn it back off.</div>
+        </li>
+        <li class="item">
+          <div class="q">Exclusive Input</div>
+          <div class="a">When on, the touchscreen locks while you are driving an interactive puzzle from a serial terminal — so touch and serial can&#x27;t fight each other. A &#x27;TERMINAL MODE&#x27; overlay appears; it clears when the serial session ends, or press and HOLD the overlay for 2 seconds to unlock by hand (use that if your terminal disconnects mid-session).</div>
+        </li>
+        <li class="item">
+          <div class="q">Allow PCAP Saving</div>
+          <div class="a">Off by default on Sn34k-Boy. Turn on to let packet-capture tools (Analyze &gt; Raw/PCAP, Analyze &gt; EAPOL/PMKID) write a .pcap file to the SD card — or to internal storage if no card is present. Required for the Capture WPA Handshake workflow; with it off, captures produce no file.</div>
+        </li>
+        <li class="divider">POWER &amp; RESET</li>
+        <li class="item">
+          <div class="q">Backup Progress</div>
+          <div class="a">Settings &gt; Backup Progress to SD writes your collectible finds AND your ARG puzzle progress to /collectibles.sav. The backup is tied to THIS badge — it restores here but not on another badge (so it can&#x27;t be shared to skip the puzzles). SD card format: a 1 GB FAT partition works. Larger partitions may work but are untested; multi-partition cards are unknown.</div>
+        </li>
+        <li class="item">
+          <div class="q">Restore Progress</div>
+          <div class="a">Settings &gt; Restore Progress from SD loads /collectibles.sav. It&#x27;s validated first — corrupt files, or a backup made on a DIFFERENT badge, are rejected — then you choose MERGE (keep your progress AND add the file&#x27;s) or OVERWRITE (replace yours with the file&#x27;s — back up first if unsure). Same SD format as Backup (1 GB FAT).</div>
+        </li>
+        <li class="item">
+          <div class="q">Charge with lights off</div>
+          <div class="a">Charges the badge with the screen and every NeoPixel dark — only the hardware charge LED stays lit — so you can top up on a shelf without the light show. Tap it, confirm, and the badge goes dark; press and HOLD the screen to wake it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Resets</div>
+          <div class="a">Reset Collectibles: marks all as uncollected. Reset All Settings: factory reset and reboot — this ALSO clears your collected items (they return to locked). Both at the bottom of Settings with confirmation dialogs.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-12">
+      <summary>Screensaver</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Timeout</div>
+          <div class="a">Settings &gt; Screensaver (the timeout dropdown, top of the screensaver block) controls how long the screen stays bright before the saver kicks in. Options: 15s, 30s, 60s, 2m, 5m, or Never.</div>
+        </li>
+        <li class="item">
+          <div class="q">Styles</div>
+          <div class="a">Settings &gt; Screensaver Style: Clip-Boy shows a dim mascot; Blank goes fully dark.</div>
+        </li>
+        <li class="item">
+          <div class="q">Idle Brightness</div>
+          <div class="a">Settings &gt; Idle Brightness sets how dim the Clip-Boy mascot gets (1-100%, default 10%). The slider greys out when Style is Blank since it has no effect there.</div>
+        </li>
+        <li class="item">
+          <div class="q">Wake Up</div>
+          <div class="a">Tap and HOLD for 2 seconds to unlock. The progress bar fills as you hold. The hold prevents accidental pocket wakes.</div>
+        </li>
+        <li class="item">
+          <div class="q">LED Behavior</div>
+          <div class="a">By default, the NeoPixels keep running through the screensaver. Enable Settings &gt; Dim LEDs when idle if you&#x27;d rather have them turn off with the screen and restore on wake.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-13">
+      <summary>SD Card Mods</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Custom Items</div>
+          <div class="a">Place collectibles.csv at the SD card root. Same CSV format as built-in data: ID, Title, Source, Tier, Description, then up to three Mod/Stat pairs.</div>
+        </li>
+        <li class="item">
+          <div class="q">Custom Images</div>
+          <div class="a">Drop raw 200x200 A8 files at /images/&lt;id&gt;.a8 on the SD card, where &lt;id&gt; is the collectible&#x27;s numeric ID. Convert PNG to A8 with data/png_to_a8.py.</div>
+        </li>
+        <li class="item">
+          <div class="q">Load Priority</div>
+          <div class="a">SD card overrides LittleFS overrides built-in PROGMEM. Matching IDs get replaced; new IDs get added. Reboot to pick up changes.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-14">
+      <summary>SAOs</summary>
+      <ul>
+        <li class="item">
+          <div class="q">SAOs</div>
+          <div class="a">The dim items under ITEMS &gt; SAOs are jokes about gear that doesn&#x27;t exist — enjoy the descriptions. The one exception is &#x27;Whether Radio&#x27; (not dimmed): tap it to open a real radio. See the Radio section.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-15">
+      <summary>Open Source</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Source Code</div>
+          <div class="a">Clip-Boy is open source. The full firmware lives at github.com/SafeHazard/Clip-Boy — clone it, read it, learn from it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Make It Yours</div>
+          <div class="a">Fork the repo, mod the code, flash your own build. Lighter-weight mods (custom collectibles + images) need no rebuild at all — see SD Card Mods.</div>
+        </li>
+        <li class="item">
+          <div class="q">Contribute</div>
+          <div class="a">Found a bug or built something cool? Open an issue or a pull request on the repo. This badge got better because people shared.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-16">
+      <summary>Trouble?</summary>
+      <ul>
+        <li class="item">
+          <div class="q">First Boot</div>
+          <div class="a">Initial boot takes around 10 seconds while SPIFFS and LittleFS format. The screen may stay blank during this; that&#x27;s expected.</div>
+        </li>
+        <li class="item">
+          <div class="q">Boot Screen</div>
+          <div class="a">The retro POST screen shows real system info while the badge initializes. If it hangs there for more than ~30 seconds, something has actually gone wrong - try a power cycle.</div>
+        </li>
+        <li class="item">
+          <div class="q">Frozen Display</div>
+          <div class="a">Hold the power button to force reboot. If that doesn&#x27;t work, plug in USB-C to give the watchdog something to chew on, or wait for battery drain.</div>
+        </li>
+        <li class="item">
+          <div class="q">Reset Settings</div>
+          <div class="a">Settings &gt; Reset All Settings restores factory defaults and reboots. Your collected-state bitfield is wiped too - items you&#x27;ve found will return to locked.</div>
+        </li>
+        <li class="item">
+          <div class="q">Serial Debug</div>
+          <div class="a">USB-C serial at 115200 baud, 8N1. Useful for catching boot logs and runtime debug output.</div>
+        </li>
+      </ul>
+    </details>
+    <details class="cat" id="cat-17">
+      <summary>Battery/Power</summary>
+      <ul>
+        <li class="item">
+          <div class="q">Battery Life</div>
+          <div class="a">2200mAh 3.7V LiPo. Percentage shown in the status bar. Charge via USB-C.</div>
+        </li>
+        <li class="item">
+          <div class="q">Power Saving</div>
+          <div class="a">Use Airplane Mode, lower brightness, set a short screensaver timeout, and disable LEDs or set them to Off.</div>
+        </li>
+      </ul>
+    </details>
+  <div id="noresults">No help topics match that search.</div>
+</main>
+<footer>
+  Generated from the Clip-Boy firmware Help corpus (commit <code>68e159b</code>, 2026-07-17).
+  Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
+  This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
+</footer>
+<script>
+(function(){
+  var q = document.getElementById('q');
+  var cats = Array.prototype.slice.call(document.querySelectorAll('details.cat'));
+  var none = document.getElementById('noresults');
+  var openState = null;
+  function clearMarks(el){
+    el.querySelectorAll('mark').forEach(function(m){
+      m.replaceWith(document.createTextNode(m.textContent));
+    });
+  }
+  function run(){
+    var term = q.value.trim().toLowerCase();
+    if(!term){
+      if(openState){ cats.forEach(function(c,i){ c.open = openState[i]; }); openState=null; }
+      cats.forEach(function(c){
+        c.style.display='';
+        c.querySelectorAll('li.item,li.divider').forEach(function(li){ li.style.display=''; clearMarks(li); });
+      });
+      none.style.display='none';
+      return;
+    }
+    if(!openState){ openState = cats.map(function(c){ return c.open; }); }
+    var anyCat = false;
+    cats.forEach(function(c){
+      var anyItem = false;
+      c.querySelectorAll('li.item').forEach(function(li){
+        clearMarks(li);
+        var hit = li.textContent.toLowerCase().indexOf(term) !== -1;
+        li.style.display = hit ? '' : 'none';
+        if(hit){ anyItem = true; }
+      });
+      // Dividers only show when the section has visible items.
+      c.querySelectorAll('li.divider').forEach(function(d){ d.style.display = anyItem ? '' : 'none'; });
+      c.style.display = anyItem ? '' : 'none';
+      c.open = anyItem;
+      if(anyItem){ anyCat = true; }
+    });
+    none.style.display = anyCat ? 'none' : '';
+  }
+  q.addEventListener('input', run);
+})();
+</script>
+</body>
+</html>
