@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Clip-Boy</title>
+<style>
+  :root{--bg:#0b0d0a;--panel:#12160f;--line:#2c3a22;--amber:#ffb642;--amber-dim:#c98f34;--green:#7ee081;--text:#e8dcc0;--muted:#9a9070;}
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 ui-monospace,"Cascadia Mono",Consolas,"DejaVu Sans Mono",monospace;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:32px 16px calc(32px + env(safe-area-inset-bottom));}
+  header{text-align:center;max-width:620px;margin-bottom:26px;}
+  h1{margin:0;font-size:34px;letter-spacing:2px;color:var(--amber);text-shadow:0 0 10px #ffb64233;}
+  .tag{color:var(--muted);font-size:14px;margin-top:8px;}
+  main{width:100%;max-width:620px;display:flex;flex-direction:column;gap:12px;}
+  a.card{display:block;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:border-color .15s,transform .05s;}
+  a.card:hover{border-color:var(--amber-dim);}
+  a.card:active{transform:translateY(1px);}
+  .row{display:flex;align-items:center;gap:14px;}
+  .ic{font-size:26px;line-height:1;flex:0 0 auto;}
+  .t{font-size:18px;color:var(--amber);font-weight:600;letter-spacing:.4px;}
+  .d{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .soon{color:var(--amber-dim);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:1px 7px;margin-left:8px;vertical-align:middle;white-space:nowrap;}
+  footer{color:var(--muted);font-size:12px;margin-top:26px;text-align:center;}
+  footer a{color:var(--amber-dim);}
+  @media (max-width:480px){h1{font-size:27px;} .t{font-size:16.5px;}}
+</style>
+</head>
+<body>
+<header>
+  <h1>CLIP-BOY</h1>
+  <div class="tag">A DEFCON badge with a Pip-Boy soul. Pick a door.</div>
+</header>
+<main>
+  <a class="card" href="./help/">
+    <div class="row"><span class="ic">&#128214;</span><div>
+      <div class="t">Help</div>
+      <div class="d">The full badge manual, phone-friendly &mdash; searchable, with scan tips and a tool reference.</div>
+    </div></div>
+  </a>
+  <a class="card" href="./postcon/">
+    <div class="row"><span class="ic">&#129513;</span><div>
+      <div class="t">Post-Con Companion <span class="soon">after DEF CON 34</span></div>
+      <div class="d">Tag tracker + printable HR codes + puzzle-finale helper. Goes live once the con is over.</div>
+    </div></div>
+  </a>
+  <a class="card" href="https://github.com/SafeHazard/Clip-Boy">
+    <div class="row"><span class="ic">&#128190;</span><div>
+      <div class="t">Source</div>
+      <div class="d">Open-source firmware (GPLv3). Read it, fork it, flash your own.</div>
+    </div></div>
+  </a>
+  <a class="card" href="https://brycebadges.com">
+    <div class="row"><span class="ic">&#128737;</span><div>
+      <div class="t">Get your own</div>
+      <div class="d">Want a Clip-Boy of your very own? &rarr; brycebadges.com</div>
+    </div></div>
+  </a>
+</main>
+<footer>
+  Fan-made parody. Properties &copy; their respective owners. &middot; <a href="./acceptable_use.md">Acceptable Use</a>
+</footer>
+</body>
+</html>
