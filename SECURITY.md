@@ -40,7 +40,7 @@ download still verifies against it), but they are not publicly downloadable.
 2. Check the signature against our public key, then the file hashes:
 
 ```sh
-minisign -Vm SHA256SUMS -P RWTwvRbAZLliH6TNR1sxTn3IYHXVlx2tEBNTwSE4MeCoe0WKxFdfTu3N
+minisign -Vm SHA256SUMS -P RWS3nF/cRYZf3xN3Z9KSkNbKdGcOzcAIzm5+9bkUpmrO361rt8lkhlOa
 sha256sum -c SHA256SUMS        # or: shasum -a 256 -c SHA256SUMS  (macOS)
 ```
 
@@ -56,7 +56,7 @@ reproducible builds below are the real anchors.)
 ### Trust anchor — the release public key
 
 ```
-RWTwvRbAZLliH6TNR1sxTn3IYHXVlx2tEBNTwSE4MeCoe0WKxFdfTu3N
+RWS3nF/cRYZf3xN3Z9KSkNbKdGcOzcAIzm5+9bkUpmrO361rt8lkhlOa
 ```
 
 Committed at [`keys/clipboy-release.pub`](keys/clipboy-release.pub). For
