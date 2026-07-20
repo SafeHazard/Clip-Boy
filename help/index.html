@@ -116,7 +116,7 @@
       <ul>
         <li class="item">
           <div class="q">Guided Tour</div>
-          <div class="a">First boot runs a quick Clip-Boy walkthrough. Replay it any time from DATA &gt; Settings &gt; Help.</div>
+          <div class="a">First boot runs a quick Clip-Boy walkthrough. Replay it any time from DATA &gt; Settings &gt; Help, then tap Tour.</div>
         </li>
         <li class="item">
           <div class="q">About</div>
@@ -194,7 +194,7 @@
         </li>
         <li class="item">
           <div class="q">Status Bar</div>
-          <div class="a">Top bar shows battery %, active task, free RAM, a WiFi icon when connected, and an FL button on the right that toggles the front-LED flashlight.</div>
+          <div class="a">Top bar shows battery %, active task, free RAM, a WiFi icon when connected, a ? icon that opens this Help, and an FL button on the right that toggles the front-LED flashlight.</div>
         </li>
         <li class="item">
           <div class="q">Flashlight</div>
@@ -301,7 +301,7 @@
         </li>
         <li class="item">
           <div class="q">Populate Beacon List then spam<span class="tag">Res34rch-only</span></div>
-          <div class="a">1) Tools &gt; Utilities/Lists &gt; Add SSID (type entries) or Gen Rnd SSIDs. 2) Tools &gt; Utilities/Lists &gt; List SSIDs to verify. 3) Tools &gt; Beacon Spam &gt; List, Start. Stop when bored.</div>
+          <div class="a">1) Tools &gt; Utilities/Lists &gt; Add SSID (type entries) or Gen Rnd SSIDs. 2) Tools &gt; Utilities/Lists &gt; List SSIDs to verify. 3) Tools &gt; Beacon Spam &gt; List, Start; keep it short and only with obviously-fake SSIDs.</div>
         </li>
         <li class="item">
           <div class="q">Is something tracking me?</div>
@@ -388,6 +388,10 @@
           <div class="a">Tools whose name starts with &#x27;!&#x27; are active research tools - they transmit frames that can disrupt, spoof, or annoy other devices, so they are for authorized testing only. Per-tool guidance is in each tool&#x27;s More Info.</div>
         </li>
         <li class="item">
+          <div class="q">BLE Spam &quot;All&quot;<span class="tag">Res34rch-only</span></div>
+          <div class="a">Known limitation: BLE Spam &gt; All (which cycles every Bluetooth spam type at once) can be slow or briefly unresponsive to start - a quirk of driving all payloads on the shared WiFi/BT radio. If it doesn&#x27;t start within a few seconds, back out and pick a single spam type instead: Sour Apple, Swiftpair, Samsung, Google, and Flipper all start instantly.</div>
+        </li>
+        <li class="item">
           <div class="q">Categories</div>
           <div class="a">Tap a category header to expand or collapse it. Tap a tool to open its detail page; tap Start (or Scan) on that page to actually run it. Output appears in the right pane.</div>
         </li>
@@ -397,7 +401,7 @@
         </li>
         <li class="item">
           <div class="q">Live Table</div>
-          <div class="a">During AP, station or Bluetooth scans (the Scan tools, Analyze &gt; Beacons/Espressif, and Detect &gt; Skimmer Check) the output pane has a Live Devices (table) button that opens a full-screen, Wireshark-style table: columns for type, signal, channel and name. Tap a row for its full detail; use &lt; PREV / NEXT &gt; to step through results, or LATEST to follow the newest as they arrive.</div>
+          <div class="a">During AP, station or Bluetooth scans (the Scan tools except BLE Adverts, Analyze &gt; Beacons/Espressif, and Detect &gt; Skimmer Check) the output pane has a Live Devices (table) button that opens a full-screen, Wireshark-style table: columns for type, signal, channel and name. Tap a row for its full detail; use &lt; PREV / NEXT &gt; to step through results, or LATEST to follow the newest as they arrive.</div>
         </li>
         <li class="item">
           <div class="q">Network Names</div>
@@ -616,6 +620,7 @@
           <div class="q">Allow PCAP Saving</div>
           <div class="a">Off by default on Sn34k-Boy. Turn on to let packet-capture tools (Analyze &gt; Raw/PCAP, Analyze &gt; EAPOL/PMKID) write a .pcap file to the SD card — or to internal storage if no card is present. Required for the Capture WPA Handshake workflow; with it off, captures produce no file.</div>
         </li>
+        <li class="divider">INFO</li>
         <li class="divider">POWER &amp; RESET</li>
         <li class="item">
           <div class="q">Backup Progress</div>
@@ -733,6 +738,10 @@
         <li class="item">
           <div class="q">Serial Debug</div>
           <div class="a">Plug in USB-C and open a serial terminal at 115200 baud, 8 data bits, no parity, 1 stop bit (8N1). Good for boot logs and runtime output — and it&#x27;s how the ARG&#x27;s terminal puzzles talk to the badge. New to serial? On Windows try PuTTY or Tera Term; on macOS/Linux run &#x27;screen /dev/tty.usbmodem* 115200&#x27; or use minicom; or the Serial Monitor built into the Arduino IDE (cross-platform). Pick the COM/tty port that appears when you plug the badge in.</div>
+        </li>
+        <li class="item">
+          <div class="q">PCAP capture is getting slow</div>
+          <div class="a">Captures save to /pcaps on the SD card. The card searches that folder every time it saves, so once you have thousands of .pcap files each new capture takes longer — the badge warns you at 500+ and again at 5000+, and with several thousand the screen can stutter. This only hits heavy users; a handful of captures is fine. Fix: put the card in a computer, copy the .pcap files off /pcaps, then delete them. The badge renumbers automatically from a clean folder — nothing is harmed, it&#x27;s just housekeeping.</div>
         </li>
       </ul>
     </details>
@@ -937,7 +946,7 @@
           <div class="a">Capture WPA handshakes for offline analysis. Select target AP.</div>
           <div class="tif"><b>What:</b> Captures WPA/WPA2 4-way handshakes (EAPOL) or PMKIDs from a selected network. These can be used offline to attempt to recover the network&#x27;s password by guessing (an offline dictionary run).</div>
           <div class="tif"><b>Setup:</b> Select the AP first (Utilities/Lists &gt; Select AP). WiFi antenna enabled. SD card recommended for the pcap output. REQUIRES DATA &gt; Settings &gt; Allow PCAP Saving = ON, or nothing is written.</div>
-          <div class="tif"><b>You'll see:</b> Capture saved to SD (or internal storage) as /raw_&lt;n&gt;.pcap. You need to actually crack the file offline with hashcat or similar - the badge doesn&#x27;t do the cracking. Success criteria: a complete EAPOL handshake needs all four messages (M1-M4) from the same MAC pair to be crackable; M1+M2 alone is a partial and won&#x27;t crack. PMKID is opportunistic and can come from the AP alone, no station required. EAPOL needs a station to (re)authenticate during your capture window - on a network you own, briefly toggle a device&#x27;s WiFi off/on yourself to force a reconnect.</div>
+          <div class="tif"><b>You'll see:</b> Capture saved to the SD card (or internal storage) as /pcaps/&lt;name&gt;_&lt;n&gt;.pcap. You need to actually crack the file offline with hashcat or similar - the badge doesn&#x27;t do the cracking. Success criteria: a complete EAPOL handshake needs all four messages (M1-M4) from the same MAC pair to be crackable; M1+M2 alone is a partial and won&#x27;t crack. PMKID is opportunistic and can come from the AP alone, no station required. EAPOL needs a station to (re)authenticate during your capture window - on a network you own, briefly toggle a device&#x27;s WiFi off/on yourself to force a reconnect.</div>
           <div class="tif"><b>Use responsibly:</b> Only run against networks you own or have explicit written authorization to test. Cracking WPA on someone else&#x27;s AP is a crime in most places.</div>
         </li>
         <li class="divider">Utilities/Lists</li>
@@ -1172,8 +1181,8 @@
         </li>
         <li class="item">
           <div class="q">! All<span class="tag">Res34rch-only</span></div>
-          <div class="a">Spam all BT notification types at once.</div>
-          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Runs all five BT spam variants at once (Sour Apple, Swiftpair, Samsung, Google, Flipper). Maximum disruption for demonstration purposes - affects every nearby phone simultaneously.</div>
+          <div class="a">Spam all BT types at once. May be slow to start - if it hangs, use a single type.</div>
+          <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Runs all five BT spam variants at once (Sour Apple, Swiftpair, Samsung, Google, Flipper). Maximum disruption for demonstration purposes - affects every nearby phone simultaneously. KNOWN LIMITATION: this &#x27;All&#x27; mode can be slow or briefly unresponsive to start (a quirk of cycling every BT payload on the shared WiFi/BT radio). If it doesn&#x27;t start within a few seconds, back out and pick a single spam type - Sour Apple, Swiftpair, Samsung, Google, or Flipper all start instantly.</div>
           <div class="tif"><b>Setup:</b> Bluetooth antenna enabled. Affects: all phones and laptops in range.</div>
           <div class="tif"><b>You'll see:</b> Phones in range light up with overlapping pairing popups from every vendor they recognize. Visible from across a room. On recent iOS versions Sour Apple alone can render a phone unusable until it leaves radio range; layered with the others it&#x27;s significantly worse.</div>
           <div class="tif"><b>Use responsibly:</b> Demo only on devices you control or with full-room consent. The broadcast nature means nearby strangers&#x27; phones get hit too.</div>
@@ -1278,7 +1287,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>3760586</code>, 2026-07-17).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>02ae5b6</code>, 2026-07-19).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
