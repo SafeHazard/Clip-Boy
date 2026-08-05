@@ -1,0 +1,21 @@
+{
+    "name": "lz4",
+    "keywords": "compression",
+    "description": "Extremely fast lossless compression",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lz4/lz4"
+    },
+    "version": "1.10.0",
+    "frameworks": "arduino",
+    "platforms": "espressif8266, espressif32",
+    "dependencies": [ ],
+    "authors": [
+        { "name": "LZ4" }, 
+        { 
+            "name": "LZ4",
+            "url": "https://github.com/lz4/lz4"
+        }
+    ],
+    "headers": "lz4.h"
+}

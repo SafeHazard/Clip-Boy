@@ -1,0 +1,14 @@
+# Clip-Boy partition table - 16MB flash, no OTA
+# app0 9MB + littlefs 6.44MB (Jul 2026). PROGMEM/DROM caps embedded audio ~1.9MB
+# (see docs/radio-audio-pipeline.md), so the small clips + ARG numbers embed in
+# app0 and the big flavor beds (3-1/5-1/1-2/1-3, ~3MB) live in littlefs, streamed
+# by file (missing = simply skipped, never a reboot). app0 shrunk 13->9MB to give
+# littlefs the room. nvs offset UNCHANGED so collected-state/settings/ARG survive.
+# LittleFS mounts by label "littlefs" (ui_collectibles.h), format-on-fail.
+# Name,   Type, SubType, Offset,   Size,     Flags
+nvs,      data, nvs,     0x9000,   0x5000,
+otadata,  data, ota,     0xe000,   0x2000,
+app0,     app,  ota_0,   0x10000,  0x900000,
+spiffs,   data, spiffs,  0x910000, 0x70000,
+littlefs, data, spiffs,  0x980000, 0x670000,
+coredump, data, coredump,0xFF0000, 0x10000,

@@ -1,0 +1,62 @@
+sweep: idle FPS baseline 140 (positive control OK)
+sweep: 39 tools across 6 categories on COM4; dwell 6.0s; reset_reason=0
+
+  Detect[0]                    OK            DRAM 93404->93244 (-160)  FPS 86/129/118 n=6 
+  Detect[1]                    OK            DRAM 93404->92252 (-1152)  FPS 116/129/123 n=6 
+  Detect[2]                    OK            DRAM 93404->93404 (+0)  FPS 119/129/125 n=6 
+  Detect[3]                    OK            DRAM 93404->93404 (+0)  FPS 84/131/118 n=6 
+  Detect[4]                    OK            DRAM 93404->93308 (-96)  FPS 84/132/118 n=6 
+  Detect[5]                    OK            DRAM 93308->93308 (+0)  FPS 80/132/119 n=6 
+  Scan[0]                      OK            DRAM 93308->92680 (-628)  FPS 82/129/118 n=6 
+  Scan[1]                      OK            DRAM 92680->93308 (+628)  FPS 81/128/117 n=6 
+  Scan[2]                      OK            DRAM 93308->93308 (+0)  FPS 81/132/118 n=6 
+  Scan[3]                      OK            DRAM 93308->91196 (-2112)  FPS 113/128/121 n=6 
+  Scan[4]                      OK            DRAM 92416->92140 (-276)  FPS 107/126/118 n=6 
+  Monitor[0]                   OK            DRAM 93308->93308 (+0)  FPS 77/136/121 n=6 
+  Monitor[1]                   OK            DRAM 93308->93308 (+0)  FPS 79/135/123 n=6 
+  Monitor[2]                   OK            DRAM 93308->93308 (+0)  FPS 124/143/136 n=6 
+  Monitor[3]                   OK            DRAM 93308->93308 (+0)  FPS 115/133/125 n=6 
+  Monitor[4]                   OK            DRAM 93308->93308 (+0)  FPS 30/143/118 n=6 
+  Analyze[0]                   OK            DRAM 93308->93152 (-156)  FPS 84/132/117 n=6 
+  Analyze[1]                   OK            DRAM 93152->93072 (-80)  FPS 80/129/117 n=6 
+  Analyze[2]                   OK            DRAM 93112->93112 (+0)  FPS 82/131/120 n=6 
+  Analyze[3]                   OK            DRAM 93112->93112 (+0)  FPS 86/128/113 n=6 
+  Analyze[4]                   OK            DRAM 93112->93112 (+0)  FPS 67/129/115 n=6 
+  Analyze[5]                   OK            DRAM 93112->93112 (+0)  FPS 83/123/115 n=6 
+  Analyze[6]                   OK            DRAM 93112->93112 (+0)  FPS 81/128/115 n=6 
+  Analyze[7]                   OK            DRAM 93112->93112 (+0)  FPS 81/132/118 n=6 
+  Utilities/Lists[0]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 135/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[1]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 129/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[2]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 128/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[3]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 135/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[4]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 128/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[5]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 128/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[6]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 134/143/138 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[7]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 125/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[8]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 125/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[9]           DID-NOT-START DRAM 93112->93112 (+0)  FPS 126/143/136 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[10]          DID-NOT-START DRAM 93112->93112 (+0)  FPS 125/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Utilities/Lists[11]          DID-NOT-START DRAM 93112->93112 (+0)  FPS 123/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Network[0]                   DID-NOT-START DRAM 93112->93112 (+0)  FPS 126/143/136 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Network[1]                   DID-NOT-START DRAM 93112->93112 (+0)  FPS 125/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  Network[2]                   DID-NOT-START DRAM 93112->93112 (+0)  FPS 125/143/137 n=6 page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+
+39 tool pages visited -- 24 OK, 15 DID-NOT-START
+  tools actually EXERCISED (ran and stopped cleanly): 24/39
+  DID-NOT-START: Utilities/Lists[0] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[1] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[2] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[3] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[4] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[5] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[6] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[7] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[8] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[9] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[10] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Utilities/Lists[11] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Network[0] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Network[1] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+  DID-NOT-START: Network[2] -- page opened but the tool never ran (open btn=False running=False); FPS is for the page, not the tool
+
+json -> C:/Users/data/AppData/Local/Temp/claude/C--Users-data-OneDrive-esp-ui-test/d8a0ed4b-607b-4d61-9333-c2023aa3c750/scratchpad/logs/perf_com4.json

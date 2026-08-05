@@ -1,0 +1,174 @@
+id,name,outcome,locked_id,locked_name,time_to_lock_s,lock_dist_mm,clean_frames,frames,saw
+85,KARR CPU Fragment,LOCK,85,KARR CPU Fragment,3.9,82,2,14,1x5;80x4;85x4
+38,Professor Oak's Research Notes,LOCK,38,Professor Oak's Research Notes,1.4,74,9,9,38x9
+16,Gandalf's 'You Shall Not Pass' Sign,LOCK,16,Gandalf's 'You Shall Not Pass' Sign,3.8,80,4,13,96x8;16x5
+47,Napoleon's Waterloo Ice Cream Receipt,LOCK,47,Napoleon's Waterloo Ice Cream Receipt,6.4,82,12,16,47x15;78x1
+1,Cake (It's Not a Lie This Time),LOCK,1,Cake (It's Not a Lie This Time),5.0,78,3,7,1x4;39x2;13x1
+2,Companion Cube Remains,LOCK,2,Companion Cube Remains,1.8,76,6,6,2x6
+3,The Eye of Jupiter,LOCK,3,The Eye of Jupiter,10.2,73,0,11,3x7;1x3;6x1
+4,Admiral Adama's Gravel Voice,LOCK,4,Admiral Adama's Gravel Voice,3.3,83,4,14,4x14
+5,The Blue Pill,LOCK,5,The Blue Pill,4.7,79,6,7,5x7
+6,Spoon (There Is No),LOCK,6,Spoon (There Is No),3.3,73,11,13,6x13
+7,Master Chief's Helmet (Cracked Visor),LOCK,7,Master Chief's Helmet (Cracked Visor),1.5,77,10,10,7x10
+8,Warthog Hood Ornament,LOCK,8,Warthog Hood Ornament,1.5,72,3,10,8x10
+9,ODST Drop Pod Stress Ball,LOCK,9,ODST Drop Pod Stress Ball,2.1,96,8,8,9x8
+10,T-800 Endoskeleton Thumb,TIMEOUT,-1,,,83,1,30,10x24;0x6
+12,Cyberdyne Systems Employee Badge,LOCK,12,Cyberdyne Systems Employee Badge,3.1,74,8,9,12x8;0x1
+13,Skynet's First Thought,LOCK,13,Skynet's First Thought,3.1,98,4,13,13x13
+14,Hasta La Vista Baby Button,LOCK,14,Hasta La Vista Baby Button,2.1,80,0,10,14x10
+15,The One Ring (Replica),LOCK,15,The One Ring (Replica),1.5,84,10,10,15x10
+16,Gandalf's 'You Shall Not Pass' Sign,LOCK,16,Gandalf's 'You Shall Not Pass' Sign,2.9,96,1,3,16x3
+17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",TIMEOUT,-1,,,84,45,48,17x46;65x2
+18,Redshirt (Lightly Used),WRONG,17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",8.5,88,0,13,17x5;1x4;73x1
+19,Tribble (Pregnant),LOCK,19,Tribble (Pregnant),25.8,80,1,31,127x11;54x8;55x6
+20,Universal Translator (Slightly Off),LOCK,20,Universal Translator (Slightly Off),2.9,81,1,3,20x3
+21,Mjolnir (You're Not Worthy),LOCK,21,Mjolnir (You're Not Worthy),5.4,87,0,3,21x2;79x1
+22,Deadpool's Fourth Wall Note,LOCK,22,Deadpool's Fourth Wall Note,1.6,86,9,9,22x9
+23,"Lightsaber Crystal (Kyber, Cracked)",LOCK,23,"Lightsaber Crystal (Kyber, Cracked)",2.0,80,2,11,23x11
+24,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,81,0,24,24x11;73x6;66x5
+25,Darth Vader's Cape (Dry Cleaned),TIMEOUT,-1,,,79,2,50,73x44;65x3;25x3
+26,The Numbers (4 8 15 16 23 42),LOCK,26,The Numbers (4 8 15 16 23 42),25.1,81,2,22,118x8;92x7;44x3
+27,"Smoke Monster (Captured in a Jar, Leaking)",LOCK,27,"Smoke Monster (Captured in a Jar, Leaking)",8.9,80,0,17,27x17
+28,Proton Pack (Power Cell Dead),LOCK,28,Proton Pack (Power Cell Dead),5.8,79,2,12,28x8;124x3;76x1
+29,Ghostbusters Operating License (Suspended),LOCK,29,Ghostbusters Operating License (Suspended),19.9,86,3,20,109x5;29x5;73x3
+30,Hannibal's Cigar,LOCK,30,Hannibal's Cigar,1.6,92,1,10,30x10
+31,Face's Unconvincing Press Pass,LOCK,31,Face's Unconvincing Press Pass,26.5,81,0,47,127x36;31x11
+32,Knowing is Half the Battle (Other Half?),LOCK,32,Knowing is Half the Battle (Other Half?),1.5,78,4,10,32x10
+33,Snake Eyes' Sword (It's Just a Stick),LOCK,33,Snake Eyes' Sword (It's Just a Stick),5.2,90,0,10,33x10
+34,Acid Burn's Rollerblades,TIMEOUT,-1,,,75,0,33,78x14;20x6;7x4
+35,Ellingson Mineral Corp. Floppy Disk,LOCK,35,Ellingson Mineral Corp. Floppy Disk,4.2,82,3,7,35x5;117x2
+36,Navi (Muted),LOCK,36,Navi (Muted),10.1,91,6,20,35x9;36x9;47x1
+37,Team Moppett Motto Script,LOCK,37,Team Moppett Motto Script,6.1,86,3,7,37x3;13x2;36x1
+38,Professor Oak's Research Notes,LOCK,38,Professor Oak's Research Notes,4.0,83,1,3,38x3
+39,Niko's Lightbulb,LOCK,39,Niko's Lightbulb,3.6,79,6,8,39x8
+40,The Prophecy (Partially Correct),WRONG,72,Weeping Angel Postcard (Don't Blink),6.0,82,0,4,72x4
+41,Lord Zedd's Z-Staff,WRONG,73,Flux Capacitor (Single Cell),12.4,86,0,11,73x7;72x3;77x1
+42,Crow T. Robot's Beak,LOCK,42,Crow T. Robot's Beak,4.9,87,3,6,42x4;106x2
+43,Tom Servo's Gumball Machine Head,TIMEOUT,-1,,,81,0,35,79x14;42x9;77x4
+44,Serenity Maintenance Manual (Duct Tape Edition),TIMEOUT,-1,,,93,3,38,64x17;44x14;100x3
+45,"Alliance Warrant (For You, Specifically)",TIMEOUT,-1,,,78,46,53,45x50;108x2;65x1
+46,Phone Booth Key Fob,WRONG,45,"Alliance Warrant (For You, Specifically)",3.6,86,0,10,108x6;45x4
+47,Napoleon's Waterloo Ice Cream Receipt,LOCK,47,Napoleon's Waterloo Ice Cream Receipt,6.5,90,1,9,47x8;127x1
+48,Dr. Smith's Excuse Log,LOCK,48,Dr. Smith's Excuse Log,3.6,84,1,14,48x14
+49,DANGER DANGER Button,LOCK,49,DANGER DANGER Button,7.6,85,8,13,49x13
+50,Mordecai the Magnificent's Hat,LOCK,50,Mordecai the Magnificent's Hat,5.3,81,1,4,50x2;49x1;54x1
+51,Sponsored Item: Bopca's Chunky Bits (Expired),LOCK,51,Sponsored Item: Bopca's Chunky Bits (Expired),4.2,87,2,5,51x5
+52,Crawler Fan Art (Unsolicited),LOCK,52,Crawler Fan Art (Unsolicited),7.3,81,18,21,52x21
+53,Optimus Prime's Trailer (Detached),LOCK,53,Optimus Prime's Trailer (Detached),6.1,82,1,14,53x8;49x3;33x2
+54,Bumblebee's Voice Box (Broken),LOCK,54,Bumblebee's Voice Box (Broken),5.9,82,3,16,54x16
+55,Johnny 5's Laser (Defocused),LOCK,55,Johnny 5's Laser (Defocused),3.8,87,3,13,55x12;36x1
+56,DHD (Dial Home Device) Keystone,LOCK,56,DHD (Dial Home Device) Keystone,8.4,81,2,11,56x9;9x2
+57,SG-1 Team Patch,LOCK,57,SG-1 Team Patch,18.3,77,0,28,8x18;57x10
+58,"Goa'uld Symbiote Jar (Empty, Hopefully)",LOCK,58,"Goa'uld Symbiote Jar (Empty, Hopefully)",3.1,82,3,5,58x3;57x1;54x1
+60,WOPR's Access Credential,LOCK,60,WOPR's Access Credential,2.6,79,6,12,60x12
+61,McKittrick's Security Badge (Voided),LOCK,61,McKittrick's Security Badge (Voided),9.0,79,1,19,60x16;121x1;41x1
+62,Shadow Vessel Fragment,LOCK,62,Shadow Vessel Fragment,4.1,80,2,13,62x12;6x1
+63,Zathras's Spare Parts Bag,LOCK,63,Zathras's Spare Parts Bag,5.0,85,2,5,63x3;62x2
+64,Self-Destructing Message Tape,LOCK,64,Self-Destructing Message Tape,2.2,97,2,11,64x10;63x1
+65,Disavowed IMF Agent's Last Note,TIMEOUT,-1,,,78,1,27,73x19;65x6;0x2
+66,Marauder's Map (Network Edition),LOCK,66,Marauder's Map (Network Edition),3.6,79,3,10,66x10
+67,Hagrid's Overcoat Pocket Contents,LOCK,67,Hagrid's Overcoat Pocket Contents,9.4,85,0,8,67x7;75x1
+68,Monolith Data Shard,LOCK,68,Monolith Data Shard,2.8,84,6,8,68x8
+69,Jack Sparrow's Rum (Empty),LOCK,69,Jack Sparrow's Rum (Empty),1.7,92,4,10,69x9;68x1
+70,Compass that Points to Your Heart's Desire,LOCK,70,Compass that Points to Your Heart's Desire,1.6,90,6,9,70x9
+71,Sonic Screwdriver (Doesn't Work on Wood),LOCK,71,Sonic Screwdriver (Doesn't Work on Wood),5.3,89,1,13,70x8;71x3;69x1
+72,Weeping Angel Postcard (Don't Blink),LOCK,72,Weeping Angel Postcard (Don't Blink),2.3,89,6,8,72x8
+73,Flux Capacitor (Single Cell),LOCK,73,Flux Capacitor (Single Cell),1.8,87,10,10,73x10
+74,Marty McFly's Guitar Pick,LOCK,74,Marty McFly's Guitar Pick,3.1,85,0,10,74x10
+75,Ticket to SheetmetalCon 26,LOCK,75,Ticket to SheetmetalCon 26,5.9,79,3,13,75x11;74x1;79x1
+76,Warp Pipe Token,LOCK,76,Warp Pipe Token,2.1,88,5,8,76x8
+77,"Koopa Shell (Blue, Used)",LOCK,77,"Koopa Shell (Blue, Used)",3.3,82,2,11,77x11
+78,Identity Disc (Cleared),TIMEOUT,-1,,,93,48,55,78x55
+79,The Theory of Chaos,WRONG,78,Identity Disc (Cleared),1.7,83,0,9,78x9
+80,Sequel Police Badge,LOCK,80,Sequel Police Badge,4.0,90,15,15,80x15
+81,Two Guys Autograph,LOCK,81,Two Guys Autograph,2.3,86,1,10,81x10
+83,Strong Bad's Luchador Mask,LOCK,83,Strong Bad's Luchador Mask,7.5,80,10,13,83x10;91x3
+84,Email: from Strongbadia,LOCK,84,Email: from Strongbadia,3.1,81,3,7,84x7
+85,KARR CPU Fragment,LOCK,85,KARR CPU Fragment,8.1,80,4,8,85x5;1x2;86x1
+86,Turbo Boost Button,LOCK,86,Turbo Boost Button,3.1,73,2,11,86x11
+87,The Fedora (Genuine Article),LOCK,87,The Fedora (Genuine Article),1.6,84,10,10,87x10
+88,Skippy's Philosophical Manifesto,LOCK,88,Skippy's Philosophical Manifesto,2.6,80,2,5,88x3;12x2
+89,Skippy's Beer Can (Empty),TIMEOUT,-1,,,77,1,38,9x28;41x5;89x3
+90,Pan Galactic Gargle Blaster,LOCK,90,Pan Galactic Gargle Blaster,11.7,82,5,14,90x6;108x5;120x2
+92,The Black Box (Setec Astronomy),LOCK,92,The Black Box (Setec Astronomy),4.2,86,1,6,92x5;72x1
+93,Facehugger (Dormant),LOCK,93,Facehugger (Dormant),2.3,84,5,9,93x7;7x2
+95,LineCon Veteran,LOCK,95,LineCon Veteran,8.0,87,2,10,95x8;79x1;103x1
+18,Redshirt (Lightly Used),LOCK,18,Redshirt (Lightly Used),6.4,81,2,6,18x4;86x1;54x1
+40,The Prophecy (Partially Correct),TIMEOUT,-1,,,83,0,50,72x20;105x11;40x10
+41,Lord Zedd's Z-Staff,TIMEOUT,-1,,,88,0,34,73x24;69x8;105x1
+46,Phone Booth Key Fob,TIMEOUT,-1,,,77,0,97,69x88;127x3;119x2
+79,The Theory of Chaos,TIMEOUT,-1,,,85,1,40,73x18;78x14;79x5
+10,T-800 Endoskeleton Thumb,TIMEOUT,-1,,,86,3,45,10x25;13x19;6x1
+24,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,88,0,39,24x28;73x10;72x1
+25,Darth Vader's Cape (Dry Cleaned),TIMEOUT,-1,,,79,0,67,73x64;65x3
+34,Acid Burn's Rollerblades,TIMEOUT,-1,,,82,0,58,78x22;7x12;20x10
+43,Tom Servo's Gumball Machine Head,TIMEOUT,-1,,,74,0,60,77x20;78x13;76x8
+44,Serenity Maintenance Manual (Duct Tape Edition),LOCK,44,Serenity Maintenance Manual (Duct Tape Edition),5.4,81,1,9,44x6;72x1;106x1
+65,Disavowed IMF Agent's Last Note,LOCK,65,Disavowed IMF Agent's Last Note,4.2,77,8,10,65x8;73x2
+89,Skippy's Beer Can (Empty),LOCK,89,Skippy's Beer Can (Empty),7.9,78,8,15,89x10;57x2;73x2
+17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",LOCK,17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",8.2,78,5,13,65x6;17x5;71x1
+45,"Alliance Warrant (For You, Specifically)",LOCK,45,"Alliance Warrant (For You, Specifically)",21.8,83,1,50,45x43;108x7
+78,Identity Disc (Cleared),LOCK,78,Identity Disc (Cleared),3.0,81,2,15,78x11;127x4
+96,Social Engineer Supreme,TIMEOUT,-1,,,82,0,89,96x76;0x8;78x5
+97,The Goon Life,LOCK,97,The Goon Life,5.5,76,0,17,97x17
+98,Shall of Weep Inductee,TIMEOUT,-1,,,86,1,54,100x24;39x13;98x9
+99,Legendary Conference Badge,TIMEOUT,-1,,,88,2,22,99x11;85x8;71x2
+100,CEF DON XXXIV Commemorative Circuit,LOCK,100,CEF DON XXXIV Commemorative Circuit,1.8,83,0,9,100x9
+40,The Prophecy (Partially Correct),TIMEOUT,-1,,,75,0,50,0x13;13x11;73x6
+40,The Prophecy (Partially Correct),TIMEOUT,-1,,,78,2,44,72x24;105x15;40x5
+40,The Prophecy (Partially Correct),TIMEOUT,-1,,,73,6,52,72x16;73x9;105x9
+40,The Prophecy (Partially Correct),WRONG,72,Weeping Angel Postcard (Don't Blink),6.0,87,3,17,72x12;40x3;108x1
+41,Lord Zedd's Z-Staff,WRONG,73,Flux Capacitor (Single Cell),8.4,76,0,17,73x8;72x6;91x3
+46,Phone Booth Key Fob,LOCK,46,Phone Booth Key Fob,3.3,79,2,2,46x2
+79,The Theory of Chaos,LOCK,79,The Theory of Chaos,4.5,80,5,8,79x5;46x1;78x1
+10,T-800 Endoskeleton Thumb,LOCK,10,T-800 Endoskeleton Thumb,3.1,84,5,6,10x5;0x1
+24,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,88,8,30,24x16;76x14
+25,Darth Vader's Cape (Dry Cleaned),TIMEOUT,-1,,,82,0,72,73x69;77x3
+34,Acid Burn's Rollerblades,LOCK,34,Acid Burn's Rollerblades,15.1,76,2,35,34x21;73x6;78x4
+43,Tom Servo's Gumball Machine Head,TIMEOUT,-1,,,82,0,66,79x42;11x13;10x4
+96,Social Engineer Supreme,LOCK,96,Social Engineer Supreme,4.5,78,20,20,96x20
+98,Shall of Weep Inductee,LOCK,98,Shall of Weep Inductee,1.8,80,10,12,98x12
+99,Legendary Conference Badge,LOCK,99,Legendary Conference Badge,1.5,80,5,10,99x10
+82,"Han Solo's Blaster (DL-44, Empty)",LOCK,82,"Han Solo's Blaster (DL-44, Empty)",2.8,77,3,9,82x6;6x2;102x1
+91,Darth Vader's Cape (Dry Cleaned),LOCK,91,Darth Vader's Cape (Dry Cleaned),12.3,76,0,23,91x16;109x2;127x2
+108,The Prophecy (Partially Correct),LOCK,108,The Prophecy (Partially Correct),3.6,71,4,11,108x11
+112,Lord Zedd's Z-Staff,LOCK,112,Lord Zedd's Z-Staff,2.9,73,4,7,112x4;116x2;80x1
+118,Tom Servo's Gumball Machine Head,LOCK,118,Tom Servo's Gumball Machine Head,3.1,72,13,15,118x15
+91,Darth Vader's Cape (Dry Cleaned),TIMEOUT,-1,,,85,1,67,109x24;47x23;15x5
+82,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,86,1,44,119x17;62x14;82x7,145,140
+108,The Prophecy (Partially Correct),LOCK,108,The Prophecy (Partially Correct),3.0,80,4,9,108x9,145,140
+112,Lord Zedd's Z-Staff,LOCK,112,Lord Zedd's Z-Staff,5.6,82,14,15,112x15,145,140
+118,Tom Servo's Gumball Machine Head,LOCK,118,Tom Servo's Gumball Machine Head,1.4,80,11,11,118x11,145,140
+127,Darth Vader's Cape (Dry Cleaned),LOCK,127,Darth Vader's Cape (Dry Cleaned),1.1,79,8,9,127x9,145,140
+96,Social Engineer Supreme,LOCK,96,Social Engineer Supreme,5.5,87,13,17,96x17,145,140
+98,Shall of Weep Inductee,LOCK,98,Shall of Weep Inductee,26.2,85,3,28,100x9;98x9;70x7,145,140
+99,Legendary Conference Badge,LOCK,99,Legendary Conference Badge,5.5,85,1,10,99x9;70x1,145,140
+15,The One Ring (Replica),LOCK,15,The One Ring (Replica),1.1,78,9,9,15x9,145,140
+38,Professor Oak's Research Notes,LOCK,38,Professor Oak's Research Notes,27.8,84,2,59,38x49;100x3;46x2,145,140
+73,Flux Capacitor (Single Cell),LOCK,73,Flux Capacitor (Single Cell),1.5,77,11,11,73x11,145,140
+87,The Fedora (Genuine Article),LOCK,87,The Fedora (Genuine Article),2.5,77,4,6,87x4;55x2,145,140
+82,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,84,0,21,100x10;102x6;118x4,145,140
+82,"Han Solo's Blaster (DL-44, Empty)",TIMEOUT,-1,,,83,0,56,118x24;99x17;102x15,145,140
+124,"Han Solo's Blaster (DL-44, Empty)",LOCK,124,"Han Solo's Blaster (DL-44, Empty)",3.6,80,5,8,124x8,145,140
+0,(unused/free ID),TIMEOUT,-1,,,82,58,84,0x58;65x22;127x2,146,140
+1,Cake (It's Not a Lie This Time),LOCK,1,Cake (It's Not a Lie This Time),2.6,77,0,11,1x11,146,140
+2,Companion Cube Remains,LOCK,2,Companion Cube Remains,3.0,79,3,3,2x3,146,140
+3,The Eye of Jupiter,TIMEOUT,-1,,,78,0,25,6x21;3x2;53x1,146,140
+4,Admiral Adama's Gravel Voice,LOCK,4,Admiral Adama's Gravel Voice,2.3,80,1,3,4x3,146,140
+5,The Blue Pill,LOCK,5,The Blue Pill,3.6,92,0,13,4x10;5x3,146,140
+6,Spoon (There Is No),LOCK,6,Spoon (There Is No),4.3,87,5,17,5x10;6x5;127x2,146,140
+7,Master Chief's Helmet (Cracked Visor),LOCK,7,Master Chief's Helmet (Cracked Visor),1.2,88,9,10,7x10,146,140
+8,Warthog Hood Ornament,LOCK,8,Warthog Hood Ornament,3.9,80,2,7,8x6;11x1,146,140
+9,ODST Drop Pod Stress Ball,LOCK,9,ODST Drop Pod Stress Ball,5.4,82,8,8,9x8,146,140
+10,T-800 Endoskeleton Thumb,LOCK,10,T-800 Endoskeleton Thumb,1.9,73,5,5,10x5,146,140
+11,(unused/free ID),WRONG,13,Skynet's First Thought,22.1,83,15,47,11x30;13x10;10x5,146,140
+12,Cyberdyne Systems Employee Badge,LOCK,12,Cyberdyne Systems Employee Badge,1.6,80,2,9,12x9,146,140
+13,Skynet's First Thought,LOCK,13,Skynet's First Thought,2.0,78,1,2,13x2,146,140
+14,Hasta La Vista Baby Button,WRONG,15,The One Ring (Replica),16.5,80,0,26,14x23;15x2;8x1,146,140
+15,The One Ring (Replica),LOCK,15,The One Ring (Replica),1.2,71,8,10,15x10,146,140
+16,Gandalf's 'You Shall Not Pass' Sign,LOCK,16,Gandalf's 'You Shall Not Pass' Sign,4.6,79,4,18,16x12;96x5;80x1,146,140
+17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",LOCK,17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",1.7,89,2,8,17x8,146,140
+18,Redshirt (Lightly Used),WRONG,127,Darth Vader's Cape (Dry Cleaned),25.5,71,0,29,54x10;127x7;118x5,146,140
+19,Tribble (Pregnant),TIMEOUT,-1,,,73,0,57,55x29;127x14;54x13,146,140
+20,Universal Translator (Slightly Off),LOCK,20,Universal Translator (Slightly Off),2.8,75,2,8,109x4;20x3;29x1,146,140
+21,Mjolnir (You're Not Worthy),TIMEOUT,-1,,,81,0,48,93x26;21x8;117x6,146,140

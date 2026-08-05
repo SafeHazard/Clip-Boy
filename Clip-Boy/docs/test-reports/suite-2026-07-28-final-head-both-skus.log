@@ -1,0 +1,45 @@
+=== build+flash res34rch @HEAD -> COM5 ===
+[BUILD] Compile OK
+Hash of data verified.
+[flash] done
+=== SUITE COM4 (sn34k @HEAD) ===
+  [PASS] SB1: full SSID->password->save flow works; saved=['cb19054 (pw)'] (password stored); no leftover modal; Join WiFi untouched
+  [PASS] SB2/geiger: survived 3000 ms on Help with the geiger poller live, no reboot
+  [PASS] SB2/theremin: survived 3000 ms on Help with the theremin poller live, no reboot
+  [PASS] SB2b: readouts kept advancing across the theme switch (00:00:01 -> 00:00:03 -> 00:00:05)
+  [PASS] SB3: theremin still running after a status-bar tap (true of both silent-click and duck-and-resume modes)
+  [PASS] FB7: press on the hold-bar unlocked the screensaver
+  [PASS] FB8: battery reads 'BAT 100%' right after boot (sequence ['BAT 100%', 'BAT 100%', 'BAT 100%', 'BAT 100%'])
+  [PASS] FB11: tick audio released on every stop route tested
+  [PASS] FB5: label matched the action in both phases; stop cleared BOTH the UI and the library (lib_scanning=false)
+  [PASS] FB1: promiscuous mode enabled while scanning and disabled after stop
+  [PASS] FB1b: promiscuous re-armed on the second tool start after a stop
+  [PASS] F3: status-bar task slot cleared on a forced Geiger stop
+  [PASS] F7: Geiger refused to start under airplane mode; promisc stayed off
+  [PASS] F1: inline Scan refuses while this page's own tool runs, and starts a scan when idle
+  [warn] F8: cannot test: the fullscreen reveal's audio is not playing, so an un-fired screensaver would prove nothing
+  [PASS] F4: Join WiFi stopped the Geiger honestly instead of deafening it
+  [PASS] F7b: scripted tool start refused under airplane mode; promisc off
+  [PASS] FB10: bt count 7 <= 50 distinct-address ceiling; dedup holding
+  [SKIP] R1: Sn34k build has no TAT_STA tools -- nothing to test
+=== SUITE COM5 (res34rch @HEAD) ===
+  [PASS] SB1: full SSID->password->save flow works; saved=['cb19791 (pw)'] (password stored); no leftover modal; Join WiFi untouched
+  [PASS] SB2/geiger: survived 3000 ms on Help with the geiger poller live, no reboot
+  [PASS] SB2/theremin: survived 3000 ms on Help with the theremin poller live, no reboot
+  [PASS] SB2b: readouts kept advancing across the theme switch (00:00:01 -> 00:00:03 -> 00:00:05)
+  [PASS] SB3: theremin still running after a status-bar tap (true of both silent-click and duck-and-resume modes)
+  [PASS] FB7: press on the hold-bar unlocked the screensaver
+  [PASS] FB8: battery reads 'BAT 100%' right after boot (sequence ['BAT 100%', 'BAT 100%', 'BAT 100%', 'BAT 100%'])
+  [PASS] FB11: tick audio released on every stop route tested
+  [PASS] FB5: label matched the action in both phases; stop cleared BOTH the UI and the library (lib_scanning=false)
+  [PASS] FB1: promiscuous mode enabled while scanning and disabled after stop
+  [PASS] FB1b: promiscuous re-armed on the second tool start after a stop
+  [PASS] F3: status-bar task slot cleared on a forced Geiger stop
+  [PASS] F7: Geiger refused to start under airplane mode; promisc stayed off
+  [PASS] F1: inline Scan refuses while this page's own tool runs, and starts a scan when idle
+  [warn] F8: cannot test: the fullscreen reveal's audio is not playing, so an un-fired screensaver would prove nothing
+  [PASS] F4: Join WiFi stopped the Geiger honestly instead of deafening it
+  [PASS] F7b: scripted tool start refused under airplane mode; promisc off
+  [PASS] FB10: bt count 7 <= 50 distinct-address ceiling; dedup holding
+  [PASS] R1: status bar stayed station-scoped across the EXECUTE tap ('0 STAs found' -> '0 STAs found', manual_kind 1 -> 1)
+=== DONE ===

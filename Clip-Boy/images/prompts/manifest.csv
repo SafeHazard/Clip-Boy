@@ -1,0 +1,96 @@
+id,title,source,tier,slug,format,filename,subject,has_override
+1,Cake (It's Not a Lie This Time),Portal / Portal 2,Rare,cake_it_s_not_a_lie_this_time,flux,001_cake_it_s_not_a_lie_this_time_flux.txt,a decorated Black Forest chocolate cake with frosting writing,yes
+2,Companion Cube Remains,Portal / Portal 2,Legendary,companion_cube_remains,flux,002_companion_cube_remains_flux.txt,a cracked and damaged Weighted Companion Cube from Portal,yes
+3,The Eye of Jupiter,Battlestar Galactica,Legendary,the_eye_of_jupiter,flux,003_the_eye_of_jupiter_flux.txt,a glowing mystical eye artifact with radiating light,yes
+4,Admiral Adama's Gravel Voice,Battlestar Galactica,Why did you do this,admiral_adama_s_gravel_voice,flux,004_admiral_adama_s_gravel_voice_flux.txt,a vintage reel-to-reel tape recorder,yes
+5,The Blue Pill,The Matrix,Common,the_blue_pill,flux,005_the_blue_pill_flux.txt,a small blue pill capsule,yes
+6,Spoon (There Is No),The Matrix,Common,spoon_there_is_no,flux,006_spoon_there_is_no_flux.txt,a bent spoon with warped metallic reflections,yes
+7,Master Chief's Helmet (Cracked Visor),Halo,Legendary,master_chief_s_helmet_cracked_visor,flux,007_master_chief_s_helmet_cracked_visor_flux.txt,Master Chief's MJOLNIR helmet with a cracked visor,yes
+8,Warthog Hood Ornament,Halo,Common,warthog_hood_ornament,flux,008_warthog_hood_ornament_flux.txt,"a military Warthog vehicle hood ornament, rugged metal",yes
+9,ODST Drop Pod Stress Ball,Halo,Common,odst_drop_pod_stress_ball,flux,009_odst_drop_pod_stress_ball_flux.txt,a small cylindrical drop pod stress ball with scorch marks,yes
+10,T-800 Endoskeleton Thumb,Terminator,Legendary,t_800_endoskeleton_thumb,flux,010_t_800_endoskeleton_thumb_flux.txt,"a robotic T-800 endoskeleton thumb giving a thumbs up, chrome metal",yes
+12,Cyberdyne Systems Employee Badge,Terminator,Common,cyberdyne_systems_employee_badge,flux,012_cyberdyne_systems_employee_badge_flux.txt,a retro corporate employee ID badge with Cyberdyne Systems logo,yes
+13,Skynet's First Thought,Terminator,Why did you do this,skynet_s_first_thought,flux,013_skynet_s_first_thought_flux.txt,"a glowing microchip on a circuit board, ominous red light",yes
+14,Hasta La Vista Baby Button,Terminator,Common,hasta_la_vista_baby_button,flux,014_hasta_la_vista_baby_button_flux.txt,a large red arcade-style push button,yes
+15,The One Ring (Replica),Lord of the Rings,Legendary,the_one_ring_replica,flux,015_the_one_ring_replica_flux.txt,a gold ring with glowing elvish script inscriptions,yes
+16,Gandalf's 'You Shall Not Pass' Sign,Lord of the Rings,Common,gandalf_s_you_shall_not_pass_sign,flux,016_gandalf_s_you_shall_not_pass_sign_flux.txt,"a wooden staff with a glowing crystal top, planted like a sign",yes
+17,"Sting (Glows Blue Near Orcs, Orange Near Lawyers)",Lord of the Rings,Rare,sting_glows_blue_near_orcs_orange_near_lawyers,flux,017_sting_glows_blue_near_orcs_orange_near_lawyers_flux.txt,"an elven short sword glowing blue-orange, ornate blade",yes
+18,Redshirt (Lightly Used),Star Trek,Common,redshirt_lightly_used,flux,018_redshirt_lightly_used_flux.txt,"a red Starfleet uniform shirt, slightly worn",yes
+19,Tribble (Pregnant),Star Trek,Why did you do this,tribble_pregnant,flux,019_tribble_pregnant_flux.txt,"a round fluffy tribble creature, fuzzy and purring",yes
+20,Universal Translator (Slightly Off),Star Trek,Common,universal_translator_slightly_off,flux,020_universal_translator_slightly_off_flux.txt,a handheld universal translator device with a cracked screen,yes
+21,Mjšlnir (You're Not Worthy),Marvel,Legendary,mj_lnir_you_re_not_worthy,flux,021_mj_lnir_you_re_not_worthy_flux.txt,"Thor's hammer Mjolnir, heavy stone and metal",yes
+22,Deadpool's Fourth Wall Note,Marvel,Rare,deadpool_s_fourth_wall_note,flux,022_deadpool_s_fourth_wall_note_flux.txt,a handwritten note on crumpled paper with doodles,yes
+23,"Lightsaber Crystal (Kyber, Cracked)",Star Wars,Rare,lightsaber_crystal_kyber_cracked,flux,023_lightsaber_crystal_kyber_cracked_flux.txt,a cracked red kyber crystal with energy fractures,yes
+24,"Han Solo's Blaster (DL-44, Empty)",Star Wars,Legendary,han_solo_s_blaster_dl_44_empty,flux,024_han_solo_s_blaster_dl_44_empty_flux.txt,"Han Solo's DL-44 blaster pistol, worn metal",yes
+25,Darth Vader's Cape (Dry Cleaned),Star Wars,Legendary,darth_vader_s_cape_dry_cleaned,flux,025_darth_vader_s_cape_dry_cleaned_flux.txt,a flowing black cape draped over an invisible form,yes
+26,The Numbers (4 8 15 16 23 42),Lost,Legendary,the_numbers_4_8_15_16_23_42,flux,026_the_numbers_4_8_15_16_23_42_flux.txt,a row of six numbers (4 8 15 16 23 42) on a worn computer terminal,yes
+27,"Smoke Monster (Captured in a Jar, Leaking)",Lost,Why did you do this,smoke_monster_captured_in_a_jar_leaking,flux,027_smoke_monster_captured_in_a_jar_leaking_flux.txt,a mason jar with dark swirling smoke leaking from the lid,yes
+28,Proton Pack (Power Cell Dead),Ghostbusters,Legendary,proton_pack_power_cell_dead,flux,028_proton_pack_power_cell_dead_flux.txt,a Ghostbusters proton pack with dead power cell indicator,yes
+29,Ghostbusters Operating License (Suspended),Ghostbusters,Common,ghostbusters_operating_license_suspended,flux,029_ghostbusters_operating_license_suspended_flux.txt,an official operating license document with a red SUSPENDED stamp,yes
+30,Hannibal's Cigar,A-Team,Legendary,hannibal_s_cigar,flux,030_hannibal_s_cigar_flux.txt,a thick lit cigar with curling smoke,yes
+31,Face's Unconvincing Press Pass,A-Team,Common,face_s_unconvincing_press_pass,flux,031_face_s_unconvincing_press_pass_flux.txt,a laminated press pass badge in Comic Sans font,yes
+32,Knowing is Half the Battle (Other Half?),GI Joe,Why did you do this,knowing_is_half_the_battle_other_half,flux,032_knowing_is_half_the_battle_other_half_flux.txt,a military dog tag with a question mark engraved,yes
+33,Snake Eyes' Sword (It's Just a Stick),GI Joe,Common,snake_eyes_sword_it_s_just_a_stick,flux,033_snake_eyes_sword_it_s_just_a_stick_flux.txt,a plain wooden stick radiating dark energy,yes
+34,Acid Burn's Rollerblades,Hackers,Rare,acid_burn_s_rollerblades,flux,034_acid_burn_s_rollerblades_flux.txt,a pair of retro 90s inline rollerblades,yes
+35,Ellingson Mineral Corp. Floppy Disk,Hackers,Rare,ellingson_mineral_corp_floppy_disk,flux,035_ellingson_mineral_corp_floppy_disk_flux.txt,a 3.5-inch floppy disk with a skull label,yes
+36,Navi (Muted),Legend of Zelda,Why did you do this,navi_muted,flux,036_navi_muted_flux.txt,"a small fairy companion trapped under a glass dome, glowing",yes
+37,Team Rocket Motto Script,PokŽmon,Common,team_rocket_motto_script,flux,037_team_rocket_motto_script_flux.txt,a dramatic script page with theatrical stage directions,yes
+38,Professor Oak's Research Notes,PokŽmon,Rare,professor_oak_s_research_notes,flux,038_professor_oak_s_research_notes_flux.txt,a leather-bound research notebook with handwritten notes,yes
+39,Niko's Lightbulb,One Shot,Legendary,niko_s_lightbulb,flux,039_niko_s_lightbulb_flux.txt,a glowing lightbulb held carefully in two hands,yes
+40,The Prophecy (Partially Correct),One Shot,Rare,the_prophecy_partially_correct,flux,040_the_prophecy_partially_correct_flux.txt,an ancient scroll with partially faded prophecy text,yes
+41,Lord Zedd's Z-Staff,Power Rangers,Legendary,lord_zedd_s_z_staff,flux,041_lord_zedd_s_z_staff_flux.txt,Lord Zedd's Z-shaped metal staff with lightning energy,yes
+42,Crow T. Robot's Beak,MST3K,Rare,crow_t_robot_s_beak,flux,042_crow_t_robot_s_beak_flux.txt,"a metallic bird-like robot beak, angular and sarcastic-looking",yes
+43,Tom Servo's Gumball Machine Head,MST3K,Rare,tom_servo_s_gumball_machine_head,flux,043_tom_servo_s_gumball_machine_head_flux.txt,a red gumball machine head dome on a small robot body,yes
+44,Serenity Maintenance Manual (Duct Tape Edition),Firefly,Legendary,serenity_maintenance_manual_duct_tape_edition,flux,044_serenity_maintenance_manual_duct_tape_edition_flux.txt,a grease-stained spaceship maintenance manual with duct tape binding,yes
+45,"Alliance Warrant (For You, Specifically)",Firefly,Rare,alliance_warrant_for_you_specifically,flux,045_alliance_warrant_for_you_specifically_flux.txt,an official warrant document with a blinking red tracking dot,yes
+46,Phone Booth Key Fob,Bill & Ted,Common,phone_booth_key_fob,flux,046_phone_booth_key_fob_flux.txt,"a phone booth shaped keychain fob, retro red",yes
+47,Napoleon's Waterloo Ice Cream Receipt,Bill & Ted,Common,napoleon_s_waterloo_ice_cream_receipt,flux,047_napoleon_s_waterloo_ice_cream_receipt_flux.txt,a long receipt scroll with ice cream illustrations,yes
+48,Dr. Smith's Excuse Log,Lost in Space,Legendary,dr_smith_s_excuse_log,flux,048_dr_smith_s_excuse_log_flux.txt,a leather-bound logbook titled 'Excuses',yes
+49,DANGER DANGER Button,Lost in Space,Common,danger_danger_button,flux,049_danger_danger_button_flux.txt,a large red danger button with flashing warning lights,yes
+50,Mordecai the Magnificent's Hat,Dungeon Crawler Carl,Rare,mordecai_the_magnificent_s_hat,flux,050_mordecai_the_magnificent_s_hat_flux.txt,an ornate magician's top hat with a skull motif,yes
+51,Sponsored Item: Bopca's Chunky Bits (Expired),Dungeon Crawler Carl,Why did you do this,sponsored_item_bopca_s_chunky_bits_expired,flux,051_sponsored_item_bopca_s_chunky_bits_expired_flux.txt,a dented tin can labeled 'Chunky Bits' with expired sticker,yes
+52,Crawler Fan Art (Unsolicited),Dungeon Crawler Carl,Common,crawler_fan_art_unsolicited,flux,052_crawler_fan_art_unsolicited_flux.txt,a disturbing piece of fan art on crumpled paper,yes
+53,Optimus Prime's Trailer (Detached),Transformers,Legendary,optimus_prime_s_trailer_detached,flux,053_optimus_prime_s_trailer_detached_flux.txt,"a detached semi-truck trailer, futuristic military style",yes
+54,Bumblebee's Voice Box (Broken),Transformers,Rare,bumblebee_s_voice_box_broken,flux,054_bumblebee_s_voice_box_broken_flux.txt,a damaged robot voice box speaker with exposed wires,yes
+55,Johnny 5's Laser (Defocused),Short Circuit,Common,johnny_5_s_laser_defocused,flux,055_johnny_5_s_laser_defocused_flux.txt,a handheld laser device with a defocused lens,yes
+56,DHD (Dial Home Device) Keystone,Stargate,Legendary,dhd_dial_home_device_keystone,flux,056_dhd_dial_home_device_keystone_flux.txt,a circular Dial Home Device console with glowing glyphs,yes
+57,SG-1 Team Patch,Stargate,Common,sg_1_team_patch,flux,057_sg_1_team_patch_flux.txt,a military team shoulder patch with SG-1 designation,yes
+58,"Goa'uld Symbiote Jar (Empty, Hopefully)",Stargate,Why did you do this,goa_uld_symbiote_jar_empty_hopefully,flux,058_goa_uld_symbiote_jar_empty_hopefully_flux.txt,"a sealed canopic jar with hieroglyphic markings, slightly ajar",yes
+60,WOPR's Access Credential,War Games,Legendary,wopr_s_access_credential,flux,060_wopr_s_access_credential_flux.txt,a vintage computer terminal login screen showing 'ACCESS GRANTED',yes
+61,McKittrick's Security Badge (Voided),War Games,Common,mckittrick_s_security_badge_voided,flux,061_mckittrick_s_security_badge_voided_flux.txt,a voided security badge with a red X stamped across it,yes
+62,Shadow Vessel Fragment,Babylon 5,Why did you do this,shadow_vessel_fragment,flux,062_shadow_vessel_fragment_flux.txt,"a jagged dark ship hull fragment with organic veins, glowing faintly",yes
+63,Zathras's Spare Parts Bag,Babylon 5,Common,zathras_s_spare_parts_bag,flux,063_zathras_s_spare_parts_bag_flux.txt,a burlap sack of assorted mechanical spare parts and tools,yes
+64,Self-Destructing Message Tape,Mission Impossible,Common,self_destructing_message_tape,flux,064_self_destructing_message_tape_flux.txt,a reel-to-reel tape labeled CLASSIFIED with smoke rising from it,yes
+65,Disavowed IMF Agent's Last Note,Mission Impossible,Common,disavowed_imf_agent_s_last_note,flux,065_disavowed_imf_agent_s_last_note_flux.txt,a crumpled handwritten note with coffee stains,yes
+66,Marauder's Map (Network Edition),Harry Potter,Legendary,marauder_s_map_network_edition,flux,066_marauder_s_map_network_edition_flux.txt,a magical parchment map showing glowing moving dots,yes
+67,Hagrid's Overcoat Pocket Contents,Harry Potter,Common,hagrid_s_overcoat_pocket_contents,flux,067_hagrid_s_overcoat_pocket_contents_flux.txt,an oversized overcoat pocket bulging with assorted objects,yes
+68,Monolith Data Shard,2001,Why did you do this,monolith_data_shard,flux,068_monolith_data_shard_flux.txt,a perfectly proportioned black rectangular monolith,yes
+69,Jack Sparrow's Rum (Empty),Pirates of the Caribbean,Common,jack_sparrow_s_rum_empty,flux,069_jack_sparrow_s_rum_empty_flux.txt,an empty glass rum flask with a cork,yes
+70,Compass that Points to Your Heart's Desire,Pirates of the Caribbean,Legendary,compass_that_points_to_your_heart_s_desire,flux,070_compass_that_points_to_your_heart_s_desire_flux.txt,a brass compass with a spinning needle pointing sideways,yes
+71,Sonic Screwdriver (Doesn't Work on Wood),Dr Who,Rare,sonic_screwdriver_doesn_t_work_on_wood,flux,071_sonic_screwdriver_doesn_t_work_on_wood_flux.txt,"a sonic screwdriver device, metallic with a glowing green tip",yes
+72,Weeping Angel Postcard (Don't Blink),Dr Who,Why did you do this,weeping_angel_postcard_don_t_blink,flux,072_weeping_angel_postcard_don_t_blink_flux.txt,"a stone angel statue with hands covering its face, weeping pose",yes
+73,Flux Capacitor (Single Cell),Back to the Future,Legendary,flux_capacitor_single_cell,flux,073_flux_capacitor_single_cell_flux.txt,a Y-shaped flux capacitor device with glowing energy channels,yes
+74,DeLorean Hood Ornament,Back to the Future,Common,delorean_hood_ornament,flux,074_delorean_hood_ornament_flux.txt,"a DeLorean car hood ornament, brushed stainless steel",yes
+75,Marty McFly's Guitar Pick,Back to the Future,Common,marty_mcfly_s_guitar_pick,flux,075_marty_mcfly_s_guitar_pick_flux.txt,a guitar pick with lightning bolt design,yes
+76,Warp Pipe Token,Super Mario,Rare,warp_pipe_token,flux,076_warp_pipe_token_flux.txt,"a green warp pipe from Mario, arcade coin token nearby",yes
+77,"Koopa Shell (Blue, Used)",Super Mario,Rare,koopa_shell_blue_used,flux,077_koopa_shell_blue_used_flux.txt,a blue spiny Koopa shell with motion blur,yes
+78,Identity Disc (Cleared),Tron,Legendary,identity_disc_cleared,flux,078_identity_disc_cleared_flux.txt,"a glowing circular identity disc from Tron, neon blue edge",yes
+79,Jeff Goldblum's Theory of Chaos,Jurassic Park,Legendary,jeff_goldblum_s_theory_of_chaos,flux,079_jeff_goldblum_s_theory_of_chaos_flux.txt,a pair of stylish sunglasses with a chaos theory equation reflected,yes
+80,Sequel Police Badge,Space Quest,Rare,sequel_police_badge,flux,080_sequel_police_badge_flux.txt,a police badge engraved with 'Sequel Police',yes
+81,Two Guys from Andromeda Autograph,Space Quest,Rare,two_guys_from_andromeda_autograph,flux,081_two_guys_from_andromeda_autograph_flux.txt,a signed autograph page with two signatures and a doodle,yes
+83,Strong Bad's Luchador Mask,Homestar Runner,Legendary,strong_bad_s_luchador_mask,flux,083_strong_bad_s_luchador_mask_flux.txt,a red Mexican luchador wrestling mask,yes
+84,Email: from Strongbadia,Homestar Runner,Common,email_from_strongbadia,flux,084_email_from_strongbadia_flux.txt,a printed email on paper with pixel art header,yes
+85,KARR CPU Fragment,Knight Rider,Rare,karr_cpu_fragment,flux,085_karr_cpu_fragment_flux.txt,a dark menacing car CPU chip fragment with red circuitry,yes
+86,Turbo Boost Button,Knight Rider,Rare,turbo_boost_button,flux,086_turbo_boost_button_flux.txt,"a dashboard-mounted turbo boost button, red with chrome ring",yes
+87,The Fedora (Genuine Article),Indiana Jones,Legendary,the_fedora_genuine_article,flux,087_the_fedora_genuine_article_flux.txt,a weathered brown leather fedora hat,yes
+88,Skippy's Philosophical Manifesto,Expeditionary Force,Legendary,skippy_s_philosophical_manifesto,flux,088_skippy_s_philosophical_manifesto_flux.txt,a glowing ancient manuscript with alien script,yes
+89,Skippy's Beer Can (Empty),Expeditionary Force,Why did you do this,skippy_s_beer_can_empty,flux,089_skippy_s_beer_can_empty_flux.txt,a crushed empty beer can with a faint golden glow,yes
+90,Nuka-Cola Quantum (Glowing),Fallout,Rare,nuka_cola_quantum_glowing,flux,090_nuka_cola_quantum_glowing_flux.txt,a glowing blue Nuka-Cola bottle with radioactive bubbles,yes
+92,VATS Targeting Module (Battlefield Only),Fallout,Rare,vats_targeting_module_battlefield_only,flux,092_vats_targeting_module_battlefield_only_flux.txt,a targeting monocle HUD device with percentage readouts,yes
+93,Deathclaw Egg (Intact),Fallout,Why did you do this,deathclaw_egg_intact,flux,093_deathclaw_egg_intact_flux.txt,a large mottled reptilian egg in a rough nest,yes
+95,LineCon Veteran,DEFCON Meta,Rare,linecon_veteran,flux,095_linecon_veteran_flux.txt,a convention lanyard badge with 'VETERAN' ribbon,yes
+96,Social Engineer Supreme,DEFCON Meta,Legendary,social_engineer_supreme,flux,096_social_engineer_supreme_flux.txt,a telephone handset with a confident smirk aura,yes
+97,The Goon Life,DEFCON Meta,Common,the_goon_life,flux,097_the_goon_life_flux.txt,a black staff t-shirt neatly folded with a radio on top,yes
+98,Wall of Sheep Inductee,DEFCON Meta,Why did you do this,wall_of_sheep_inductee,flux,098_wall_of_sheep_inductee_flux.txt,a sheep silhouette with a WiFi signal symbol above its head,yes
+99,Dark Tangent's Fabled Conference Badge,DEFCON Meta,Legendary,dark_tangent_s_fabled_conference_badge,flux,099_dark_tangent_s_fabled_conference_badge_flux.txt,"a legendary hacker conference badge, circuit board with 'HELLO'",yes
+100,DEF CON XXXIV Commemorative Circuit,DEFCON Meta,Legendary,def_con_xxxiv_commemorative_circuit,flux,100_def_con_xxxiv_commemorative_circuit_flux.txt,a commemorative circuit board badge with '34' etched prominently,yes

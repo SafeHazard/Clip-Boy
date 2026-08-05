@@ -1,0 +1,10 @@
+====================================================================
+TEST: Flock liveness -- the age must read BOTH ways
+====================================================================
+  [PASS] FLOCK-SEEN: badge reports an age: 1 Flock, 6s since last heard
+  [PASS] FLOCK-AGE-RISES: with no emitter the age climbed 6s -> 20s, so the readout is alive and CAN report the bad state
+  [PASS] FLOCK-AGE-RESETS: the emitter pulled the age back down 20s -> 6s, so a re-sighting refreshes last_seen through the dedup path
+  [PASS] FLOCK-DEDUP-INTACT: flock count is still 1 for one emitter -- the age moved, the list did not
+====================================================================
+passed=4 failed=0 not-run=0
+====================================================================

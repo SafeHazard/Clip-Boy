@@ -1,0 +1,3 @@
+badge running flock tool (0.3); emitting 45s -- watch the badge
+   {'ok': True, 'bytes': 5, 'secs': 45.0, 'msg': 'Instance added: 1'}
+  detect_counts.flock = 13

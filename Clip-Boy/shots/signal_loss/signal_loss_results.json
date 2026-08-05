@@ -1,0 +1,95 @@
+{
+  "sku": "sn34k",
+  "kalipi": "192.168.1.146",
+  "port": "COM4",
+  "results": [
+    {
+      "case": "Monitor > RSSI",
+      "phase": "acquire",
+      "verdict": "INFO",
+      "detail": "5 APs in the list after a 12 s scan",
+      "shot": "rssi_01_scanned.bmp",
+      "evidence": {
+        "ap_count": 5
+      }
+    },
+    {
+      "case": "Monitor > RSSI",
+      "phase": "select",
+      "verdict": "INFO",
+      "detail": "selected 'Pineapple'",
+      "shot": "rssi_03_selected.bmp",
+      "evidence": {}
+    },
+    {
+      "case": "Monitor > RSSI",
+      "phase": "monitoring",
+      "verdict": "INFO",
+      "detail": "monitoring with the target alive (running=True, name='RSSI')",
+      "shot": "rssi_04_target_alive.bmp",
+      "evidence": {}
+    },
+    {
+      "case": "Monitor > RSSI",
+      "phase": "target-killed",
+      "verdict": "INFO",
+      "detail": "kalipi beacon stopped and mon iface downed",
+      "shot": null,
+      "evidence": {}
+    },
+    {
+      "case": "Monitor > RSSI",
+      "phase": "after-loss",
+      "verdict": "LOSS-NOT-DETECTED",
+      "detail": "the tool still reports running 25 s after the target stopped transmitting; compare the two screenshots -- if the trace/readout is unchanged then a flat line means either a steady signal or a dead target, and the UI does not say which. This is current documented behaviour, not a regression.",
+      "shot": "rssi_05_target_gone.bmp",
+      "evidence": {
+        "alive_shot": "rssi_04_target_alive.bmp",
+        "gone_shot": "rssi_05_target_gone.bmp",
+        "running_after_loss": true
+      }
+    },
+    {
+      "case": "AP list freshness",
+      "phase": "present",
+      "verdict": "INFO",
+      "detail": "5 APs while the target is beaconing",
+      "shot": "aplist_01_target_present.bmp",
+      "evidence": {}
+    },
+    {
+      "case": "AP list freshness",
+      "phase": "after-loss",
+      "verdict": "LOSS-NOT-DETECTED",
+      "detail": "AP count did not drop 30 s after the target stopped (5 -> 5). AccessPoint carries no last-seen field, so entries cannot age out and the list is a cumulative 'ever seen' record. Documented in README Known issues.",
+      "shot": "aplist_02_target_gone.bmp",
+      "evidence": {
+        "before": 5,
+        "after": 5,
+        "present_shot": "aplist_01_target_present.bmp",
+        "gone_shot": "aplist_02_target_gone.bmp"
+      }
+    },
+    {
+      "case": "BT scan freshness",
+      "phase": "present",
+      "verdict": "INFO",
+      "detail": "7 BT devices while the advertiser is up",
+      "shot": "ble_01_advertiser_up.bmp",
+      "evidence": {}
+    },
+    {
+      "case": "BT scan freshness",
+      "phase": "after-loss",
+      "verdict": "LOSS-NOT-DETECTED",
+      "detail": "BT count did not drop 35 s after the advertiser stopped (7 -> 7). last_seen exists on these records but no UI reads it, so a departed device keeps its last reading.",
+      "shot": "ble_02_advertiser_gone.bmp",
+      "evidence": {
+        "before": 7,
+        "after": 7,
+        "present_shot": "ble_01_advertiser_up.bmp",
+        "gone_shot": "ble_02_advertiser_gone.bmp"
+      }
+    }
+  ]
+}

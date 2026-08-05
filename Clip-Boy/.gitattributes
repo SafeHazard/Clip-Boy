@@ -1,0 +1,38 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# ── Never publish (audit 2026-07-24 FB3) ─────────────────────────────────────
+# stage_source.sh builds the PUBLIC (GPLv3) and KS trees with `git archive | tar -x`
+# -- EVERY tracked file -- then removes a short TRIM list. That denylist publishes
+# anything new by default, so these paths are ALSO excluded at the archive layer;
+# git archive honors export-ignore natively. stage_source.sh keeps matching TRIM +
+# leak-gate entries (belt and suspenders), and
+# `scripts/tests/check_source_drop.py` fails the release if any layer regresses.
+# `stage_source.sh` is the repo's ONLY `git archive` consumer, so this affects
+# nothing else.
+scripts/production/**    export-ignore
+docs/arg-*               export-ignore
+docs/audit/**            export-ignore
+docs/security-review-*   export-ignore
+docs/superpowers/**      export-ignore
+
+# Force LF on tooling that breaks with CRLF regardless of checkout platform:
+# shell scripts (CRLF \r breaks the shebang/commands on Linux/macOS release
+# boxes) and the minisign public key (DC34-122). SHA256SUMS is generated LF.
+*.sh        text eol=lf
+keys/*.pub  text eol=lf
+
+# Collectibles SSOT: embed_csv.py bakes this CSV verbatim into the PROGMEM
+# header (a git-ignored, per-build-regenerated artifact). It MUST check out LF
+# so a Windows build and a clean-clone/Linux build produce byte-identical bytes
+# -> identical app_elf_sha256 -> the byte-reproducibility the signed release
+# rests on (DC34-122). embed_csv also CRLF->LF-normalizes as a backstop.
+data/collectibles.csv  text eol=lf
+
+# Signed release manifest: the minisign signature is over the EXACT bytes of
+# SHA256SUMS, and flash-spec.json's hash is inside it. These MUST stay LF in the
+# repo (= what raw.githubusercontent serves = what was signed), or the flasher's
+# cross-origin signature/hash check fails (DC34-122/123).
+release/flash-spec.json    text eol=lf
+release/SHA256SUMS         text eol=lf
+release/SHA256SUMS.minisig text eol=lf

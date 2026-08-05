@@ -1,0 +1,346 @@
+{
+  "fleet": {
+    "COM4": "sn34k",
+    "COM5": "res34rch",
+    "COM6": "sn34k",
+    "COM7": "res34rch"
+  },
+  "witness_ready": true,
+  "staged": true,
+  "stage_files": [
+    "oracle-stageA.json",
+    "oracle-stageB.json",
+    "oracle-stageB2.json",
+    "oracle-stageB3.json",
+    "oracle-stageC.json",
+    "oracle-stageC2.json",
+    "oracle-stageD.json"
+  ],
+  "rows": [
+    {
+      "tier": "T1",
+      "name": "airplane",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "ble-advert-rate",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "ble-spam-witness",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "continuity",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "deauth-channel",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T0",
+      "name": "deref-guards",
+      "sku": "host",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "tier": "T2",
+      "name": "detect-oracles",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "evil-portal",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "flood-beacon",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "info-screens",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "join-wifi",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "leds-theme",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "navigation",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T0",
+      "name": "redfirst",
+      "sku": "host",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "tier": "T2",
+      "name": "rx-detection",
+      "sku": "sn34k",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM6": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "sae-sniff-rx",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "sae-witness",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "scan-rx",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "screensaver",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "screenshot",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T1",
+      "name": "sd-card",
+      "sku": "sn34k/res34rch",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM5": "PASS",
+        "COM6": "CANNOT-TEST",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T0",
+      "name": "security-regress",
+      "sku": "host",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "tier": "T1",
+      "name": "settings-persist",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "skimmer-id",
+      "sku": "sn34k",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T0",
+      "name": "source-drop",
+      "sku": "host",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "tier": "T1",
+      "name": "teardown-paths",
+      "sku": "sn34k/res34rch",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM5": "CANNOT-TEST",
+        "COM6": "CANNOT-TEST",
+        "COM7": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T0",
+      "name": "terminology",
+      "sku": "host",
+      "verdict": "PASS",
+      "detail": ""
+    },
+    {
+      "tier": "T1",
+      "name": "tool-gauntlet",
+      "sku": "sn34k/res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM5": "PASS",
+        "COM6": "PASS",
+        "COM7": "PASS"
+      }
+    }
+  ],
+  "summary": {
+    "PASS": 24,
+    "FAIL": 0,
+    "CANNOT-TEST": 4
+  },
+  "coverage": {
+    "expected": 28,
+    "covered": 28,
+    "missing": [],
+    "duplicated": [
+      "sae-sniff-rx",
+      "teardown-paths",
+      "tool-gauntlet"
+    ]
+  }
+}

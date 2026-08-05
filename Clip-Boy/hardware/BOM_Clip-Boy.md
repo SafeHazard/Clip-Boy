@@ -1,0 +1,10 @@
+# Clip-Boy Bill of Materials
+- Waveshare ESP32-S3 2.8" Touch (SKU 27690) - https://www.waveshare.com/esp32-s3-touch-lcd-2.8.htm?sku=27690 (1x)
+- WS2812B LED Strip Lights - https://www.amazon.com/dp/B0BNN1ZQHS (you only need 4 LEDs)
+- Pre-tinned wire - https://www.amazon.com/dp/B07TX6BX47 (you only need ~6" of wire)
+- 2200 mAh 3.7V battery, Micro JST 1.25 plug - example: https://www.amazon.com/stores/page/E4F30779-6CE4-4F8D-9E27-8DD57BBAE6DF (1x)
+- Trilancer 12"x2" strap - https://www.amazon.com/dp/B097BG9Q9F (1x)
+- 5mm Fiber Optic Cable - https://www.amazon.com/dp/B07R81YYSD (2x 2" lengths)
+- Optional: microSD card (any size) with the 1st partition = 1 GB (FAT/FAT32)
+- Custom connector/LED PCB (1x)
+- Custom LiDAR PCB (1x)

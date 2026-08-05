@@ -1,0 +1,5 @@
+id,name,outcome,locked_id,locked_name,time_to_lock_s,lock_dist_mm,clean_frames,frames,saw
+85,KARR CPU Fragment,LOCK,85,KARR CPU Fragment,9.4,74,1,17,1x8;85x5;37x2
+38,Professor Oak's Research Notes,LOCK,38,Professor Oak's Research Notes,1.6,79,9,9,38x9
+16,Gandalf's 'You Shall Not Pass' Sign,LOCK,16,Gandalf's 'You Shall Not Pass' Sign,1.5,76,10,10,16x10
+47,Napoleon's Waterloo Ice Cream Receipt,LOCK,47,Napoleon's Waterloo Ice Cream Receipt,4.3,83,2,12,47x12

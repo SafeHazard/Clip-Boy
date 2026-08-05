@@ -1,0 +1,71 @@
+{
+  "fleet": {
+    "COM4": "sn34k",
+    "COM5": "res34rch",
+    "COM6": "sn34k",
+    "COM7": "res34rch"
+  },
+  "witness_ready": true,
+  "rows": [
+    {
+      "tier": "T2",
+      "name": "deauth-channel",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "sae-witness",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "ble-spam-witness",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "evil-portal",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "flood-beacon",
+      "sku": "res34rch",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM5": "PASS",
+        "COM7": "PASS"
+      }
+    }
+  ],
+  "summary": {
+    "PASS": 5,
+    "FAIL": 0,
+    "CANNOT-TEST": 0
+  }
+}

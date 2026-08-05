@@ -1,0 +1,11 @@
+HRScan	KEYWORD1
+Scanner	KEYWORD2
+Config	KEYWORD2
+LockAction	KEYWORD2
+LockCallback	KEYWORD2
+Engine	KEYWORD2
+Result	KEYWORD2
+OverlayLVGL	KEYWORD2
+OverlayConfig	KEYWORD2
+Profile	KEYWORD2
+Prompt	KEYWORD2

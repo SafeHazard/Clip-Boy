@@ -1,0 +1,131 @@
+#######################################
+# Syntax Coloring Map for ClipBoyMarauder
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ClipBoyMarauder	KEYWORD1
+ClipBoyState	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+# Lifecycle
+begin	KEYWORD2
+loop	KEYWORD2
+
+# WiFi Scanning
+scanAPs	KEYWORD2
+scanAPsFull	KEYWORD2
+scanAPsAndStations	KEYWORD2
+scanStations	KEYWORD2
+sniffBeacons	KEYWORD2
+sniffProbes	KEYWORD2
+sniffDeauth	KEYWORD2
+sniffEAPOL	KEYWORD2
+sniffPMKID	KEYWORD2
+sniffPMKIDList	KEYWORD2
+sniffRaw	KEYWORD2
+sniffPwnagotchi	KEYWORD2
+sniffEspressif	KEYWORD2
+sniffPinescan	KEYWORD2
+sniffMultiSSID	KEYWORD2
+sniffSAE	KEYWORD2
+packetMonitor	KEYWORD2
+packetRate	KEYWORD2
+signalMonitor	KEYWORD2
+channelActivity	KEYWORD2
+macTracker	KEYWORD2
+
+# WiFi Attacks
+attackDeauth	KEYWORD2
+attackDeauthManual	KEYWORD2
+attackDeauthTargeted	KEYWORD2
+attackBeaconSpam	KEYWORD2
+attackBeaconList	KEYWORD2
+attackBeaconAPClone	KEYWORD2
+attackRickRoll	KEYWORD2
+attackFunnyBeacon	KEYWORD2
+attackProbe	KEYWORD2
+attackAuth	KEYWORD2
+attackBadMsg	KEYWORD2
+attackBadMsgTargeted	KEYWORD2
+attackSleep	KEYWORD2
+attackSleepTargeted	KEYWORD2
+attackSAE	KEYWORD2
+
+# Bluetooth
+btScanAll	KEYWORD2
+btScanSimple	KEYWORD2
+btScanSkimmers	KEYWORD2
+btScanAirtags	KEYWORD2
+btScanAirtagMonitor	KEYWORD2
+btScanFlippers	KEYWORD2
+btScanFlock	KEYWORD2
+btSpamApple	KEYWORD2
+btSpamWindows	KEYWORD2
+btSpamSamsung	KEYWORD2
+btSpamGoogle	KEYWORD2
+btSpamFlipper	KEYWORD2
+btSpamAll	KEYWORD2
+
+# Evil Portal
+startEvilPortal	KEYWORD2
+stopEvilPortal	KEYWORD2
+
+# Control
+stopScan	KEYWORD2
+setChannel	KEYWORD2
+getChannel	KEYWORD2
+joinWiFi	KEYWORD2
+
+# SSID Management
+addSSID	KEYWORD2
+generateSSIDs	KEYWORD2
+clearSSIDs	KEYWORD2
+getSSIDCount	KEYWORD2
+
+# AP Management
+clearAPs	KEYWORD2
+getAPCount	KEYWORD2
+selectAP	KEYWORD2
+deselectAPs	KEYWORD2
+
+# Station Management
+clearStations	KEYWORD2
+getStationCount	KEYWORD2
+selectStation	KEYWORD2
+
+# MAC
+randomizeAPMac	KEYWORD2
+randomizeSTAMac	KEYWORD2
+
+# Info
+getState	KEYWORD2
+getCurrentScanMode	KEYWORD2
+isScanning	KEYWORD2
+isSDSupported	KEYWORD2
+getFreeHeap	KEYWORD2
+getFreePSRAM	KEYWORD2
+printAPList	KEYWORD2
+printSSIDList	KEYWORD2
+printStationList	KEYWORD2
+printSettings	KEYWORD2
+printSystemInfo	KEYWORD2
+
+# Settings
+toggleSetting	KEYWORD2
+setSavePCAP	KEYWORD2
+getSavePCAP	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+IDLE	LITERAL1
+SCANNING	LITERAL1
+ATTACKING	LITERAL1
+PORTAL_ACTIVE	LITERAL1

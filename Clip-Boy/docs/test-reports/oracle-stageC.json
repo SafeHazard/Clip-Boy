@@ -1,0 +1,93 @@
+{
+  "fleet": {
+    "COM4": "sn34k",
+    "COM5": "res34rch",
+    "COM6": "sn34k",
+    "COM7": "res34rch"
+  },
+  "witness_ready": true,
+  "rows": [
+    {
+      "tier": "T2",
+      "name": "detect-oracles",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "scan-rx",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "rx-detection",
+      "sku": "sn34k",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM6": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "skimmer-id",
+      "sku": "sn34k",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "sae-sniff-rx",
+      "sku": "sn34k",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM6": "CANNOT-TEST"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "join-wifi",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    },
+    {
+      "tier": "T2",
+      "name": "ble-advert-rate",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    }
+  ],
+  "summary": {
+    "PASS": 4,
+    "FAIL": 0,
+    "CANNOT-TEST": 3
+  }
+}

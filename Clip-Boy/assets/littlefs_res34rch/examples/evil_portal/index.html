@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEMO Captive Portal (Example)</title>
+</head>
+<body style="font-family:sans-serif; max-width:40em; margin:2em auto; padding:0 1em">
+  <h1>Clip-Boy Evil Portal &mdash; EXAMPLE TEMPLATE</h1>
+
+  <p><strong>This is a demonstration page. It does not collect anything.</strong></p>
+
+  <p>Captive portals are for <strong>authorized security testing and education
+  only</strong>. You must have explicit written permission before running a portal
+  that could capture another person's input on any network you do not own.</p>
+
+  <h2>How to use this template</h2>
+  <ol>
+    <li>Copy <code>index.html</code> and <code>ap.config.txt</code> from this folder to
+        the <strong>root</strong> of the SD card.</li>
+    <li>Edit <code>ap.config.txt</code> to the AP name you are authorized to use.</li>
+    <li>Edit <code>index.html</code> to build your authorized test page.</li>
+    <li>Run DATA &gt; Tools &gt; Evil Portal on the badge.</li>
+  </ol>
+
+  <p>This template intentionally has <strong>no working capture form</strong>. To capture
+  submitted input you must deliberately add a form that posts to <code>/get</code> &mdash;
+  that is a conscious choice for an authorized engagement, not the default.</p>
+
+  <!--
+    EXAMPLE capture form (DISABLED ON PURPOSE). Uncomment and adapt ONLY for a test you
+    are authorized to run:
+
+    <form action="/get" method="get">
+      Email: <input name="email">
+      Password: <input name="password">
+      <input type="submit" value="Log In">
+    </form>
+  -->
+
+  <p style="color:#888; font-size:small">Clip-Boy is a parody DEFCON badge. Use
+  responsibly and lawfully. See the Legal screen on the badge.</p>
+</body>
+</html>

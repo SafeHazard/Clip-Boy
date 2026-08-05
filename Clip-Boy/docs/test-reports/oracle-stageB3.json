@@ -1,0 +1,29 @@
+{
+  "fleet": {
+    "COM4": "sn34k",
+    "COM5": "res34rch",
+    "COM6": "sn34k",
+    "COM7": "res34rch"
+  },
+  "witness_ready": true,
+  "rows": [
+    {
+      "tier": "T1",
+      "name": "teardown-paths",
+      "sku": "sn34k/res34rch",
+      "verdict": "CANNOT-TEST",
+      "flag": "",
+      "per_badge": {
+        "COM4": "CANNOT-TEST",
+        "COM5": "CANNOT-TEST",
+        "COM6": "CANNOT-TEST",
+        "COM7": "CANNOT-TEST"
+      }
+    }
+  ],
+  "summary": {
+    "PASS": 0,
+    "FAIL": 0,
+    "CANNOT-TEST": 1
+  }
+}

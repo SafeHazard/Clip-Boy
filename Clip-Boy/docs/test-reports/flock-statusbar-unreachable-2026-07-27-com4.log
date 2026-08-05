@@ -1,0 +1,8 @@
+build: None
+Detect cat pos: 0
+running: True name: Flock Safety
+kalipi reply: {'ok': True, 'bytes': 5, 'secs': 20.0, 'msg': 'Instance added: 1'}
+  t+ 4s flock=1  bar=['BAT 100%', 'Flock Safety']
+  t+ 8s flock=1  bar=['BAT 100%', 'Flock Safety']
+  t+12s flock=1  bar=['BAT 100%', 'Flock Safety']
+  t+16s flock=1  bar=['BAT 100%', 'Flock Safety']

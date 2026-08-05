@@ -1,0 +1,149 @@
+{
+  "chipFamily": "ESP32-S3",
+  "version": "2026-07-31+ea2708d2",
+  "variants": {
+    "sn34k": {
+      "active": false,
+      "parts": [
+        {
+          "offset": 0,
+          "path": "clipboy-bootloader.bin",
+          "role": "bootloader",
+          "sha256": "d0b02b860147ace6a607985a3123a977b9451fa5d54a24ca6db59be4a2e4c345"
+        },
+        {
+          "offset": 32768,
+          "path": "clipboy-partitions.bin",
+          "role": "partitions",
+          "sha256": "f3ce8e2119443c5685f4dc120acea6684f246877871bf2529600664e335269ce"
+        },
+        {
+          "offset": 57344,
+          "path": "clipboy-boot_app0.bin",
+          "role": "boot_app0",
+          "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+        },
+        {
+          "offset": 65536,
+          "path": "clipboy-sn34k-app.bin",
+          "role": "app",
+          "sha256": "b5e8d6bdfb54ee58b49c54dbdd868ff728b3e691f741680f4b680f2cf0afa6e7"
+        },
+        {
+          "offset": 9961472,
+          "path": "clipboy-littlefs.bin",
+          "role": "littlefs",
+          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+        }
+      ]
+    },
+    "res34rch": {
+      "active": true,
+      "parts": [
+        {
+          "offset": 0,
+          "path": "clipboy-bootloader.bin",
+          "role": "bootloader",
+          "sha256": "d0b02b860147ace6a607985a3123a977b9451fa5d54a24ca6db59be4a2e4c345"
+        },
+        {
+          "offset": 32768,
+          "path": "clipboy-partitions.bin",
+          "role": "partitions",
+          "sha256": "f3ce8e2119443c5685f4dc120acea6684f246877871bf2529600664e335269ce"
+        },
+        {
+          "offset": 57344,
+          "path": "clipboy-boot_app0.bin",
+          "role": "boot_app0",
+          "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+        },
+        {
+          "offset": 65536,
+          "path": "clipboy-res34rch-app.bin",
+          "role": "app",
+          "sha256": "a04c84f1f655a3eb08cb40a2a762e5654950006873cdf9d4a6b217d240b3f2fd"
+        },
+        {
+          "offset": 9961472,
+          "path": "clipboy-littlefs.bin",
+          "role": "littlefs",
+          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+        }
+      ]
+    },
+    "sn34k-rift": {
+      "active": false,
+      "rift": true,
+      "parts": [
+        {
+          "offset": 0,
+          "path": "clipboy-bootloader.bin",
+          "role": "bootloader",
+          "sha256": "d0b02b860147ace6a607985a3123a977b9451fa5d54a24ca6db59be4a2e4c345"
+        },
+        {
+          "offset": 32768,
+          "path": "clipboy-partitions.bin",
+          "role": "partitions",
+          "sha256": "f3ce8e2119443c5685f4dc120acea6684f246877871bf2529600664e335269ce"
+        },
+        {
+          "offset": 57344,
+          "path": "clipboy-boot_app0.bin",
+          "role": "boot_app0",
+          "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+        },
+        {
+          "offset": 65536,
+          "path": "clipboy-sn34k-rift-app.bin",
+          "role": "app",
+          "sha256": "9a7ebba11f377a956be0f25ed1b2522439b8f0e958bce626e8e1f1f2c8363e2b"
+        },
+        {
+          "offset": 9961472,
+          "path": "clipboy-littlefs.bin",
+          "role": "littlefs",
+          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+        }
+      ]
+    },
+    "res34rch-rift": {
+      "active": true,
+      "rift": true,
+      "parts": [
+        {
+          "offset": 0,
+          "path": "clipboy-bootloader.bin",
+          "role": "bootloader",
+          "sha256": "d0b02b860147ace6a607985a3123a977b9451fa5d54a24ca6db59be4a2e4c345"
+        },
+        {
+          "offset": 32768,
+          "path": "clipboy-partitions.bin",
+          "role": "partitions",
+          "sha256": "f3ce8e2119443c5685f4dc120acea6684f246877871bf2529600664e335269ce"
+        },
+        {
+          "offset": 57344,
+          "path": "clipboy-boot_app0.bin",
+          "role": "boot_app0",
+          "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+        },
+        {
+          "offset": 65536,
+          "path": "clipboy-res34rch-rift-app.bin",
+          "role": "app",
+          "sha256": "a012e087dd77c7ae3df214007c6731e4b72b8b074c239947040eb81e1d2bab70"
+        },
+        {
+          "offset": 9961472,
+          "path": "clipboy-littlefs.bin",
+          "role": "littlefs",
+          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+        }
+      ]
+    }
+  },
+  "contentVersion": "b9937f14089e"
+}

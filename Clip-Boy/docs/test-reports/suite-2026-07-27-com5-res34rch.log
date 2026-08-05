@@ -1,0 +1,92 @@
+====================================================================
+TEST: audit teardown/lifetime regressions (must FAIL pre-fix)
+====================================================================
+suite: bridge read deadline 30s (ap_scan blocks the badge ~15-22s)
+suite: display timeout pinned to Never for the run (was 2)
+
+-- SB1: nested kb_open (Utilities > Saved Networks > + Add Network) --
+  [PASS] SB1: full SSID->password->save flow works; saved=['cb29293 (pw)'] (password stored); no leftover modal; Join WiFi untouched
+    recovering (reboot) before the next test
+
+-- SB2: show_help() as a third teardown path --
+  [PASS] SB2/geiger: survived 3000 ms on Help with the geiger poller live, no reboot
+  [PASS] SB2/theremin: survived 3000 ms on Help with the theremin poller live, no reboot
+    recovering (reboot) before the next test
+
+-- SB2b: theme switch must not freeze the Radiation readouts --
+  [PASS] SB2b: readouts kept advancing across the theme switch (00:00:01 -> 00:00:03 -> 00:00:05)
+    recovering (reboot) before the next test
+
+-- SB3: status-bar tap must not kill a running theremin --
+  [PASS] SB3: theremin still running after a status-bar tap (true of both silent-click and duck-and-resume modes)
+    recovering (reboot) before the next test
+
+-- FB7: screensaver hold-bar swallows the unlock press --
+  [PASS] FB7: press on the hold-bar unlocked the screensaver
+    recovering (reboot) before the next test
+
+-- FB8: battery must not read 0% straight after boot --
+  [PASS] FB8: battery reads 'BAT 100%' right after boot (sequence ['BAT 100%', 'BAT 100%', 'BAT 100%', 'BAT 100%'])
+    recovering (reboot) before the next test
+
+-- FB11/FB12: geiger tick audio must not stay latched after a stop --
+  [PASS] FB11: tick audio released on every stop route tested
+    recovering (reboot) before the next test
+
+-- FB5/FB6: Join WiFi Scan/Stop -- label==action, and stop really stops --
+  [PASS] FB5: label matched the action in both phases; stop cleared BOTH the UI and the library (lib_scanning=false)
+    recovering (reboot) before the next test
+
+-- FB1: promiscuous mode must be off after a tool stop --
+  promisc: running=True -> stopped=False; lib_scanning=False
+  [PASS] FB1: promiscuous mode enabled while scanning and disabled after stop
+    recovering (reboot) before the next test
+
+-- FB1b: promiscuous must be RE-ARMED on a tool start after a previous stop --
+  promisc: after stop=False -> after restart=True; lib_scanning=True name='Beacons'
+  [PASS] FB1b: promiscuous re-armed on the second tool start after a stop
+    recovering (reboot) before the next test
+
+-- F3: 'Geiger active' must not stick in the status bar after a forced stop --
+  [PASS] F3: status-bar task slot cleared on a forced Geiger stop
+    recovering (reboot) before the next test
+
+-- F7: the Geiger must not enter promiscuous RX while airplane mode is on --
+  airplane=True -> geiger_active=False promisc=False
+  [PASS] F7: Geiger refused to start under airplane mode; promisc stayed off
+    recovering (reboot) before the next test
+
+-- F1: inline Scan must be disabled while another tool owns the radio --
+  same-page tool running: scan started=False   idle: scan started=True (busy tool was 'RSSI')
+  [PASS] F1: inline Scan refuses while this page's own tool runs, and starts a scan when idle
+    recovering (reboot) before the next test
+
+-- F8: the collectible reveal's audio must inhibit the screensaver --
+  [warn] F8: cannot test: the fullscreen reveal's audio is not playing, so an un-fired screensaver would prove nothing
+        (screenshot: F8_1785129828.bmp)
+    recovering (reboot) before the next test
+
+-- F4: Join WiFi must not leave a deafened Geiger claiming to run --
+  geiger_active: before join=True -> after CONNECT=False
+  [PASS] F4: Join WiFi stopped the Geiger honestly instead of deafening it
+    recovering (reboot) before the next test
+
+-- F7b: a scripted tool start must respect airplane mode --
+  airplane ON -> tool_start ok=False err='blocked by airplane mode' running=False promisc=False
+  [PASS] F7b: scripted tool start refused under airplane mode; promisc off
+    recovering (reboot) before the next test
+
+-- FB10: the BT device list must dedup by address --
+  bt device count after ~30 s of scanning: 7
+  [PASS] FB10: bt count 7 <= 50 distinct-address ceiling; dedup holding
+    recovering (reboot) before the next test
+
+-- R1: EXECUTE mid-manual-station-scan flips the status bar (Res34rch) --
+  [PASS] R1: status bar stayed station-scoped across the EXECUTE tap ('0 STAs found' -> '1 STAs found', manual_kind 1 -> 1)
+    recovering (reboot) before the next test
+suite: display timeout restored to 2
+
+====================================================================
+RESULTS: 18/18 blocking checks pass
+  warn: F8 -- cannot test: the fullscreen reveal's audio is not playing, so an un-fired screensaver would prove nothing
+====================================================================

@@ -1,0 +1,6 @@
+--- A: tool_start (the path my test used) ---
+   bar = ['Flock Safety']
+--- B: tool_open (fires the REAL START button) ---
+   tool_open -> {'ok': True, 'name': 'Flock Safety', 'btn': True, 'running': True}
+   bar = ['1 Flock, 4s ago', 'Flock Safety', 'Starting: Flock Safety...\nFLOCK: ?? [2C:CF:67:CF:29:28] -38dBm\n']
+   bar +4s = ['1 Flock, 8s ago', 'Flock Safety', 'Starting: Flock Safety...\nFLOCK: ?? [2C:CF:67:CF:29:28] -38dBm\n']

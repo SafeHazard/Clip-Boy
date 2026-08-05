@@ -1,0 +1,84 @@
+sweep: idle FPS baseline 140 (positive control OK)
+sweep: 62 tools across 12 categories on COM5; dwell 6.0s; reset_reason=3
+
+  Detect[0]                    OK            DRAM 91372->91220 (-152)  FPS 114/127/122 n=6 
+  Detect[1]                    OK            DRAM 91372->90396 (-976)  FPS 111/125/119 n=6 
+  Detect[2]                    OK            DRAM 91372->91372 (+0)  FPS 115/126/121 n=6 
+  Detect[3]                    OK            DRAM 91372->86756 (-4616)  FPS 83/127/117 n=6 
+  Detect[4]                    OK            DRAM 91124->90612 (-512)  FPS 83/125/112 n=6 
+  Detect[5]                    OK            DRAM 91020->90612 (-408)  FPS 81/127/117 n=6 
+  Scan[0]                      OK            DRAM 91020->89996 (-1024)  FPS 69/125/108 n=6 
+  Scan[1]                      OK            DRAM 90396->86644 (-3752)  FPS 79/127/118 n=6 
+  Scan[2]                      OK            DRAM 91020->90616 (-404)  FPS 78/126/113 n=6 
+  Scan[3]                      OK            DRAM 91020->88872 (-2148)  FPS 115/125/118 n=6 
+  Scan[4]                      OK            DRAM 89456->90056 (+600)  FPS 108/117/112 n=6 
+  Monitor[0]                   OK            DRAM 91020->90612 (-408)  FPS 83/133/119 n=6 
+  Monitor[1]                   OK            DRAM 91020->90612 (-408)  FPS 76/133/119 n=6 
+  Monitor[2]                   OK            DRAM 91020->91020 (+0)  FPS 121/143/137 n=16 
+  Monitor[3]                   OK            DRAM 91020->91020 (+0)  FPS 112/131/125 n=6 
+  Monitor[4]                   OK            DRAM 91020->90612 (-408)  FPS 29/143/116 n=6 
+  Analyze[0]                   OK            DRAM 91020->90464 (-556)  FPS 82/127/112 n=6 
+  Analyze[1]                   OK            DRAM 90864->86408 (-4456)  FPS 77/127/102 n=6 
+  Analyze[2]                   OK            DRAM 90820->86448 (-4372)  FPS 66/125/110 n=6 
+  Analyze[3]                   OK            DRAM 90316->86452 (-3864)  FPS 80/125/112 n=6 
+  Analyze[4]                   OK            DRAM 90820->86444 (-4376)  FPS 80/125/110 n=6 
+  Analyze[5]                   OK            DRAM 90820->86608 (-4212)  FPS 80/118/107 n=6 
+  Analyze[6]                   OK            DRAM 90472->86600 (-3872)  FPS 79/127/117 n=6 
+  Analyze[7]                   OK            DRAM 90976->86604 (-4372)  FPS 80/127/114 n=6 
+  Utilities/Lists[0]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 125/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[1]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 134/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[2]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 135/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[3]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 125/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[4]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 133/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[5]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 125/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[6]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 123/143/136 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[7]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 131/143/137 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[8]           ONESHOT-NOT-FIRED DRAM 90976->90976 (+0)  FPS 122/143/136 n=6 one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  Utilities/Lists[9]           DID-NOT-START DRAM 90976->90976 (+0)  FPS 115/143/135 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Utilities/Lists[10]          ONESHOT-NOT-FIRED DRAM 90976->90976 (+0)  FPS 130/143/136 n=6 one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  Utilities/Lists[11]          DID-NOT-START DRAM 90976->90976 (+0)  FPS 120/143/136 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Network[0]                   DID-NOT-START DRAM 90976->90976 (+0)  FPS 115/143/135 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  Network[1]                   ONESHOT-NOT-FIRED DRAM 90976->90976 (+0)  FPS 131/143/137 n=6 one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  Network[2]                   ONESHOT-NOT-FIRED DRAM 90976->90976 (+0)  FPS 121/143/136 n=6 one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  Deauth[0]                    OK            DRAM 90472->89056 (-1416)  FPS 113/143/135 n=6 
+  Deauth[1]                    OK            DRAM 88732->88904 (+172)  FPS 6/83/18 n=6 
+  Deauth[2]                    OK            DRAM 89088->88904 (-184)  FPS 110/143/134 n=6 
+  Flood[0]                     OK            DRAM 89088->88760 (-328)  FPS 119/143/135 n=6 
+  Flood[1]                     OK            DRAM 89232->89060 (-172)  FPS 114/143/135 n=6 
+  Flood[2]                     OK            DRAM 89088->88916 (-172)  FPS 106/143/133 n=6 
+  Flood[3]                     OK            DRAM 89088->88916 (-172)  FPS 123/143/135 n=6 
+  Flood[4]                     OK            DRAM 89088->88916 (-172)  FPS 111/143/134 n=6 
+  Beacon Spam[0]               OK            DRAM 89088->88916 (-172)  FPS 37/44/38 n=6 
+  Beacon Spam[1]               OK            DRAM 89088->88772 (-316)  FPS 98/143/131 n=6 
+  Beacon Spam[2]               OK            DRAM 89232->89060 (-172)  FPS 110/143/134 n=6 
+  Beacon Spam[3]               OK            DRAM 89088->80516 (-8572)  FPS 9/55/16 n=6 
+  Beacon Spam[4]               OK            DRAM 88584->80516 (-8068)  FPS 30/78/40 n=6 
+  BLE Spam[0]                  OK            DRAM 88440->88428 (-12)  FPS 13/85/26 n=6 
+  BLE Spam[1]                  OK            DRAM 88428->88420 (-8)  FPS 49/100/61 n=6 
+  BLE Spam[2]                  OK            DRAM 88412->88416 (+4)  FPS 53/91/60 n=6 
+  BLE Spam[3]                  OK            DRAM 88412->88412 (+0)  FPS 53/93/60 n=6 
+  BLE Spam[4]                  OK            DRAM 88416->88384 (-32)  FPS 53/96/61 n=6 
+  BLE Spam[5]                  OK            DRAM 88396->88408 (+12)  FPS 30/91/43 n=6 
+  SAE[0]                       OK            DRAM 88404->88300 (-104)  FPS 112/143/135 n=6 
+  Evil Portal[0]               OK            DRAM 88300->67076 (-21224)  FPS 103/143/132 n=6 
+  Evil Portal[1]               OK            DRAM 69064->67076 (-1988)  FPS 103/143/133 n=6 
+  Evil Portal[2]               DID-NOT-START DRAM 69064->69064 (+0)  FPS 130/143/136 n=6 no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+
+62 tool pages visited -- 46 OK, 12 DID-NOT-START, 4 ONESHOT-NOT-FIRED
+  tools actually EXERCISED (ran and stopped cleanly): 46/62
+  ONESHOT-NOT-FIRED: Utilities/Lists[8] -- one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  ONESHOT-NOT-FIRED: Utilities/Lists[10] -- one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  ONESHOT-NOT-FIRED: Network[1] -- one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  ONESHOT-NOT-FIRED: Network[2] -- one-shot action; tool_open only navigates to the page, so this action was NEVER EXERCISED by the sweep -- not covered
+  DID-NOT-START: Utilities/Lists[0] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[1] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[2] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[3] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[4] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[5] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[6] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[7] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[9] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Utilities/Lists[11] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Network[0] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool
+  DID-NOT-START: Evil Portal[2] -- no start control exists for this page (open btn=False running=False) -- expected for a viewer/picker/text page; FPS is for the PAGE, not a tool

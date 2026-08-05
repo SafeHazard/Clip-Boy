@@ -1,0 +1,25 @@
+Flock log high-watermark race -- RED then GREEN, COM4 (sn34k), emitter = kalipi2b (192.168.1.113)
+Payload: full-fidelity Flock -- AD1 10ffc809544e3132333435363738393000 (Xuntong C8:09 + "TN1234567890")
+                                AD2 0b0931323334353637383930          (complete local name "1234567890")
+
+RED  (pre-fix, observed twice):
+  detect_counts: flock=1  flock_age~1163ms      <- device present and freshly heard
+  log pane:      'Starting: Flock Safety...'    <- no FLOCK: line, ever
+  status bar:    '1 Flock, 0s ago'
+  => the tool reports a surveillance camera and never says which one.
+
+GREEN (post-fix):
+  detect_counts: flock=1  flock_age=1241ms
+  log pane:      'Starting: Flock Safety...\nFLOCK: 1234567890 [36:72:0E:56:14:FD] -42dBm'
+  status bar:    '1 Flock, 0s ago'
+
+Also established by this run:
+  * The penguin 10-digit-name arm PARSED ("1234567890", not "??"). First execution of that
+    detection path in any test or hardware run.
+  * btmgmt advertises from a NON-RESOLVABLE PRIVATE address (36:72:..), not the adapter BD
+    address -- so address rotation is close to free for the cap test, and it is also the
+    real-world privacy behaviour MAC-keyed dedup has to survive.
+  * flock_age bounced 161/1004/298/829/174 ms with this emitter, vs multi-second gaps from the
+    ~0.29/s emitter. The 0.29/s figure was the EMITTER's rate, never a badge limit.
+  * Serial (TN1234567890) is parsed into FlockDevice but rendered NOWHERE, so it remains
+    unverified from the UI -- needs a harness field or the serial console.

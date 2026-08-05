@@ -1,0 +1,13 @@
+====================================================================
+TEST: BT list evicts the oldest entry when full (cap=4)
+====================================================================
+  list reached the cap at sample 1: ['68:67:f7:df:a5:38', 'b8:06:0d:83:93:00', 'ef:2f:42:c6:45:56', 'ef:2f:42:c6:47:64']
+  + 15s size=4 union=4
+  + 30s size=4 union=4
+  + 45s size=4 union=4
+  an entry from the first full sample is gone: ['68:67:f7:df:a5:38']
+  samples=11 distinct MACs observed=5 cap=4
+  [PASS] BT-EVICT: 5 distinct addresses passed through a 4-entry list, so an arrival was inserted AFTER the list was full -- eviction works (and an original entry was observed leaving)
+====================================================================
+passed=1 failed=0 not-run=0
+====================================================================

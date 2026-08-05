@@ -1,0 +1,10 @@
+[flock-serial] advertiser=192.168.1.113 dwell=12.0s port=COM4
+  [PASS] A1 liveness: known-good emitter -> flock=1 serial='TN1234567890'
+  [warn] A2 D1 truncation: D1 REPRODUCED: got 'TN7202302200077' (15 chars), truth is 'TN72023022000771' (16). adEnd = adStart + adLen drops the last byte. Documented + queued; not fixed in this pass.
+  [PASS] A4 D2 control: company-ID-only + 1 filler byte -> flock=1 (must detect)
+  [warn] A3 D2 silent miss: D2 REPRODUCED: an advert whose manufacturer AD ends at the company ID is not detected at all, while the same bytes plus ONE filler byte are (A4). `i + 3 < len` never attempts a match at i = len-3. Documented; not fixed here.
+  [PASS] A5 negative: reversed company ID correctly NOT detected, with liveness proven this run
+
+[flock-serial] 3 pass, 0 fail, 2 documented-defect, 0 cannot-test
+  WARN   A2 D1 truncation -- reproduced a documented, deliberately-unfixed defect
+  WARN   A3 D2 silent miss -- reproduced a documented, deliberately-unfixed defect

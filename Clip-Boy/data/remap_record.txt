@@ -1,0 +1,6 @@
+24,82,Han Solo's Blaster (DL-44, Empty)
+25,91,Darth Vader's Cape (Dry Cleaned)
+40,108,The Prophecy (Partially Correct)
+41,112,Lord Zedd's Z-Staff
+43,118,Tom Servo's Gumball Machine Head
+91,127,Darth Vader's Cape (Dry Cleaned)  [91 was rough -> 127]

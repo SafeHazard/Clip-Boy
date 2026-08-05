@@ -1,0 +1,27 @@
+{
+  "fleet": {
+    "COM4": "sn34k",
+    "COM5": "res34rch",
+    "COM6": "sn34k",
+    "COM7": "res34rch"
+  },
+  "witness_ready": true,
+  "rows": [
+    {
+      "tier": "T2",
+      "name": "sae-sniff-rx",
+      "sku": "sn34k",
+      "verdict": "PASS",
+      "flag": "",
+      "per_badge": {
+        "COM4": "PASS",
+        "COM6": "PASS"
+      }
+    }
+  ],
+  "summary": {
+    "PASS": 1,
+    "FAIL": 0,
+    "CANNOT-TEST": 0
+  }
+}

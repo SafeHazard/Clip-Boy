@@ -1,0 +1,16 @@
+# Syntax Coloring Map For HRCode4x4
+# Datatypes (KEYWORD1)
+HRCode4x4	KEYWORD1
+DecodeResult	KEYWORD1
+DecodeStatus	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+decode16	KEYWORD2
+decodeGrid	KEYWORD2
+crc4	KEYWORD2
+
+# Constants (LITERAL1)
+Ok	LITERAL1
+OrientationMatchedBadCrc	LITERAL1
+OrientationNotFound	LITERAL1
+InvalidInput	LITERAL1
