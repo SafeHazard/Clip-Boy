@@ -2,6 +2,7 @@
 #include <lvgl.h>
 #include <esp_heap_caps.h>
 #include <Wire.h>
+#include "drone_store.h"   // Remote ID (drone) detector store + decoder
 #include <SparkFun_VL53L5CX_Library.h>
 #include <HRScanner.h>
 #include <HRScanIMU.h>
@@ -1150,6 +1151,7 @@ static const ToolItem cat_detect[] = {
                           "themselves usually are not -- see More Info.",                     TAT_SIMPLE },
     { "Rogue AP",         "Flag APs that answer probes for SSIDs they shouldn't know.",      TAT_SIMPLE },
     { "Evil Twin",        "Flag duplicate SSIDs across multiple BSSIDs (evil-twin signal).", TAT_SIMPLE },
+    { "Remote ID",        "Detect drone Remote ID (ASTM F3411) broadcasts over Bluetooth.",  TAT_SIMPLE },
 };
 
 // --- id1 Scan ---
@@ -1306,6 +1308,7 @@ static inline bool tool_is_bluetooth(const ToolItem *wi) {
     // Bluetooth-only tool -- on every shipped badge. Rename a tool, grep its old name.
     static const char * const bt_tools[] = {
         "AirTag", "Skimmer Check", "Flipper Zero", "Flock Batteries",
+        "Remote ID",
         "BT Devices", "BLE Adverts",
         "List BT Devices", "List AirTags", "List Flippers",
 #ifdef CLIPBOY_RES34RCH  // BLE Spam tools exist only in Res34rch; their names
@@ -2244,6 +2247,7 @@ static void dispatch_clipboy_action(uint8_t cat, uint8_t item) {
                 case 3: cb.btScanFlock();     break;  // Flock Batteries
                 case 4: cb.sniffPinescan();   break;  // Rogue AP
                 case 5: cb.sniffMultiSSID();  break;  // Evil Twin
+                case 6: cb.btScanRemoteID();  break;  // Remote ID (drone)
             } break;
         case 1: // Scan
             switch (item) {
@@ -2834,6 +2838,8 @@ static void cb_scan_poll_cb(lv_timer_t *t) {
             snprintf(sbuf, sizeof(sbuf), "%d rogue", cb.getPinescanCount());
         } else if (sc == 0 && sii == 5) {   // Detect > Evil Twin (multi-SSID)
             snprintf(sbuf, sizeof(sbuf), "%d multi-SSID", cb.getMultiSSIDCount());
+        } else if (sc == 0 && sii == 6) {   // Detect > Remote ID (drones)
+            snprintf(sbuf, sizeof(sbuf), "%d drones", drone_count());
         } else if (sc == 1 && sii == 4) {   // Scan > BLE Adverts (frame counter)
             snprintf(sbuf, sizeof(sbuf), "%d BLE pkts", cb.getBTFrames());
         } else if (sc == 2 && sii == 1) {   // Monitor > Packet Rate (total frames)
@@ -4037,6 +4043,26 @@ static void cb_poll_flock(void) {
     }
 }
 
+// Remote ID (drone) poller. The drone store recycles/updates slots in place
+// (keyed by UAS serial), so we log each slot's contact once when it first
+// appears and reset the flag when the slot frees. Status bar shows live count.
+static uint8_t cb_drone_logged[DRONE_MAX] = {0};
+static void cb_poll_drone(void) {
+    for (int i = 0; i < DRONE_MAX; i++) {
+        const DroneRec *d = drone_get(i);
+        if (!d) { cb_drone_logged[i] = 0; continue; }
+        if (cb_drone_logged[i]) continue;
+        cb_drone_logged[i] = 1;
+        char alt[16];
+        if (d->altGeo > INV_ALT)       snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
+        else if (d->height > INV_ALT)  snprintf(alt, sizeof(alt), "%.0fm", d->height);
+        else                           snprintf(alt, sizeof(alt), "alt?");
+        char line[96];
+        snprintf(line, sizeof(line), "DRONE: %s %s %ddBm\n", d->uasId, alt, d->rssi);
+        cb_log_append(line);
+    }
+}
+
 static void cb_poll_pwnagotchi(void) {
     int count = cb.getPwnagotchiCount();
     while (cb_output_last_pwna < count) {
@@ -4357,6 +4383,7 @@ static void cb_output_poll_cb(lv_timer_t *timer) {
                 case 3: cb_poll_flock(); break;
                 case 4: cb_poll_pinescan(); break;          // Rogue AP (Pineapple)
                 case 5: cb_poll_multissid(); break;         // Evil Twin (Multi-SSID)
+                case 6: cb_poll_drone(); break;             // Remote ID (drone)
                 default: cb_poll_aps(); break;
             }
             break;
@@ -4576,6 +4603,8 @@ static void cb_tool_start_stop_cb(lv_event_t *e) {
             cb_output_last_airtag  = cb.getAirTagCount();
             cb_output_last_flipper = cb.getFlipperCount();
             cb_output_last_flock   = 0;
+            drone_clear();
+            for (int _di = 0; _di < DRONE_MAX; _di++) cb_drone_logged[_di] = 0;
             cb_output_last_pwna    = 0;
             cb_output_last_pine    = cb.getPinescanCount();
             cb_output_last_multi   = cb.getMultiSSIDCount();

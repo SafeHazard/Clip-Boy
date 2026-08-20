@@ -2,6 +2,7 @@
 #include "esp_random.h"
 #include "WiFiScan.h"
 #include "lang_var.h"
+#include "drone_store.h"  // Clip-Boy: Remote ID BLE decoder (drone_ingest_ble)
 #include <LittleFS.h>  // Clip-Boy local patch (DC34-147): PCAP fallback target
 
 // SECURITY (fake-ultrareview Finding 2): bound the attacker-controlled SSID length
@@ -859,6 +860,19 @@ extern "C" {
               wifi_scan_obj.flock_devices->add(fd);
             }
           }
+          else if (wifi_scan_obj.currentScanMode == BT_SCAN_REMOTE_ID) {
+            #ifndef HAS_NIMBLE_2
+              const uint8_t* _pl = advertisedDevice->getPayload();
+              size_t _pl_len = advertisedDevice->getPayloadLength();
+            #else
+              const std::vector<unsigned char>& _plv = advertisedDevice->getPayload();
+              const uint8_t* _pl = _plv.data();
+              size_t _pl_len = _plv.size();
+            #endif
+            uint8_t _mac[6];
+            memcpy(_mac, advertisedDevice->getAddress().getVal(), 6);
+            drone_ingest_ble(_mac, advertisedDevice->getRSSI(), _pl, (uint16_t)_pl_len);
+          }
           else if (wifi_scan_obj.currentScanMode == BT_SCAN_FLOCK_WARDRIVE) {
             bool do_save = false;
             #ifdef HAS_GPS
@@ -1580,6 +1594,19 @@ extern "C" {
               // String compare in the helper correct.
               wifi_scan_obj.addFlockDeviceDeduped(fd);
             }
+          }
+          else if (wifi_scan_obj.currentScanMode == BT_SCAN_REMOTE_ID) {
+            #ifndef HAS_NIMBLE_2
+              const uint8_t* _pl = advertisedDevice->getPayload();
+              size_t _pl_len = advertisedDevice->getPayloadLength();
+            #else
+              const std::vector<unsigned char>& _plv = advertisedDevice->getPayload();
+              const uint8_t* _pl = _plv.data();
+              size_t _pl_len = _plv.size();
+            #endif
+            uint8_t _mac[6];
+            memcpy(_mac, advertisedDevice->getAddress().getVal(), 6);
+            drone_ingest_ble(_mac, advertisedDevice->getRSSI(), _pl, (uint16_t)_pl_len);
           }
           else if (wifi_scan_obj.currentScanMode == BT_SCAN_FLOCK_WARDRIVE) {
             bool do_save = false;
@@ -2373,6 +2400,7 @@ void WiFiScan::StartScan(uint8_t scan_mode, uint16_t color) {
           (scan_mode == BT_SCAN_AIRTAG_MON) ||
           (scan_mode == BT_SCAN_FLIPPER) ||
           (scan_mode == BT_SCAN_FLOCK) ||
+          (scan_mode == BT_SCAN_REMOTE_ID) ||
           (scan_mode == BT_SCAN_FLOCK_WARDRIVE) ||
           (scan_mode == BT_SCAN_ANALYZER) ||
           (scan_mode == BT_SCAN_SIMPLE) ||
@@ -2751,6 +2779,7 @@ void WiFiScan::StopScan(uint8_t scan_mode)
   (currentScanMode == WIFI_SCAN_PACKET_RATE) ||
   (currentScanMode == WIFI_CONNECTED) ||
   (currentScanMode == BT_SCAN_FLOCK) ||
+  (currentScanMode == BT_SCAN_REMOTE_ID) ||
   (currentScanMode == BT_SCAN_FLOCK_WARDRIVE) ||
   (currentScanMode == WIFI_SCAN_DETECT_FOLLOW) ||
   (currentScanMode == LV_JOIN_WIFI) ||
@@ -2820,6 +2849,7 @@ void WiFiScan::StopScan(uint8_t scan_mode)
   (currentScanMode == BT_SCAN_AIRTAG_MON) ||
   (currentScanMode == BT_SCAN_FLIPPER) ||
   (currentScanMode == BT_SCAN_FLOCK) ||
+  (currentScanMode == BT_SCAN_REMOTE_ID) ||
   (currentScanMode == BT_SCAN_FLOCK_WARDRIVE) ||
   (currentScanMode == BT_ATTACK_SOUR_APPLE) ||
   (currentScanMode == BT_ATTACK_SWIFTPAIR_SPAM) ||
@@ -5943,12 +5973,13 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
     #endif
 
     if ((scan_mode == BT_SCAN_FLOCK) ||
+        (scan_mode == BT_SCAN_REMOTE_ID) ||
         (scan_mode == BT_SCAN_FLOCK_WARDRIVE) ||
         (scan_mode == WIFI_SCAN_WAR_DRIVE) ||
         (scan_mode == WIFI_SCAN_DETECT_FOLLOW) ||
         (scan_mode == BT_SCAN_SIMPLE) ||
         (scan_mode == BT_SCAN_SIMPLE_TWO) ||
-        (scan_mode == BT_SCAN_WAR_DRIVE_CONT) || 
+        (scan_mode == BT_SCAN_WAR_DRIVE_CONT) ||
         (scan_mode == BT_SCAN_ANALYZER))
       NimBLEDevice::setScanDuplicateCacheSize(0);
     else {
@@ -5966,6 +5997,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
         (scan_mode == BT_SCAN_AIRTAG_MON) ||
         (scan_mode == BT_SCAN_FLIPPER) ||
         (scan_mode == BT_SCAN_FLOCK) ||
+        (scan_mode == BT_SCAN_REMOTE_ID) ||
         (scan_mode == BT_SCAN_FLOCK_WARDRIVE) ||
         (scan_mode == BT_SCAN_SIMPLE) ||
         (scan_mode == BT_SCAN_SIMPLE_TWO))
@@ -6038,6 +6070,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
                 (scan_mode == BT_SCAN_WAR_DRIVE) ||
                 (scan_mode == BT_SCAN_WAR_DRIVE_CONT) ||
                 (scan_mode == BT_SCAN_FLOCK) ||
+                (scan_mode == BT_SCAN_REMOTE_ID) ||
                 (scan_mode == BT_SCAN_FLOCK_WARDRIVE) ||
                 (scan_mode == BT_SCAN_SIMPLE) ||
                 (scan_mode == BT_SCAN_AIRTAG) ||
@@ -6171,6 +6204,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
         (scan_mode == WIFI_SCAN_WAR_DRIVE) ||
         (scan_mode == BT_SCAN_ANALYZER) ||
         (scan_mode == BT_SCAN_FLOCK) ||
+        (scan_mode == BT_SCAN_REMOTE_ID) ||
         (scan_mode == BT_SCAN_SIMPLE) ||
         (scan_mode == BT_SCAN_SIMPLE_TWO) ||
         (scan_mode == BT_SCAN_FLOCK_WARDRIVE))
@@ -12430,10 +12464,11 @@ void WiFiScan::main(uint32_t currentTime)
     }
   }
   else if ((currentScanMode == BT_SCAN_FLOCK) ||
+          (currentScanMode == BT_SCAN_REMOTE_ID) ||
           (currentScanMode == BT_SCAN_FLOCK_WARDRIVE) ||
           (currentScanMode == BT_SCAN_WAR_DRIVE) ||
           (currentScanMode == BT_SCAN_WAR_DRIVE_CONT) ||
-          (currentScanMode == BT_SCAN_FLIPPER) || 
+          (currentScanMode == BT_SCAN_FLIPPER) ||
           (currentScanMode == BT_SCAN_AIRTAG)) {
     if (currentTime - initTime >= this->channel_hop_delay * HOP_DELAY) {
       initTime = millis();
@@ -12456,6 +12491,8 @@ void WiFiScan::main(uint32_t currentTime)
         }
       #endif
       if (currentScanMode == BT_SCAN_FLOCK)
+        channelHop();
+      else if (currentScanMode == BT_SCAN_REMOTE_ID)
         channelHop();
       else if (currentScanMode == BT_SCAN_FLOCK_WARDRIVE) {
         #ifdef HAS_GPS
