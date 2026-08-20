@@ -140,14 +140,14 @@ arduino-cli compile \
   --build-path build  Clip-Boy.ino
 ```
 
-Expect roughly 74% app flash and 33% static RAM, clean. The image is
+Expect roughly 74% app flash and 34% static RAM, clean. The image is
 `build/Clip-Boy.ino.bin`. Unsigned dev builds boot fine, there is no hardware
 secure boot, so flash with esptool and skip the web flasher's signature check.
 
 Sanity check that it linked:
 
 ```
-xtensa-esp32s3-elf-nm build/Clip-Boy.ino.elf | grep -E "drone_ingest_ble|drone_count|btScanRemoteID"
+xtensa-esp32s3-elf-nm build/Clip-Boy.ino.elf | grep -E "drone_ingest_odid|drone_count|btScanRemoteID|rid_wifi"
 ```
 
 ## Gotchas learned the hard way
