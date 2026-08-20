@@ -182,15 +182,16 @@ static const ToolInfoEntry tool_info_table[] = {
     }},
     { 0, 6, {
         "Listens for drone Remote ID broadcasts (ASTM F3411 / Open Drone ID) over "
-        "Bluetooth. US federal law requires most drones to broadcast their serial, "
-        "live position, altitude, and the operator's location in the clear - this "
-        "is a passive receiver for exactly that public broadcast. A hit means a "
+        "WiFi and Bluetooth. US federal law requires most drones to broadcast their "
+        "serial, live position, altitude, and the operator's location in the clear - "
+        "this is a passive receiver for exactly that public broadcast. A hit means a "
         "compliant drone is transmitting nearby.",
-        "Bluetooth antenna enabled.",
-        "Output lists each drone by its UAS ID (serial) with altitude and signal "
-        "strength; the status bar shows a live count. Drones that broadcast Remote "
-        "ID only over WiFi (some larger models) will not appear on this Bluetooth-"
-        "only listener. A quiet screen is not proof the sky is empty.",
+        "WiFi and Bluetooth antennas enabled.",
+        "Output lists each drone by its UAS ID (serial) with altitude, signal "
+        "strength, and where it was heard - a WiFi channel, or BT for Bluetooth. "
+        "The status bar shows a live count. One antenna serves both radios and the "
+        "WiFi side hops channels, so a drone can take a few seconds to appear. A "
+        "quiet screen is not proof the sky is empty.",
         "Receive only - it transmits nothing. Reading Remote ID is what the "
         "broadcast is for; use what you see responsibly."
     }},

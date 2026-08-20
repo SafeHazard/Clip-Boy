@@ -1151,7 +1151,7 @@ static const ToolItem cat_detect[] = {
                           "themselves usually are not -- see More Info.",                     TAT_SIMPLE },
     { "Rogue AP",         "Flag APs that answer probes for SSIDs they shouldn't know.",      TAT_SIMPLE },
     { "Evil Twin",        "Flag duplicate SSIDs across multiple BSSIDs (evil-twin signal).", TAT_SIMPLE },
-    { "Remote ID",        "Detect drone Remote ID (ASTM F3411) broadcasts over Bluetooth.",  TAT_SIMPLE },
+    { "Remote ID",        "Detect drone Remote ID (ASTM F3411) over WiFi and Bluetooth.",   TAT_SIMPLE },
 };
 
 // --- id1 Scan ---
@@ -4057,8 +4057,14 @@ static void cb_poll_drone(void) {
         if (d->altGeo > INV_ALT)       snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
         else if (d->height > INV_ALT)  snprintf(alt, sizeof(alt), "%.0fm", d->height);
         else                           snprintf(alt, sizeof(alt), "alt?");
+        // channel 0 means the contact arrived over Bluetooth; anything else is
+        // the WiFi channel it was beaconing on.
+        char src[8];
+        if (d->channel) snprintf(src, sizeof(src), "ch%u", d->channel);
+        else            snprintf(src, sizeof(src), "BT");
         char line[96];
-        snprintf(line, sizeof(line), "DRONE: %s %s %ddBm\n", d->uasId, alt, d->rssi);
+        snprintf(line, sizeof(line), "DRONE: %s %s %ddBm %s\n",
+                 d->uasId, alt, d->rssi, src);
         cb_log_append(line);
     }
 }

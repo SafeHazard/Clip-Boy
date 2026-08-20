@@ -11,6 +11,126 @@
 // beacon clamp. `len` + `snifferPacket` must be in scope (each sniffer callback has them).
 #define CB_SSID_LEN(pkt, len) ((len) > 37 ? ((38 + (pkt)->payload[37] > (len)) ? ((len) > 38 ? (len) - 38 : 0) : (int)(pkt)->payload[37]) : 0)
 
+// --- Remote ID (drone) WiFi receive path ---------------------------------
+// Ported from the DroneWatch reference firmware (drone-remoteid/
+// standalone-dronewatch/rid_scan.cpp, sniff_beacon + sniff_nan_action).
+//
+// The promiscuous rx callback runs on the WiFi task, so it does the cheap
+// half only: walk the frame for the ODID element and copy those bytes out.
+// Decoding happens in WiFiScan::main() via rid_wifi_service(), because
+// drone_ingest_odid() puts an ODID_UAS_Data (~1KB) on the stack and running
+// the decoder in the rx path is how you get a stack overflow that only shows
+// up as a random crash on someone else's badge.
+//
+// A full ring drops the frame rather than blocking the rx path: Remote ID
+// beacons repeat at ~1Hz, so a dropped frame costs one update, not a contact.
+#define RID_WIFI_RING_LEN   8
+#define RID_WIFI_FRAME_MAX  232   // ODID message pack: 3 byte header + 9 * 25
+
+struct RidWifiFrame {
+    uint8_t  buf[RID_WIFI_FRAME_MAX];
+    uint16_t len;
+    uint8_t  mac[6];
+    int8_t   rssi;
+    uint8_t  channel;
+};
+
+static RidWifiFrame      s_rid_ring[RID_WIFI_RING_LEN];
+static volatile uint8_t  s_rid_head = 0;
+static volatile uint8_t  s_rid_tail = 0;
+static portMUX_TYPE      s_rid_mux  = portMUX_INITIALIZER_UNLOCKED;
+
+static void rid_wifi_enqueue(const uint8_t* odid, uint16_t len,
+                             const uint8_t* mac, int8_t rssi, uint8_t channel)
+{
+    if (!odid || len == 0) return;
+    if (len > RID_WIFI_FRAME_MAX) len = RID_WIFI_FRAME_MAX;
+    portENTER_CRITICAL(&s_rid_mux);
+    uint8_t next = (uint8_t)((s_rid_head + 1) % RID_WIFI_RING_LEN);
+    if (next != s_rid_tail) {
+        RidWifiFrame* f = &s_rid_ring[s_rid_head];
+        memcpy(f->buf, odid, len);
+        f->len     = len;
+        memcpy(f->mac, mac, 6);
+        f->rssi    = rssi;
+        f->channel = channel;
+        s_rid_head = next;
+    }
+    portEXIT_CRITICAL(&s_rid_mux);
+}
+
+// Beacon: [24 byte hdr][12 byte fixed params] then the IE list. Remote ID
+// rides in a vendor-specific IE (id 221) with OUI FA:0B:BC and type 0x0D,
+// followed by a one-byte message counter and then the ODID message or pack.
+static void rid_sniff_beacon(const uint8_t* d, uint16_t len, int8_t rssi, uint8_t ch)
+{
+    static const uint8_t ODID_OUI[3] = {0xFA, 0x0B, 0xBC};
+    if (len < 36 + 2) return;
+    const uint8_t* sa = d + 10;
+    uint16_t pos = 36;
+    while (pos + 2 <= len) {
+        uint8_t id = d[pos], l = d[pos + 1];
+        if (pos + 2 + l > len) break;            // truncated IE, stop walking
+        if (id == 221 && l >= 6 && memcmp(d + pos + 2, ODID_OUI, 3) == 0 &&
+            d[pos + 5] == 0x0D) {
+            // skip id, len, OUI(3), type, counter = 7; body carries l - 5 ODID bytes
+            rid_wifi_enqueue(d + pos + 7, (uint16_t)(l - 5), sa, rssi, ch);
+            return;
+        }
+        pos += 2 + l;
+    }
+}
+
+// NAN action frame: fixed NAN cluster DA, WFA OUI + subtype 0x13, then a
+// service descriptor whose service ID is the ODID hash. Service info is
+// [counter][ODID message or pack].
+static void rid_sniff_nan_action(const uint8_t* d, uint16_t len, int8_t rssi, uint8_t ch)
+{
+    static const uint8_t NAN_DA[6]      = {0x51, 0x6F, 0x9A, 0x01, 0x00, 0x00};
+    static const uint8_t WFA_OUI[3]     = {0x50, 0x6F, 0x9A};
+    static const uint8_t ODID_SVC_ID[6] = {0x88, 0x69, 0x19, 0x9D, 0x92, 0x09};
+    if (len < 24 + 4 + 3 + 10) return;
+    if (memcmp(d + 4, NAN_DA, 6) != 0) return;
+    const uint8_t* sa = d + 10;
+    const uint8_t* p = d + 24;
+    if (p[0] != 0x04 || p[1] != 0x09) return;
+    if (memcmp(p + 2, WFA_OUI, 3) != 0 || p[5] != 0x13) return;
+    p += 6;
+    if (p + 13 > d + len) return;
+    if (p[0] != 0x03) return;
+    if (memcmp(p + 3, ODID_SVC_ID, 6) != 0) return;
+    uint8_t svcInfoLen = p[12];
+    const uint8_t* si = p + 13;
+    if (si + svcInfoLen > d + len || svcInfoLen < 2) return;
+    rid_wifi_enqueue(si + 1, (uint16_t)(svcInfoLen - 1), sa, rssi, ch);
+}
+
+// Drop whatever is still queued. Called when the tool starts, so a frame
+// caught on the way out of the last run cannot surface as a fresh contact.
+static void rid_wifi_reset(void)
+{
+    portENTER_CRITICAL(&s_rid_mux);
+    s_rid_head = 0;
+    s_rid_tail = 0;
+    portEXIT_CRITICAL(&s_rid_mux);
+}
+
+// Drain the ring into the drone store. Called from WiFiScan::main() on the
+// Arduino task, where the decoder's stack appetite is affordable.
+static void rid_wifi_service(void)
+{
+    RidWifiFrame f;
+    for (int budget = RID_WIFI_RING_LEN; budget > 0; budget--) {
+        portENTER_CRITICAL(&s_rid_mux);
+        if (s_rid_tail == s_rid_head) { portEXIT_CRITICAL(&s_rid_mux); return; }
+        f = s_rid_ring[s_rid_tail];
+        s_rid_tail = (uint8_t)((s_rid_tail + 1) % RID_WIFI_RING_LEN);
+        portEXIT_CRITICAL(&s_rid_mux);
+        drone_ingest_odid(f.mac, f.rssi, f.channel, f.buf, f.len);
+    }
+}
+// --- end Remote ID WiFi receive path -------------------------------------
+
 // --- ClipBoy NimBLE double-init workaround ---
 // NimBLE is never deinit'd on CLIPBOY (deinit races with the host task on
 // Core 0, causing PC=0x0 crash).  NimBLEDevice::init("") is NOT a no-op in
@@ -2405,7 +2525,9 @@ void WiFiScan::StartScan(uint8_t scan_mode, uint16_t color) {
           (scan_mode == BT_SCAN_ANALYZER) ||
           (scan_mode == BT_SCAN_SIMPLE) ||
           (scan_mode == BT_SCAN_SIMPLE_TWO)) {
-    if (scan_mode == BT_SCAN_FLOCK)
+    // Remote ID rides on WiFi beacons as well as BLE (DJI and most consumer
+    // drones use the WiFi path), so bring the promiscuous sniffer up too.
+    if ((scan_mode == BT_SCAN_FLOCK) || (scan_mode == BT_SCAN_REMOTE_ID))
       this->RunProbeScan(scan_mode, color);
 
     #ifdef HAS_BT
@@ -5848,6 +5970,10 @@ void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
         display_obj.tft.drawCentreString("MAC Monitor",TFT_WIDTH / 2,16,2);
       else if (scan_mode == WIFI_SCAN_STATION_WAR_DRIVE)
         display_obj.tft.drawCentreString("Station Wardrive",TFT_WIDTH / 2,16,2);
+      else if (scan_mode == BT_SCAN_REMOTE_ID) {
+        Serial.println(F("Starting WiFi sniff for Remote ID..."));
+        display_obj.tft.drawCentreString("Remote ID",TFT_WIDTH / 2,16,2);
+      }
       else {
         Serial.println(F("Starting WiFi sniff for Flock..."));
         display_obj.tft.drawCentreString("Flock Sniff",TFT_WIDTH / 2,16,2);
@@ -5859,7 +5985,10 @@ void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
     display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
     display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
   #endif
-  
+
+  if (scan_mode == BT_SCAN_REMOTE_ID)
+    rid_wifi_reset();
+
   esp_wifi_init(&cfg2);
   #ifdef HAS_IDF_3
     esp_wifi_set_country(&country);
@@ -8992,6 +9121,22 @@ void WiFiScan::beaconSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type
           }
         }
       }
+    }
+  }
+  else if (wifi_scan_obj.currentScanMode == BT_SCAN_REMOTE_ID) {
+    if (type == WIFI_PKT_MGMT) {
+      // sig_len counts the 4-byte FCS. Walking IEs into it would read trailing
+      // garbage as an element header, so trim it before the walk.
+      uint16_t rid_len = (snifferPacket->rx_ctrl.sig_len > 4)
+                         ? (uint16_t)(snifferPacket->rx_ctrl.sig_len - 4)
+                         : 0;
+      int8_t   rid_rssi = (int8_t)snifferPacket->rx_ctrl.rssi;
+      uint8_t  rid_ch   = (uint8_t)snifferPacket->rx_ctrl.channel;
+
+      if (snifferPacket->payload[0] == 0x80)        // beacon
+        rid_sniff_beacon(snifferPacket->payload, rid_len, rid_rssi, rid_ch);
+      else if (snifferPacket->payload[0] == 0xD0)   // action frame (NAN)
+        rid_sniff_nan_action(snifferPacket->payload, rid_len, rid_rssi, rid_ch);
     }
   }
   else if (wifi_scan_obj.currentScanMode == WIFI_SCAN_DETECT_FOLLOW) {
@@ -12470,6 +12615,11 @@ void WiFiScan::main(uint32_t currentTime)
           (currentScanMode == BT_SCAN_WAR_DRIVE_CONT) ||
           (currentScanMode == BT_SCAN_FLIPPER) ||
           (currentScanMode == BT_SCAN_AIRTAG)) {
+    // Decode WiFi-side Remote ID frames off the rx path. Must run every pass,
+    // not just on the hop tick: the BLE cycle below returns early half the time.
+    if (currentScanMode == BT_SCAN_REMOTE_ID)
+      rid_wifi_service();
+
     if (currentTime - initTime >= this->channel_hop_delay * HOP_DELAY) {
       initTime = millis();
       #ifdef HAS_BT

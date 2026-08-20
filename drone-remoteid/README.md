@@ -47,7 +47,23 @@ in the sketch tree, not this directory:
 - `Clip-Boy/{ui_nav.h,tool_info.h}` — menu item, live-log poller, `"%d drones"`
   status branch, More-Info entry.
 
-**Status: Bluetooth LE only. The WiFi path is the open task, see below.**
+**Status: WiFi and Bluetooth LE, not yet tested on hardware.** The BLE path is
+hardware-tested. The WiFi path was ported from DroneWatch and its byte offsets
+are covered by `tests/`, but nothing has flown at it yet.
+
+The WiFi side works like this. `StartScan` sends `BT_SCAN_REMOTE_ID` through
+`RunProbeScan`, the same promiscuous setup `BT_SCAN_FLOCK` uses, so the tool
+runs the WiFi sniffer and the BLE scan together. `beaconSnifferCallback` gets a
+`BT_SCAN_REMOTE_ID` branch that trims the FCS off `sig_len` and hands beacons
+(`0x80`) and action frames (`0xD0`) to `rid_sniff_beacon` / `rid_sniff_nan_action`.
+Those walk the frame for the ODID element and copy the bytes into a small ring,
+because the callback runs on the WiFi task and `drone_ingest_odid()` puts a ~1KB
+`ODID_UAS_Data` on the stack. `WiFiScan::main()` drains the ring through the
+decoder on the Arduino task. `channelHop()` was already wired for this mode.
+
+`WIFI_SCAN_WAR_DRIVE` turned out to be the wrong model to copy despite the
+handoff note: it wardrives through `WiFi.scanNetworks` and returns early unless
+a GPS module is present. `RunProbeScan` is the promiscuous path.
 
 ### `standalone-dronewatch/` — the reference implementation
 
@@ -146,32 +162,36 @@ xtensa-esp32s3-elf-nm build/Clip-Boy.ino.elf | grep -E "drone_ingest_ble|drone_c
   cycling (Clip-Boy's `WiFiScan::main` cycles BLE about every second).
 - **Core versions.** See above. This is the single easiest way to waste an hour.
 
+## Tests
+
+`tests/test_ie_walk.py` mirrors the two IE walkers in Python and runs them
+against 802.11 frames assembled from the layouts, so a drifted offset fails
+instead of quietly decoding garbage. It also greps `WiFiScan.cpp` for the magic
+constants, so changing them there without changing the test is caught.
+
+```
+python drone-remoteid/tests/test_ie_walk.py
+```
+
+This is not a substitute for flying a drone at the badge. It only checks the
+part that can be checked without hardware.
+
 ## What's left
 
-1. **WiFi Remote ID on the Clip-Boy tool.** The tool was cloned from the
-   BLE-only `BT_SCAN_FLOCK`, so it never learned WiFi. Model it on
-   `WIFI_SCAN_WAR_DRIVE` (mode 32), which already runs BT and a WiFi beacon
-   sniff together (`grep WIFI_SCAN_WAR_DRIVE libs/ClipBoy/src/WiFiScan.cpp`).
-   Start a WiFi promiscuous beacon sniff with channel hopping wherever the mode
-   currently mirrors only Flock, then in the `WIFI_PKT_MGMT` rx callback add a
-   `currentScanMode == BT_SCAN_REMOTE_ID` branch that walks beacon IEs for the
-   ODID vendor element (OUI `FA:0B:BC`, type `0x0D`) and calls
-   `drone_ingest_odid(mac, rssi, channel, <bytes after the 1-byte counter>, len)`.
-   The exact IE walk is already written in `standalone-dronewatch/rid_scan.cpp`
-   as `sniff_beacon()` and `sniff_nan_action()`, so port those two functions.
-   They feed the same decoder, and no decoder work is needed. When it works,
-   drop the "Bluetooth-only" caveat from the `tool_info.h` `{0,6}` entry.
-   `tool_is_bluetooth` stays true, since the airplane dialog only needs to know
-   a radio is in use.
-2. **ESP32 WiFi (+BLE) transmitter firmware**, a real simulator for the WiFi
-   path, since Windows cannot do it. Use opendroneid's
-   `odid_wifi_build_message_pack_beacon_frame()` plus `esp_wifi_80211_tx()`. A
-   WiFi beacon carries the full message pack in one frame, so the receiver shows
-   one clean, fully populated contact instead of the MAC-rotation fragmentation
-   the BLE sim produces. Target any spare ESP32.
-3. Nice-to-haves: SD-card logging, a north-up radar plot, and a UART GNSS module
-   with TinyGPS++ for range and bearing. The drone already broadcasts its own
-   absolute position, so GPS only adds *your* position for relative math.
+Hardware testing of the WiFi path is the next step: build, flash, and fly
+something Remote ID compliant at it. Until that happens the WiFi path is
+written but unproven.
+
+Deliberately out of scope for this repo:
+
+- **A WiFi transmitter simulator.** Windows cannot inject 802.11 beacons, so
+  exercising the WiFi path without a real drone needs an ESP32 running
+  opendroneid's `odid_wifi_build_message_pack_beacon_frame()` through
+  `esp_wifi_80211_tx()`. That is a transmitter, not a detector, and belongs in
+  its own project rather than inside the badge firmware.
+- **SD logging, a north-up radar plot, and a GPS module** for range and
+  bearing. Parked. The drone already broadcasts its own absolute position, so
+  GPS would only add *your* position for the relative math.
 
 ## Licensing
 
