@@ -47,9 +47,11 @@ in the sketch tree, not this directory:
 - `Clip-Boy/{ui_nav.h,tool_info.h}` — menu item, live-log poller, `"%d drones"`
   status branch, More-Info entry.
 
-**Status: WiFi and Bluetooth LE, not yet tested on hardware.** The BLE path is
-hardware-tested. The WiFi path was ported from DroneWatch and its byte offsets
-are covered by `tests/`, but nothing has flown at it yet.
+**Status: WiFi and Bluetooth LE. Builds clean, BLE verified on this hardware
+2026-08-20, WiFi path not yet tested on hardware.** The WiFi path was ported
+from DroneWatch, its byte offsets are covered by `tests/`, and it compiles and
+links into the image (7,039,657 bytes, 74% of app flash, 34% static RAM, no
+warnings), but no ODID frame has ever reached it.
 
 The WiFi side works like this. `StartScan` sends `BT_SCAN_REMOTE_ID` through
 `RunProbeScan`, the same promiscuous setup `BT_SCAN_FLOCK` uses, so the tool
@@ -161,6 +163,27 @@ xtensa-esp32s3-elf-nm build/Clip-Boy.ino.elf | grep -E "drone_ingest_odid|drone_
   Time-slice like DroneWatch does, or lean on the host firmware's existing scan
   cycling (Clip-Boy's `WiFiScan::main` cycles BLE about every second).
 - **Core versions.** See above. This is the single easiest way to waste an hour.
+
+## Hardware log
+
+**2026-08-20, public Res34rch build (no `--rift`), Waveshare ESP32-S3-Touch-LCD-2.8.**
+Built with core 2.0.10, flashed app-only to `0x10000`, hash verified, badge boots.
+Ran `windows-sim/rid_sim_windows.py`; contacts appeared in Tools -> Detect ->
+Remote ID carrying the `BT` source tag. That confirms the decoder, the contact
+table, the BLE ingest branch, and the changed UI on real hardware. The WiFi
+beacon and NAN paths are still unexercised.
+
+Two things worth knowing next time:
+
+- The BLE simulator produces several contacts, not one. Windows rotates its BLE
+  MAC between advertisements and only the Basic ID message carries the UAS
+  serial, so Location and System messages landing under a fresh MAC open their
+  own slots. A real drone holds a stable MAC. Not a defect in the store.
+- The ESP32-S3 USB-Serial/JTAG bridge cannot sustain a long `read-flash`. It
+  stalls at roughly 4MB cumulative, in one continuous read and across separate
+  1MB reads alike, while 64KB reads work anywhere in flash. A full 16MB backup
+  over this bridge did not work; the signed bins listed in `release/SHA256SUMS`
+  are the practical restore path.
 
 ## Tests
 
