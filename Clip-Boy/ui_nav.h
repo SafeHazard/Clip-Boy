@@ -268,6 +268,12 @@ static lv_obj_t    *screensaver_overlay = NULL;
 static lv_obj_t    *screensaver_bar     = NULL;
 static lv_obj_t    *screensaver_lbl     = NULL;
 static lv_timer_t  *screensaver_timer   = NULL;
+// Idle clock, top-left of the screensaver. There is no RTC on this board, so
+// the time is only ever as good as the last NTP sync -- see the configTzTime()
+// call on the WiFi join path. getLocalTime() reports false until that lands,
+// which IS the "never set" state, so no separate have-we-synced flag exists.
+static lv_obj_t    *ss_clock_lbl       = NULL;
+static lv_timer_t  *ss_clock_timer     = NULL;
 static uint32_t     screensaver_hold_start = 0;
 
 // ── Flying-Clippy screensaver sprites (ARG-complete reward, cfg.ss_style==2) ──
@@ -290,6 +296,11 @@ static const float clippy_speed[3] = { 4.2f, 2.9f, 1.9f };  // parallax: near fl
 #define CLIPPY_SIN 0.09150f   // sin 5.25 deg  (rise up)
 
 #define SCREENSAVER_HOLD_MS  2000
+
+// POSIX timezone for the idle clock, US Central with the DST changeover rules
+// baked in, so it follows the switch without anyone editing a number twice a
+// year. configTzTime() reads this format directly.
+#define CB_TZ_POSIX          "CST6CDT,M3.2.0,M11.1.0"
 // Unlock-hold progress tone: a soft sine that sweeps A3->E5 (log/perceptual) as
 // the bar fills, then a short E6 chirp on completion. Gentle, mute+toggle gated.
 #define SS_TONE_LO_HZ      220.0f   // A3 - hold start
@@ -5727,6 +5738,13 @@ static void show_tool_text(const ToolItem *wi, int32_t encoded) {
             bool ok = cb.joinWiFi(String(wifi_join_ssid), String(wifi_join_pw));
             CB_LOGF("[CB] joinWiFi -> %s\n", ok ? "OK" : "FAIL");
 
+            // Only time source the badge has. SNTP runs in the background from
+            // here and sets the system clock; the idle clock shows --:-- until
+            // the first packet lands. With no RTC the time does survive a soft
+            // reboot and a WiFi teardown, but not a power cycle, so this fires
+            // on every join rather than once.
+            if (ok) configTzTime(CB_TZ_POSIX, "pool.ntp.org", "time.nist.gov");
+
             audio_resume();
 
             if (wifi_status_label)
@@ -9719,6 +9737,37 @@ static void clippy_cleanup_cb(lv_event_t *e) {
     for (int i = 0; i < CLIPPY_N; i++) clippy_spr[i] = NULL;
 }
 
+// ─── Idle clock ───────────────────────────────────────────────────────────────
+// Redrawn once a second while the screensaver is up. Cheap, and only alive for
+// as long as the overlay is.
+static void ss_clock_update(void) {
+    if (!ss_clock_lbl) return;
+    struct tm t;
+    // Zero timeout on purpose: this runs on the UI task, and the default 5000ms
+    // would stall the whole interface waiting for a sync that may never arrive
+    // (no network, no RTC). False simply means "not set yet", and saying so is
+    // better than showing a confident 00:00 that is wrong.
+    if (getLocalTime(&t, 0)) {
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%02d:%02d", t.tm_hour, t.tm_min);
+        lv_label_set_text(ss_clock_lbl, buf);
+    } else {
+        lv_label_set_text(ss_clock_lbl, "--:--");
+    }
+}
+
+static void ss_clock_tick_cb(lv_timer_t *t) { (void)t; ss_clock_update(); }
+
+// Same discipline as clippy_cleanup_cb, and for the same reason: this timer
+// writes into a label owned by the overlay, so it has to die on EVERY
+// overlay-delete path (dismiss, nav rebuild, live theme switch) or it outlives
+// its target. That is the project's LVGL-timer UAF trap.
+static void ss_clock_cleanup_cb(lv_event_t *e) {
+    (void)e;
+    if (ss_clock_timer) { lv_timer_delete(ss_clock_timer); ss_clock_timer = NULL; }
+    ss_clock_lbl = NULL;
+}
+
 static void screensaver_activate(void) {
     if (screensaver_active) return;
     // Flying-Clippy is an ARG reward; if progress was reset, fall back to Clip-Boy.
@@ -9786,6 +9835,22 @@ static void screensaver_activate(void) {
         }
         lv_obj_add_event_cb(screensaver_overlay, clippy_cleanup_cb, LV_EVENT_DELETE, NULL);
         clippy_timer = lv_timer_create(clippy_anim_cb, 70, NULL);
+    }
+
+    // Idle clock, top left. IGNORE_LAYOUT so the flex centering that owns the
+    // unlock label and bar leaves it in the corner, same trick the sprites use.
+    // Created after them so it draws on top. Skipped on Blank (ss_style 1),
+    // which runs the backlight at zero: a clock nobody can see is just a timer
+    // waking the CPU every second in a state that exists to save power.
+    if (cfg.ss_style != 1) {
+        ss_clock_lbl = lv_label_create(screensaver_overlay);
+        lv_obj_add_flag(ss_clock_lbl, LV_OBJ_FLAG_IGNORE_LAYOUT);
+        lv_obj_set_pos(ss_clock_lbl, 8, 6);
+        lv_obj_set_style_text_font(ss_clock_lbl, &ui_font_pipboy_16, 0);
+        lv_obj_set_style_text_color(ss_clock_lbl, pip_primary(), 0);
+        ss_clock_update();   // paint immediately; the timer only handles changes
+        lv_obj_add_event_cb(screensaver_overlay, ss_clock_cleanup_cb, LV_EVENT_DELETE, NULL);
+        ss_clock_timer = lv_timer_create(ss_clock_tick_cb, 1000, NULL);
     }
 
     screensaver_lbl = lv_label_create(screensaver_overlay);
