@@ -74,11 +74,17 @@ in the sketch tree, not this directory:
   they were logged under, so a recycled slot is announced as the new contact it
   now holds rather than inheriting the old one's "already logged" flag.
 
-**Status: WiFi and Bluetooth LE. Builds clean, BLE verified on this hardware
-2026-08-20, WiFi path not yet tested on hardware.** The WiFi path was ported
-from DroneWatch, its byte offsets are covered by `tests/`, and it compiles and
-links into the image (7,039,657 bytes, 74% of app flash, 34% static RAM, no
-warnings), but no ODID frame has ever reached it.
+**Status: WiFi and Bluetooth LE, both verified on this hardware.** BLE on
+2026-08-20 against the Windows simulator, WiFi on 2026-08-21 against
+`standalone-dronesim`. The image is 7,039,657 bytes, 74% of app flash, 34%
+static RAM, no warnings.
+
+The WiFi run was made unambiguous by turning the simulator BLE path off first,
+so the only radio in play was WiFi. The tool raised a contact carrying serial
+`SPACEBADGE-SIM-0001`, a moving position, a stationary operator location, and a
+link line reading `WiFi ch6`. That last field is the proof: it comes from
+`d->channel`, which is only ever non-zero on the WiFi ingest path, so a stale
+BLE contact cannot produce it.
 
 The WiFi side works like this. `StartScan` sends `BT_SCAN_REMOTE_ID` through
 `RunProbeScan`, the same promiscuous setup `BT_SCAN_FLOCK` uses, so the tool
@@ -355,6 +361,17 @@ Two failures on the way, both recorded as gotchas above:
 After the fix: no reboots, no aborts, and counters climbing steadily with zero
 WiFi and zero encode errors. The on-air source address is `96:A9:90:17:70:D0`,
 the AP MAC, which is the USB device MAC with the locally-administered bit set.
+
+**2026-08-21, WiFi receive path proven.** With the simulator BLE path disabled,
+so WiFi was the only radio transmitting, the Clip-Boy raised a contact in
+Tools -> Detect -> Drone ID showing serial `SPACEBADGE-SIM-0001`, a position
+that tracked the simulated flight, an operator location that stayed put, and
+`WiFi ch6` on the link line. `d->channel` is set only by `drone_ingest_odid()`
+on the WiFi path, so that field is what makes the result airtight rather than a
+BLE contact left over from an earlier run.
+
+This closes the gap opened by `267cdad`, which added the WiFi receive path in
+code and left it untested for want of anything that could transmit to it.
 
 The simulator also caught a false alarm worth recording. The Clip-Boy detail
 panel appeared to show the same coordinates for POS and PILOT. The panel was
