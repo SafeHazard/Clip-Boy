@@ -5971,8 +5971,8 @@ void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
       else if (scan_mode == WIFI_SCAN_STATION_WAR_DRIVE)
         display_obj.tft.drawCentreString("Station Wardrive",TFT_WIDTH / 2,16,2);
       else if (scan_mode == BT_SCAN_REMOTE_ID) {
-        Serial.println(F("Starting WiFi sniff for Remote ID..."));
-        display_obj.tft.drawCentreString("Remote ID",TFT_WIDTH / 2,16,2);
+        Serial.println(F("Starting WiFi sniff for Drone ID..."));
+        display_obj.tft.drawCentreString("Drone ID",TFT_WIDTH / 2,16,2);
       }
       else {
         Serial.println(F("Starting WiFi sniff for Flock..."));

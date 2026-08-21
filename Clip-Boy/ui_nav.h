@@ -1151,7 +1151,7 @@ static const ToolItem cat_detect[] = {
                           "themselves usually are not -- see More Info.",                     TAT_SIMPLE },
     { "Rogue AP",         "Flag APs that answer probes for SSIDs they shouldn't know.",      TAT_SIMPLE },
     { "Evil Twin",        "Flag duplicate SSIDs across multiple BSSIDs (evil-twin signal).", TAT_SIMPLE },
-    { "Remote ID",        "Detect drone Remote ID (ASTM F3411) over WiFi and Bluetooth.",   TAT_SIMPLE },
+    { "Drone ID",         "Detect drone Remote ID (ASTM F3411) over WiFi and Bluetooth.",   TAT_SIMPLE },
 };
 
 // --- id1 Scan ---
@@ -1198,6 +1198,7 @@ static const ToolItem cat_utilities[] = {
     { "Select AP",            "Select an AP from scan results for targeting.",               TAT_AP },
     { "Clear All",            "Clear all scanned data (APs, stations, SSIDs).",              TAT_IMMEDIATE },
     { "Set Channel",          "Set WiFi monitor channel (1 to 14, or Auto).",                TAT_CHANNEL },
+    { "List Drones",          "View Drone ID contacts. Tap one for position and pilot.",     TAT_LIST_VIEW },
 };
 
 // --- id5 Network ---
@@ -1308,7 +1309,7 @@ static inline bool tool_is_bluetooth(const ToolItem *wi) {
     // Bluetooth-only tool -- on every shipped badge. Rename a tool, grep its old name.
     static const char * const bt_tools[] = {
         "AirTag", "Skimmer Check", "Flipper Zero", "Flock Batteries",
-        "Remote ID",
+        "Drone ID",
         "BT Devices", "BLE Adverts",
         "List BT Devices", "List AirTags", "List Flippers",
 #ifdef CLIPBOY_RES34RCH  // BLE Spam tools exist only in Res34rch; their names
@@ -2297,6 +2298,7 @@ static void dispatch_clipboy_action(uint8_t cat, uint8_t item) {
                     cb.clearSSIDs();
                     break;
                 case 11: /* Set Channel - handled via dropdown */ break;
+                case 12: /* List Drones - handled in UI */       break;
             } break;
         case 5: // Network
             switch (item) {
@@ -4062,9 +4064,15 @@ static void cb_poll_drone(void) {
         char src[8];
         if (d->channel) snprintf(src, sizeof(src), "ch%u", d->channel);
         else            snprintf(src, sizeof(src), "BT");
-        char line[96];
+        // The serial arrives off the air from an unauthenticated transmitter,
+        // so it goes through cb_safe() like every other received string in this
+        // UI. Sanitising can expand each byte to a 3-byte marker, hence 104.
+        char idbuf[104];
+        strncpy(idbuf, cb_safe(d->uasId), sizeof(idbuf) - 1);
+        idbuf[sizeof(idbuf) - 1] = '\0';
+        char line[160];
         snprintf(line, sizeof(line), "DRONE: %s %s %ddBm %s\n",
-                 d->uasId, alt, d->rssi, src);
+                 idbuf, alt, d->rssi, src);
         cb_log_append(line);
     }
 }
@@ -5752,6 +5760,130 @@ static void tool_page_reshow(void) {
         rebuild_content();   // not on a tool page -> the old behaviour is correct
 }
 
+// ── Drone ID detail panel (Utilities > List Drones) ──────────────────────────
+// The store decodes far more than the live log line has room for: position,
+// the pilot's location, speed, heading, operator registration. List rows are
+// tappable and this prints the whole record. Anything the drone did not
+// broadcast reads "unknown" rather than 0, because 0,0 is a real place in the
+// Atlantic and a confident-looking zero is worse than an admission.
+static const char *drone_status_name(uint8_t s) {
+    switch (s) {
+        case ODID_STATUS_GROUND:    return "GROUND";
+        case ODID_STATUS_AIRBORNE:  return "AIRBORNE";
+        case ODID_STATUS_EMERGENCY: return "EMERGENCY";
+        case ODID_STATUS_REMOTE_ID_SYSTEM_FAILURE: return "RID FAIL";
+    }
+    return "UNKNOWN";
+}
+static const char *drone_ua_type_name(uint8_t t) {
+    switch (t) {
+        case ODID_UATYPE_AEROPLANE:                return "Fixed-wing";
+        case ODID_UATYPE_HELICOPTER_OR_MULTIROTOR: return "Multirotor";
+        case ODID_UATYPE_GYROPLANE:                return "Gyroplane";
+        case ODID_UATYPE_HYBRID_LIFT:              return "Hybrid";
+        case ODID_UATYPE_FREE_BALLOON:
+        case ODID_UATYPE_CAPTIVE_BALLOON:          return "Balloon";
+        case ODID_UATYPE_AIRSHIP:                  return "Airship";
+        case ODID_UATYPE_FREE_FALL_PARACHUTE:      return "Parachute";
+        case ODID_UATYPE_ROCKET:                   return "Rocket";
+        case ODID_UATYPE_GROUND_OBSTACLE:          return "Obstacle";
+    }
+    return "Unknown";
+}
+
+static void drone_detail_show(int idx) {
+    const DroneRec *d = drone_get(idx);
+    if (!d) return;   // slot freed or recycled between the tap and here
+
+    char pos[48], alt[64], spd[48], pilot[48], link[40], mac[20];
+    if (d->lat != 0.0 || d->lon != 0.0)
+        snprintf(pos, sizeof(pos), "%.5f, %.5f", d->lat, d->lon);
+    else snprintf(pos, sizeof(pos), "unknown");
+    if (d->opLat != 0.0 || d->opLon != 0.0)
+        snprintf(pilot, sizeof(pilot), "%.5f, %.5f", d->opLat, d->opLon);
+    else snprintf(pilot, sizeof(pilot), "unknown");
+    if (d->altGeo > INV_ALT)
+        snprintf(alt, sizeof(alt), "%.0fm MSL / %.0fm AGL",
+                 d->altGeo, d->height > INV_ALT ? d->height : 0.0f);
+    else snprintf(alt, sizeof(alt), "unknown");
+    if (d->speedH < INV_SPEED_H)
+        snprintf(spd, sizeof(spd), "%.1f m/s  hdg %.0f",
+                 d->speedH, d->direction < INV_DIR ? d->direction : 0.0f);
+    else snprintf(spd, sizeof(spd), "unknown");
+    snprintf(mac, sizeof(mac), "%02X:%02X:%02X:%02X:%02X:%02X",
+             d->mac[0], d->mac[1], d->mac[2], d->mac[3], d->mac[4], d->mac[5]);
+    if (d->channel) snprintf(link, sizeof(link), "WiFi ch%u  %ddBm",
+                             (unsigned)d->channel, d->rssi);
+    else            snprintf(link, sizeof(link), "Bluetooth  %ddBm", d->rssi);
+
+    // ID / operator / description arrive off the air from an unauthenticated
+    // transmitter, so they go through cb_safe() -- and into LOCALS first.
+    // cb_safe() hands back one of four rotating static buffers, so three live
+    // calls inside one snprintf argument list would be at the mercy of
+    // unspecified evaluation order. Same trap the Saved Networks rows document.
+    char id[104], oper[104], desc[104];
+    strncpy(id,   cb_safe(d->uasId),      sizeof(id)   - 1); id[sizeof(id) - 1]     = '\0';
+    strncpy(oper, cb_safe(d->operatorId), sizeof(oper) - 1); oper[sizeof(oper) - 1] = '\0';
+    strncpy(desc, cb_safe(d->selfDesc),   sizeof(desc) - 1); desc[sizeof(desc) - 1] = '\0';
+
+    char buf[640];
+    snprintf(buf, sizeof(buf),
+             "ID    %s\nTYPE  %s\nSTAT  %s\nMAC   %s\nPOS   %s\nALT   %s\n"
+             "SPD   %s\nPILOT %s\nOPER  %s\nDESC  %s\nLINK  %s\nPKTS  %u   AGE %us",
+             id, drone_ua_type_name(d->uaType), drone_status_name(d->status), mac,
+             pos, alt, spd, pilot, oper[0] ? oper : "-", desc[0] ? desc : "-",
+             link, (unsigned)d->packets,
+             (unsigned)((millis() - d->lastSeenMs) / 1000));
+
+    lv_obj_t *modal = lv_obj_create(lv_screen_active());
+    lv_obj_remove_style_all(modal);
+    lv_obj_set_size(modal, SCREEN_W, SCREEN_H);
+    lv_obj_set_style_bg_color(modal, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(modal, LV_OPA_80, 0);
+    lv_obj_remove_flag(modal, LV_OBJ_FLAG_SCROLLABLE);
+
+    lv_obj_t *box = lv_obj_create(modal);
+    lv_obj_remove_style_all(box);
+    lv_obj_set_size(box, 292, 210);
+    lv_obj_center(box);
+    lv_obj_set_style_bg_color(box, pip_bg(), 0);
+    lv_obj_set_style_bg_opa(box, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(box, pip_highlight(), 0);
+    lv_obj_set_style_border_width(box, 2, 0);
+    lv_obj_set_style_pad_all(box, 6, 0);
+    lv_obj_set_flex_flow(box, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_gap(box, 4, 0);
+    lv_obj_remove_flag(box, LV_OBJ_FLAG_SCROLLABLE);
+
+    make_label(box, "DRONE DETAIL", &ui_font_pipboy_16, pip_highlight());
+
+    // The record is taller than the box, so the text scrolls inside its own
+    // container and the Close button stays put below the fold-free zone --
+    // the same mistake "+ Add Network" had to be lifted out of.
+    lv_obj_t *txt_area = lv_obj_create(box);
+    lv_obj_remove_style_all(txt_area);
+    lv_obj_set_size(txt_area, lv_pct(100), 140);
+    lv_obj_set_flex_flow(txt_area, LV_FLEX_FLOW_COLUMN);
+    lv_obj_add_style(txt_area, &style_scrollbar, LV_PART_SCROLLBAR);
+
+    lv_obj_t *txt = make_label(txt_area, buf, &ui_font_pipboy_14, pip_primary());
+    lv_label_set_long_mode(txt, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(txt, lv_pct(100));
+
+    make_small_btn(box, "Close", [](lv_event_t *e) {
+        lv_obj_t *b = (lv_obj_t *)lv_event_get_target(e);
+        lv_obj_t *bx = lv_obj_get_parent(b);          // the box
+        lv_obj_delete(lv_obj_get_parent(bx));         // the modal backdrop
+        crt_scanlines_raise();
+    }, NULL);
+
+    crt_scanlines_raise();
+}
+
+static void drone_row_click_cb(lv_event_t *e) {
+    drone_detail_show((int)(intptr_t)lv_event_get_user_data(e));
+}
+
 // Build right pane for TAT_LIST_VIEW: Description + scrollable read-only list
 static void show_tool_list_view(const ToolItem *wi, uint8_t cat_idx, uint8_t item_idx) {
     lv_obj_t *desc = make_label(right_pane, wi->desc,
@@ -5928,6 +6060,37 @@ static void show_tool_list_view(const ToolItem *wi, uint8_t cat_idx, uint8_t ite
         // The "+ Add Network" button is built ABOVE list_area (see the top of this function),
         // so it can never be pushed below the fold by a growing list.
         has_data = true;  // the Add button above is always available
+    } else if (item_idx == 12) {  // List Drones (Drone ID contacts)
+        for (int i = 0; i < DRONE_MAX; i++) {
+            const DroneRec *d = drone_get(i);
+            if (!d) continue;
+            char src[10];
+            if (d->channel) snprintf(src, sizeof(src), "ch%u", (unsigned)d->channel);
+            else            snprintf(src, sizeof(src), "BT");
+            char alt[16];
+            if (d->altGeo > INV_ALT)      snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
+            else if (d->height > INV_ALT) snprintf(alt, sizeof(alt), "%.0fm", d->height);
+            else                          snprintf(alt, sizeof(alt), "alt?");
+            char idbuf[104];
+            strncpy(idbuf, cb_safe(d->uasId), sizeof(idbuf) - 1);
+            idbuf[sizeof(idbuf) - 1] = '\0';
+            bool id_warn = cb_safe_had_hostile;
+            char buf[160];
+            snprintf(buf, sizeof(buf), "%s  %s  %ddBm %s", idbuf, alt, d->rssi, src);
+
+            // Carry the REAL slot index on the row rather than its position in
+            // the list: this loop skips free slots, so the two diverge the
+            // moment a contact ages out, and you would open a detail panel for
+            // a different drone than you tapped.
+            lv_obj_t *row_btn = make_small_btn(list_area, buf, drone_row_click_cb,
+                                               (void *)(intptr_t)i);
+            lv_obj_set_width(row_btn, lv_pct(100));
+            if (id_warn) {
+                lv_obj_t *rl = lv_obj_get_child(row_btn, 0);
+                if (rl) lv_obj_set_style_text_color(rl, lv_color_hex(CB_WARN_RGB), 0);
+            }
+            has_data = true;
+        }
     }
     if (!has_data)
         make_label(list_area, "No data - run a scan first", &ui_font_pipboy_14, pip_dim());

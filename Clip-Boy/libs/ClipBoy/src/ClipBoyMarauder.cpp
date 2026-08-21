@@ -1138,7 +1138,7 @@ const char* ClipBoyMarauder::scanModeToString(uint8_t mode) {
         case BT_SCAN_AIRTAG_MON:            return "AirTag Monitor";
         case WIFI_SCAN_CHAN_ACT:            return "Channel Activity";
         case BT_SCAN_FLOCK:                return "Flock Scan";
-        case BT_SCAN_REMOTE_ID:            return "Remote ID";
+        case BT_SCAN_REMOTE_ID:            return "Drone ID";
         case BT_SCAN_SIMPLE:               return "BT Simple Scan";
         case BT_SCAN_SIMPLE_TWO:           return "BT Simple Scan 2";
         case BT_SCAN_FLOCK_WARDRIVE:       return "Flock War Drive";

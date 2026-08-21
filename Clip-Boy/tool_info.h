@@ -189,9 +189,12 @@ static const ToolInfoEntry tool_info_table[] = {
         "WiFi and Bluetooth antennas enabled.",
         "Output lists each drone by its UAS ID (serial) with altitude, signal "
         "strength, and where it was heard - a WiFi channel, or BT for Bluetooth. "
-        "The status bar shows a live count. One antenna serves both radios and the "
-        "WiFi side hops channels, so a drone can take a few seconds to appear. A "
-        "quiet screen is not proof the sky is empty.",
+        "The status bar shows a live count. Utilities > List Drones has the full "
+        "record: tap a contact for its position, altitude, speed, and the "
+        "operator's own location, which drones are required to broadcast too. "
+        "One antenna serves both radios and the WiFi side hops channels, so a "
+        "drone can take a few seconds to appear, and it fills in over several "
+        "more. A quiet screen is not proof the sky is empty.",
         "Receive only - it transmits nothing. Reading Remote ID is what the "
         "broadcast is for; use what you see responsibly."
     }},
