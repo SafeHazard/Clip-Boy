@@ -5868,13 +5868,29 @@ static void drone_detail_show(int idx) {
     strncpy(oper, cb_safe(d->operatorId), sizeof(oper) - 1); oper[sizeof(oper) - 1] = '\0';
     strncpy(desc, cb_safe(d->selfDesc),   sizeof(desc) - 1); desc[sizeof(desc) - 1] = '\0';
 
+    // Every line has to earn its place. There are 240 pixels of screen, and a
+    // field pushed below the fold reads as a field that does not exist -- so
+    // TYPE and STAT share a line, OPER and DESC appear only when the drone
+    // actually sent them, and the ID line stops repeating the MAC. When no
+    // serial has arrived the store names the contact after its MAC, so ID and
+    // MAC printed the identical string and burned a line at exactly the moment
+    // lines were scarce.
     char buf[640];
-    snprintf(buf, sizeof(buf),
-             "ID    %s\nTYPE  %s\nSTAT  %s\nMAC   %s\nPOS   %s\nALT   %s\n"
-             "SPD   %s\nPILOT %s\nOPER  %s\nDESC  %s\nLINK  %s\nPKTS  %u   AGE %us",
-             id, drone_ua_type_name(d->uaType), drone_status_name(d->status), mac,
-             pos, alt, spd, pilot, oper[0] ? oper : "-", desc[0] ? desc : "-",
-             link, (unsigned)d->packets,
+    int n = 0;
+    n += snprintf(buf + n, sizeof(buf) - n, "ID    %s\n",
+                  d->hasSerial ? id : "none broadcast yet");
+    n += snprintf(buf + n, sizeof(buf) - n, "TYPE  %s   STAT %s\n",
+                  drone_ua_type_name(d->uaType), drone_status_name(d->status));
+    n += snprintf(buf + n, sizeof(buf) - n, "MAC   %s\n", mac);
+    n += snprintf(buf + n, sizeof(buf) - n, "POS   %s\n", pos);
+    n += snprintf(buf + n, sizeof(buf) - n, "ALT   %s\n", alt);
+    n += snprintf(buf + n, sizeof(buf) - n, "SPD   %s\n", spd);
+    n += snprintf(buf + n, sizeof(buf) - n, "PILOT %s\n", pilot);
+    if (oper[0]) n += snprintf(buf + n, sizeof(buf) - n, "OPER  %s\n", oper);
+    if (desc[0]) n += snprintf(buf + n, sizeof(buf) - n, "DESC  %s\n", desc);
+    n += snprintf(buf + n, sizeof(buf) - n, "LINK  %s\n", link);
+    snprintf(buf + n, sizeof(buf) - n, "PKTS  %u   AGE %us",
+             (unsigned)d->packets,
              (unsigned)((millis() - d->lastSeenMs) / 1000));
 
     lv_obj_t *modal = lv_obj_create(lv_screen_active());
@@ -5886,7 +5902,7 @@ static void drone_detail_show(int idx) {
 
     lv_obj_t *box = lv_obj_create(modal);
     lv_obj_remove_style_all(box);
-    lv_obj_set_size(box, 292, 210);
+    lv_obj_set_size(box, 300, 226);
     lv_obj_center(box);
     lv_obj_set_style_bg_color(box, pip_bg(), 0);
     lv_obj_set_style_bg_opa(box, LV_OPA_COVER, 0);
@@ -5904,7 +5920,7 @@ static void drone_detail_show(int idx) {
     // the same mistake "+ Add Network" had to be lifted out of.
     lv_obj_t *txt_area = lv_obj_create(box);
     lv_obj_remove_style_all(txt_area);
-    lv_obj_set_size(txt_area, lv_pct(100), 140);
+    lv_obj_set_size(txt_area, lv_pct(100), 158);
     lv_obj_set_flex_flow(txt_area, LV_FLEX_FLOW_COLUMN);
     lv_obj_add_style(txt_area, &style_scrollbar, LV_PART_SCROLLBAR);
 
