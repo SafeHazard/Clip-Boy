@@ -4048,13 +4048,49 @@ static void cb_poll_flock(void) {
 // Remote ID (drone) poller. The drone store recycles/updates slots in place
 // (keyed by UAS serial), so we log each slot's contact once when it first
 // appears and reset the flag when the slot frees. Status bar shows live count.
-static uint8_t cb_drone_logged[DRONE_MAX] = {0};
+static uint8_t  cb_drone_logged[DRONE_MAX] = {0};
+static uint8_t  cb_drone_logged_fix[DRONE_MAX] = {0};
+static uint32_t cb_drone_tag[DRONE_MAX] = {0};
+
+static uint32_t cb_drone_id_hash(const char *s) {
+    uint32_t h = 2166136261u;                 // FNV-1a, same shape as the badge's
+    while (*s) { h ^= (uint8_t)*s++; h *= 16777619u; }
+    return h;
+}
+
 static void cb_poll_drone(void) {
     for (int i = 0; i < DRONE_MAX; i++) {
         const DroneRec *d = drone_get(i);
-        if (!d) { cb_drone_logged[i] = 0; continue; }
-        if (cb_drone_logged[i]) continue;
+        if (!d) {
+            cb_drone_logged[i] = 0; cb_drone_logged_fix[i] = 0; cb_drone_tag[i] = 0;
+            continue;
+        }
+
+        // A slot can be handed to a DIFFERENT drone without ever going free --
+        // the store recycles the oldest record when the table is full. Keyed
+        // only on "have I logged slot i", the new arrival would inherit the old
+        // one's flag and never be announced at all. Tag each slot with a hash of
+        // the ID it was logged under and treat a change as a fresh contact.
+        uint32_t tag = cb_drone_id_hash(d->uasId);
+        if (cb_drone_tag[i] != tag) {
+            cb_drone_tag[i] = tag;
+            cb_drone_logged[i] = 0;
+            cb_drone_logged_fix[i] = 0;
+        }
+
+        // Contacts arrive in pieces: over BLE each advertisement carries one
+        // message, so a drone announced from its Basic ID has no altitude yet
+        // and its first line reads "alt?". Log once on sighting, then ONCE more
+        // when a position or altitude actually lands, rather than freezing the
+        // first snapshot on screen forever. Anything past that is noise -- the
+        // full record is a tap away in Utilities > List Drones.
+        bool has_fix = (d->altGeo > INV_ALT) || (d->height > INV_ALT) ||
+                       (d->lat != 0.0) || (d->lon != 0.0);
+        bool first   = !cb_drone_logged[i];
+        if (!first && (!has_fix || cb_drone_logged_fix[i])) continue;
         cb_drone_logged[i] = 1;
+        if (has_fix) cb_drone_logged_fix[i] = 1;
+
         char alt[16];
         if (d->altGeo > INV_ALT)       snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
         else if (d->height > INV_ALT)  snprintf(alt, sizeof(alt), "%.0fm", d->height);
@@ -4070,9 +4106,11 @@ static void cb_poll_drone(void) {
         char idbuf[104];
         strncpy(idbuf, cb_safe(d->uasId), sizeof(idbuf) - 1);
         idbuf[sizeof(idbuf) - 1] = '\0';
+        // "+" marks the follow-up so two lines for one drone do not read as two
+        // drones. The status bar count stays authoritative either way.
         char line[160];
-        snprintf(line, sizeof(line), "DRONE: %s %s %ddBm %s\n",
-                 idbuf, alt, d->rssi, src);
+        snprintf(line, sizeof(line), "DRONE%s %s %s %ddBm %s\n",
+                 first ? ":" : "+", idbuf, alt, d->rssi, src);
         cb_log_append(line);
     }
 }
@@ -4618,7 +4656,11 @@ static void cb_tool_start_stop_cb(lv_event_t *e) {
             cb_output_last_flipper = cb.getFlipperCount();
             cb_output_last_flock   = 0;
             drone_clear();
-            for (int _di = 0; _di < DRONE_MAX; _di++) cb_drone_logged[_di] = 0;
+            for (int _di = 0; _di < DRONE_MAX; _di++) {
+                cb_drone_logged[_di] = 0;
+                cb_drone_logged_fix[_di] = 0;
+                cb_drone_tag[_di] = 0;
+            }
             cb_output_last_pwna    = 0;
             cb_output_last_pine    = cb.getPinescanCount();
             cb_output_last_multi   = cb.getMultiSSIDCount();

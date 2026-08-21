@@ -30,7 +30,7 @@ esptool --chip esp32s3 -p <PORT> write_flash 0x10000 <app.bin>
 
 ## What lives where
 
-### The Clip-Boy tool — Tools -> Detect -> "Remote ID"
+### The Clip-Boy tool — Tools -> Detect -> "Drone ID"
 
 Scan mode `BT_SCAN_REMOTE_ID` (79) in the `-DCLIPBOY_RES34RCH` build. Source is
 in the sketch tree, not this directory:
@@ -45,7 +45,22 @@ in the sketch tree, not this directory:
   `BT_SCAN_FLOCK`, plus the BLE advertised-device branch.
 - `Clip-Boy/libs/ClipBoy/src/ClipBoyMarauder.{h,cpp}` — `btScanRemoteID()`.
 - `Clip-Boy/{ui_nav.h,tool_info.h}` — menu item, live-log poller, `"%d drones"`
-  status branch, More-Info entry.
+  status branch, More-Info entry, and **Utilities -> List Drones**: a row per
+  contact, tap for a panel with position, MSL/AGL altitude, speed and heading,
+  the operator's broadcast location, registration, description, MAC, link and
+  age. Rows carry the real slot index, never their list position, because the
+  builder skips free slots and the two diverge as soon as a contact ages out.
+
+  The tool is named "Drone ID" in the UI; "Remote ID" is the standard's name
+  and stays in the help text. Note `tool_is_bluetooth` matches tools by NAME,
+  so a rename that misses it silently drops the tool from the airplane-mode
+  dialog.
+
+  The live log prints a contact once on sighting and once more when it gains a
+  position or altitude, the follow-up marked `DRONE+`. It does not stream every
+  update; the full record is a tap away. Slots are tagged with a hash of the ID
+  they were logged under, so a recycled slot is announced as the new contact it
+  now holds rather than inheriting the old one's "already logged" flag.
 
 **Status: WiFi and Bluetooth LE. Builds clean, BLE verified on this hardware
 2026-08-20, WiFi path not yet tested on hardware.** The WiFi path was ported
@@ -175,10 +190,27 @@ beacon and NAN paths are still unexercised.
 
 Two things worth knowing next time:
 
-- The BLE simulator produces several contacts, not one. Windows rotates its BLE
-  MAC between advertisements and only the Basic ID message carries the UAS
-  serial, so Location and System messages landing under a fresh MAC open their
-  own slots. A real drone holds a stable MAC. Not a defect in the store.
+- The BLE simulator produces several contacts, not one, and most of them have
+  fields missing. This is worth understanding before you go bug-hunting.
+
+  The simulator cycles five messages: Basic ID, Location, System, Operator ID,
+  Self ID. Only Basic ID carries the UAS serial and only System carries the
+  pilot's location. Windows rotates its BLE MAC between advertisements, so a
+  message that matches neither a known serial nor a known MAC opens its own
+  record. In practice one row gets the serial, another gets position and
+  altitude and speed (they share the Location message, which is why they always
+  appear together), and roughly one row in five gets PILOT. The rest read
+  "unknown".
+
+  A real drone does not behave this way. Remote ID broadcasters are meant to
+  hold a stable MAC for the session precisely so a receiver can correlate the
+  messages, and a WiFi beacon carries all five in a single frame, which is why
+  the WiFi path should show one clean, fully populated contact.
+
+  Do NOT be tempted to merge anonymous messages into an existing record on
+  anything looser than a serial or MAC match to "fix" this. It would eventually
+  fuse two real drones into one contact, and inventing a drone that is not there
+  is a far worse failure than an incomplete row.
 - The ESP32-S3 USB-Serial/JTAG bridge cannot sustain a long `read-flash`. It
   stalls at roughly 4MB cumulative, in one continuous read and across separate
   1MB reads alike, while 64KB reads work anywhere in flash. A full 16MB backup
