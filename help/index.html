@@ -400,6 +400,10 @@
           <div class="a">WiFi is off by default to save power. It turns on automatically when you start a scan and turns off again when the scan stops.</div>
         </li>
         <li class="item">
+          <div class="q">Saved Networks</div>
+          <div class="a">Tools &gt; Utilities/Lists &gt; Saved Networks lists every WiFi network you&#x27;ve joined, each with its stored password. Tap an entry to delete it. Passwords are kept in the badge&#x27;s flash without encryption, so clear any you no longer need - especially before lending, gifting, or reselling the badge.</div>
+        </li>
+        <li class="item">
           <div class="q">Live Table</div>
           <div class="a">During AP, station or Bluetooth scans (the Scan tools except BLE Adverts, Analyze &gt; Beacons/Espressif, and Detect &gt; Skimmer Check) the output pane has a Live Devices (table) button that opens a full-screen, Wireshark-style table: columns for type, signal, channel and name. Tap a row for its full detail; use &lt; PREV / NEXT &gt; to step through results, or LATEST to follow the newest as they arrive.</div>
         </li>
@@ -410,6 +414,14 @@
         <li class="item">
           <div class="q">Airplane Mode</div>
           <div class="a">When airplane mode is on, tools that need WiFi or Bluetooth show a confirm dialog before launching. Choose Turn Off to disable airplane and re-tap the tool to launch it.</div>
+        </li>
+        <li class="item">
+          <div class="q">Flock Batteries: What It Matches</div>
+          <div class="a">Detect &gt; Flock Batteries looks for a specific Bluetooth broadcast fingerprint: a manufacturer-data block carrying the Xuntong company ID, plus either a device name in one of the shapes those units use (Penguin-NNNNNNNNNN, FS Ext Battery, or ten digits) or no name at all. That is a signature of the hardware as we understand it today, not a guarantee about the product line.\n\nWhat that fingerprint belongs to matters: it is the signature of a Bluetooth accessory that SOME units carry — a battery pack — not of the camera. Units running on solar with no battery pack are usually Bluetooth-silent, so this tool can be completely quiet on a street with a camera on every pole. The camera&#x27;s own always-on radio signature is on WiFi, and the badge does not look for it yet.\n\nSo read a quiet screen carefully. If Flock ships new firmware, changes the broadcast, or fields a model with a different fingerprint, this tool will under-report or miss those units entirely — and it will look exactly the same as an empty street. A quiet screen means nothing matched the pattern we look for, which is NOT the same as nothing being there. Treat a hit as informative and a miss as inconclusive.\n\nWhat it REPORTS is Bluetooth-only. A unit that is powered down, out of range, or not broadcasting will not appear, and range varies a lot with walls, vehicles and crowds.</div>
+        </li>
+        <li class="item">
+          <div class="q">Known: Scanning While Reading</div>
+          <div class="a">The AP and station lists are shared by every tool that reads them, and a scan adds to them while you are looking. Known behaviors, all temporary: a row may appear with a blank or partial name or a signal reading of zero; a row&#x27;s signal figure is the value from when that device was first seen, not a live one; a count in the status bar may briefly disagree with the number of rows on screen; and an action aimed at a device you selected may skip it for a single pass and then resume. None of these damage saved data or require a restart. To avoid them entirely, stop the scan before selecting a target or reading the list closely.</div>
         </li>
       </ul>
     </details>
@@ -484,11 +496,19 @@
       <ul>
         <li class="item">
           <div class="q">What It Is</div>
-          <div class="a">Not a real Geiger counter. Detects WiFi deauthentication packets in the area.</div>
+          <div class="a">Not a real Geiger counter. Detects WiFi deauthentication packets in the area. It listens on 2.4 GHz only — activity on a 5 GHz or 6 GHz network is invisible to it, whatever the gauge reads.</div>
         </li>
         <li class="item">
           <div class="q">The Gauge</div>
-          <div class="a">The arc gauge rises as deauth packet rate increases. Think of it as measuring local chaos.</div>
+          <div class="a">The arc gauge rises as deauth packet rate increases. Think of it as measuring local chaos. The needle stops at 100; above that the label under it reads 100+, because the badge is seeing more than the dial can show.</div>
+        </li>
+        <li class="item">
+          <div class="q">Channels</div>
+          <div class="a">The selector above the gauge decides which channels the badge listens to. 1/6/11 (the default) covers the three channels almost every 2.4 GHz network uses. 1-14 sweeps everything, but spends only a fourteenth of its time on any one channel, so short bursts are easy to miss. Picking a single channel listens to that one continuously — best for watching a specific network, but the badge is then deaf to the other thirteen. While the Geiger runs, the status bar shows the mode and the current rate from any screen. On Tools &gt; Analyze &gt; Deauth the status bar names the mode only when it is not 1-14.</div>
+        </li>
+        <li class="item">
+          <div class="q">Reading Zero</div>
+          <div class="a">A zero can mean three different things: nothing is happening, the activity is on a channel you are not listening to, or it is on 5/6 GHz. If you want certainty about one network, select its channel; if you want breadth, use 1-14.</div>
         </li>
         <li class="item">
           <div class="q">Geiger Audio</div>
@@ -580,6 +600,14 @@
           <div class="a">Slider (1-100%) sets how dim the Clip-Boy mascot gets when the screensaver is up. Default 10%. Has no effect when Style is Blank (which always goes fully dark).</div>
         </li>
         <li class="item">
+          <div class="q">Idle Clock</div>
+          <div class="a">When on, the screensaver shows the time in its top-left corner. On by default. Greys out when Style is Blank, where the backlight is off and nothing would be readable. The badge has no clock chip, so the time is set over the network the first time you join WiFi; until then the face reads --:-- . It survives a reboot but not a power cycle.</div>
+        </li>
+        <li class="item">
+          <div class="q">Time Zone</div>
+          <div class="a">Sets the zone the Idle Clock renders in. Twelve options, from UTC through the US zones to UK, Central Europe, Japan and Australia East. Each one knows its own daylight-saving rules, and the zones that do not observe DST (Arizona, Hawaii, Japan) correctly never shift. Changing it takes effect instantly — the badge already has the right time, the zone only decides how it is displayed. Greys out when the Idle Clock is off.</div>
+        </li>
+        <li class="item">
           <div class="q">Dim LEDs When Idle</div>
           <div class="a">When on, the NeoPixels turn off as the screensaver activates. They come back when you wake the screen. Off by default — the badge looks more alive on a shelf with the LEDs running through the screensaver.</div>
         </li>
@@ -610,7 +638,11 @@
         </li>
         <li class="item">
           <div class="q">Airplane Mode</div>
-          <div class="a">Disables WiFi and Bluetooth. Tools that need radios are blocked until you turn it back off.</div>
+          <div class="a">Disables WiFi and Bluetooth. Tools that need radios are blocked until you turn it back off, and turning it on also stops anything already running. Every tool you reach by tapping honors it, including the small Scan buttons on picker pages (they dim while it is on).</div>
+        </li>
+        <li class="item">
+          <div class="q">Airplane Mode: Limits</div>
+          <div class="a">Two things it does not cover. (1) The USB serial command line: commands typed there can start a scan even while airplane mode is on, and the switch keeps reading as engaged — if you need certainty that nothing is transmitting or receiving, unplug USB or power the badge off. (2) It is a setting, not a power cut: the radio hardware comes up when the badge boots whatever the setting says. Airplane mode stops the tools and clears the receive filters.</div>
         </li>
         <li class="item">
           <div class="q">Exclusive Input</div>
@@ -654,6 +686,14 @@
         <li class="item">
           <div class="q">Idle Brightness</div>
           <div class="a">Settings &gt; Idle Brightness sets how dim the Clip-Boy mascot gets (1-100%, default 10%). The slider greys out when Style is Blank since it has no effect there.</div>
+        </li>
+        <li class="item">
+          <div class="q">Idle Clock</div>
+          <div class="a">Settings &gt; Idle Clock puts the time in the top-left corner of the screensaver. There is no clock chip on this board: the time comes from the network on your first WiFi join and reads --:-- until then. Off on the Blank style, which runs the backlight at zero.</div>
+        </li>
+        <li class="item">
+          <div class="q">Time Zone</div>
+          <div class="a">Settings &gt; Time Zone picks the zone the clock displays. Default is US Central. Travelling to a con in another zone? Change it here and the clock corrects immediately, with no need to rejoin WiFi — the badge keeps time in UTC internally and the zone is only applied when drawing it.</div>
         </li>
         <li class="item">
           <div class="q">Wake Up</div>
@@ -787,12 +827,11 @@
           <div class="tif"><b>You'll see:</b> Output lists Flipper MACs and advertised names.</div>
         </li>
         <li class="item">
-          <div class="q">Flock Safety</div>
-          <div class="a">Detect Flock Safety tracking devices.</div>
-          <div class="tif"><b>What:</b> Detects Flock Safety automated license-plate-reader devices by their Bluetooth broadcast. Flock ALPRs are deployed by some municipal police and HOAs; this is a passive detector for their BLE signature.</div>
+          <div class="q">Flock Batteries</div>
+          <div class="a">SOME Flock camera systems&#x27; batteries are detectable here. Cameras themselves usually are not — see More Info.</div>
+          <div class="tif"><b>What:</b> Listens for the Bluetooth signature used by Flock Safety equipment — in practice the battery pack fitted to SOME of their units, not the camera itself. Cameras running on solar usually transmit no Bluetooth at all and will not appear here. Flock&#x27;s license-plate readers are deployed by some municipal police and HOAs; this is a passive listener. A hit means Flock hardware is nearby. A quiet screen means nothing matched — not that nothing is there.</div>
           <div class="tif"><b>Setup:</b> Bluetooth antenna enabled.</div>
-          <div class="tif"><b>You'll see:</b> Output lists detected Flock devices with MAC and RSSI.</div>
-          <div class="tif"><b>Use responsibly:</b> Detection only. Don&#x27;t interfere with or damage any infrastructure - tampering is a serious crime and won&#x27;t help your case.</div>
+          <div class="tif"><b>You'll see:</b> Output lists each detected Flock device once, with its MAC and the signal strength when the badge first logged it. The status bar shows how long ago it last heard one — that number resets every time it hears the device again. A number that keeps climbing means the badge has stopped hearing the device, not that the badge has stopped working; short gaps of a few seconds are normal. It matches one specific broadcast, so a quiet screen Help &gt; Detect Tools &gt; Flock SafetyDetect ToolsTools</div>
         </li>
         <li class="item">
           <div class="q">Rogue AP</div>
@@ -809,6 +848,14 @@
           <div class="tif"><b>Setup:</b> WiFi antenna enabled. Works best in dense networks where duplicates stand out.</div>
           <div class="tif"><b>You'll see:</b> Output lists the SSIDs and the BSSIDs broadcasting them. Success criteria for evil-twin suspicion: same SSID, different vendor OUIs, wildly different RSSI - then walk the floor with RSSI Monitor on the outlier to see if it physically moves.</div>
           <div class="tif"><b>Use responsibly:</b> Detection only. False positives are common at scale, so don&#x27;t accuse anyone in public based on a single hit - report to venue staff if needed.</div>
+        </li>
+        <li class="item">
+          <div class="q">Drone ID</div>
+          <div class="a">Detect drone Remote ID (ASTM F3411) over WiFi and Bluetooth.</div>
+          <div class="tif"><b>What:</b> Listens for drone Remote ID broadcasts (ASTM F3411 / Open Drone ID) over WiFi and Bluetooth. US federal law requires most drones to broadcast their serial, live position, altitude, and the operator&#x27;s location in the clear - this is a passive receiver for exactly that public broadcast. A hit means a compliant drone is transmitting nearby.</div>
+          <div class="tif"><b>Setup:</b> WiFi and Bluetooth antennas enabled.</div>
+          <div class="tif"><b>You'll see:</b> Output lists each drone by its UAS ID (serial) with altitude, signal strength, and where it was heard - a WiFi channel, or BT for Bluetooth. The status bar shows a live count. Utilities &gt; List Drones has the full record: tap a contact for its position, altitude, speed, and the operator&#x27;s own location, which drones are required to broadcast too. One antenna serves both radios and the WiFi side hops channels, so a drone can take a few seconds to appear, and it fills in over several more. A quiet screen is not proof the sky is empty.</div>
+          <div class="tif"><b>Use responsibly:</b> Receive only - it transmits nothing. Reading Remote ID is what the broadcast is for; use what you see responsibly.</div>
         </li>
         <li class="divider">Scan</li>
         <li class="item">
@@ -907,8 +954,8 @@
           <div class="q">Deauth</div>
           <div class="a">Sniff deauth packets in the area.</div>
           <div class="tif"><b>What:</b> Listens for deauthentication frames - management frames that disconnect a station from an AP. Also drives the STATS &gt; Radiation geiger display: the deauth rate maps to the geiger &#x27;radiation level&#x27; so you can hear and see when something noisy is happening nearby.</div>
-          <div class="tif"><b>Setup:</b> WiFi antenna enabled.</div>
-          <div class="tif"><b>You'll see:</b> Output shows src/dst MACs, channel, RSSI. Background deauth is common in dense RF environments; a sustained burst from one source is unusual.</div>
+          <div class="tif"><b>Setup:</b> WiFi antenna enabled. 2.4 GHz only - deauths on a 5 GHz or 6 GHz network are invisible to this tool.</div>
+          <div class="tif"><b>You'll see:</b> Output shows src/dst MACs, channel, RSSI. Background deauth is common in dense RF environments; a sustained burst from one source is unusual. The Channel selector sets which channels are listened to, and it is SHARED with STATS &gt; Radiation - changing it here changes it there. 1/6/11 (the default) covers the three channels nearly every 2.4 GHz network uses; 1-14 sweeps the whole band but sits on each channel only a fourteenth of the time, so short bursts are easy to miss; a single channel listens continuously to that one and hears nothing on the other thirteen. The mode is named in the status bar while a scan runs, whenever it is not 1-14.</div>
           <div class="tif"><b>Use responsibly:</b> Pure listener, no transmission risk. Acting on what you find (e.g. publicly accusing a &#x27;suspected bad actor&#x27;) is a different judgment call - tell venue staff, not the internet.</div>
         </li>
         <li class="item">
@@ -981,13 +1028,13 @@
         <li class="item">
           <div class="q">Add SSID</div>
           <div class="a">Add a custom SSID to the SSID list.</div>
-          <div class="tif"><b>What:</b> Add a custom SSID to the SSID list used by Beacon SSID List and other list-driven spam tools.</div>
+          <div class="tif"><b>What:</b> Add a custom SSID to the badge&#x27;s SSID list. Entries are viewable under List SSIDs.</div>
           <div class="tif"><b>You'll see:</b> Keyboard prompt appears. Type the SSID, tap OK. New entry shows up next time you open List SSIDs.</div>
         </li>
         <li class="item">
           <div class="q">Gen Rnd SSIDs</div>
           <div class="a">Generate random SSIDs and add them to the list.</div>
-          <div class="tif"><b>What:</b> Generate 20 random SSIDs and add them to the SSID list in one go. Quick way to populate the list for testing Beacon SSID List.</div>
+          <div class="tif"><b>What:</b> Generate 20 random SSIDs and add them to the badge&#x27;s SSID list in one go. A quick way to populate the list; entries are viewable under List SSIDs.</div>
           <div class="tif"><b>You'll see:</b> Status updates briefly. New entries visible in List SSIDs.</div>
         </li>
         <li class="item">
@@ -1007,7 +1054,11 @@
           <div class="q">Set Channel</div>
           <div class="a">Set WiFi monitor channel (1 to 14, or Auto).</div>
           <div class="tif"><b>What:</b> Pick a specific WiFi channel (1-14) to monitor, or &#x27;Auto&#x27; for channel hopping. Affects subsequent passive scans - fixed channel sees more detail there, &#x27;Auto&#x27; is broad but shallow. Auto hops every ~250 ms.</div>
-          <div class="tif"><b>You'll see:</b> Dropdown with the choice. Takes effect on the next scan started. For EAPOL/PMKID/RSSI on a known AP, set the AP&#x27;s channel explicitly first - Auto&#x27;s hop interval is too short to reliably catch a four-way handshake.</div>
+          <div class="tif"><b>Use responsibly:</b> Dropdown with the choice. Takes effect on the next scan started. For EAPOL/PMKID on a known AP, set the AP&#x27;s channel explicitly first - Auto&#x27;s hop interval is too short to reliably catch a four-way handshake. Monitor &gt; RSSI does not need this: it tunes to the selected AP&#x27;s channel on its own.</div>
+        </li>
+        <li class="item">
+          <div class="q">List Drones</div>
+          <div class="a">View Drone ID contacts. Tap one for position and pilot.</div>
         </li>
         <li class="divider">Network</li>
         <li class="item">
@@ -1021,8 +1072,8 @@
         <li class="item">
           <div class="q">Rnd AP MAC</div>
           <div class="a">Randomize the AP MAC address.</div>
-          <div class="tif"><b>What:</b> Randomize the AP-mode MAC address. When the badge later acts as an AP, it uses the new MAC.</div>
-          <div class="tif"><b>You'll see:</b> Status message confirms the new MAC. No visible external effect until you run an AP-mode tool.</div>
+          <div class="tif"><b>Setup:</b> acts as an APRandomize the AP-mode MAC address. When the badge later acts as an AP, it uses the new MAC.</div>
+          <div class="tif"><b>Use responsibly:</b> Status message confirms the new MAC. No visible external effect until you run an AP-mode tool.</div>
         </li>
         <li class="item">
           <div class="q">Rnd STA MAC</div>
@@ -1053,7 +1104,7 @@
           <div class="a">Deauth specific stations from their networks.</div>
           <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Deauth aimed at one or more specific STATIONS (client devices) regardless of which AP they&#x27;re on. Disconnects the station from whatever it&#x27;s currently using.</div>
           <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
-          <div class="tif"><b>You'll see:</b> Output shows per-station frame counts.</div>
+          <div class="tif"><b>You'll see:</b> Output shows per-station frame counts — transmission, not delivery. If a station is tracked on a stale or wrong channel (it associated to an AP the badge last saw elsewhere), the frames go out on that channel and can silently miss. Confirm the disconnect independently.</div>
           <div class="tif"><b>Use responsibly:</b> Stations are people&#x27;s phones and laptops. Cutting off a specific one is the most personal use of this tool. Don&#x27;t do it to anyone who hasn&#x27;t agreed in advance.</div>
         </li>
         <li class="divider">Flood (Res34rch-only)</li>
@@ -1078,7 +1129,7 @@
           <div class="a">Send malformed mgmt frames to specific stations.</div>
           <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Like Bad Msg, but aimed at one or more specific stations rather than broadcast. Precise driver-confusion technique.</div>
           <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
-          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent — transmission, not a confirmed hit. A station tracked on the wrong channel is missed silently; verify the effect with a separate sniffer.</div>
           <div class="tif"><b>Use responsibly:</b> You are pointing a known crash bug at a specific person&#x27;s device. Authorized hardware only - this can leave a phone in a state that needs a reboot to recover.</div>
         </li>
         <li class="item">
@@ -1094,7 +1145,7 @@
           <div class="a">Send sleep frames to specific stations.</div>
           <div class="tif"><b>What:</b> ACTIVE - DISRUPTIVE. Sleep aimed at specific stations. Same battery-drain mechanism as the broadcast version, narrower target.</div>
           <div class="tif"><b>Setup:</b> Select the station(s) first. WiFi antenna enabled. Authorization required.</div>
-          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent.</div>
+          <div class="tif"><b>You'll see:</b> Counter shows per-station frames sent — transmission, not a confirmed hit. If a station is tracked on the wrong channel the drain frames miss silently; verify the battery effect or sniff independently.</div>
           <div class="tif"><b>Use responsibly:</b> Targeted battery drain is still a denial-of-service against someone else&#x27;s device. Not okay without explicit authorization.</div>
         </li>
         <li class="divider">Beacon Spam (Res34rch-only)</li>
@@ -1109,7 +1160,7 @@
         <li class="item">
           <div class="q">List<span class="tag">Res34rch-only</span></div>
           <div class="a">Spam beacons from the SSID list.</div>
-          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacons with SSIDs drawn from your saved SSID list. Use Utilities &gt; Add SSID to populate the list first.</div>
+          <div class="tif"><b>What:</b> ACTIVE - TRANSMITS. Broadcasts beacons with SSIDs drawn from your saved SSID list. Use Utilities/Lists &gt; Add SSID to populate the list first.</div>
           <div class="tif"><b>Setup:</b> WiFi antenna enabled. SSID list must be populated (see Add SSID).</div>
           <div class="tif"><b>You'll see:</b> Chosen SSIDs appear on nearby WiFi scan lists.</div>
           <div class="tif"><b>Use responsibly:</b> Same spectrum-pollution caveat as Beacon Random. Using real or recognizable SSID names can confuse people and may qualify as spoofing in some jurisdictions - keep your list to obviously-fake names.</div>
@@ -1287,7 +1338,7 @@
   <div id="noresults">No help topics match that search.</div>
 </main>
 <footer>
-  Generated from the Clip-Boy firmware Help corpus (commit <code>02ae5b6</code>, 2026-07-19).
+  Generated from the Clip-Boy firmware Help corpus (commit <code>c647e47</code>, 2026-08-23).
   Source: <a href="https://github.com/SafeHazard/Clip-Boy">github.com/SafeHazard/Clip-Boy</a>.
   This mirrors what's on the badge under DATA &middot; Settings &middot; Help.
 </footer>
