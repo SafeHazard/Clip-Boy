@@ -1994,6 +1994,7 @@ static void th_cmd_cfg_get(const String &args) {
     else if (key == "ui_click") snprintf(hdr, sizeof(hdr), "\"key\":\"ui_click\",\"value\":%s", cfg.ui_click ? "true" : "false");
     else if (key == "ss_style") snprintf(hdr, sizeof(hdr), "\"key\":\"ss_style\",\"value\":%d", cfg.ss_style);
     else if (key == "ss_leds")  snprintf(hdr, sizeof(hdr), "\"key\":\"ss_leds\",\"value\":%s", cfg.ss_leds_off ? "true" : "false");
+    else if (key == "ss_clock") snprintf(hdr, sizeof(hdr), "\"key\":\"ss_clock\",\"value\":%s", cfg.ss_clock ? "true" : "false");
     else if (key == "crt_scan") snprintf(hdr, sizeof(hdr), "\"key\":\"crt_scan\",\"value\":%s", cfg.crt_scanlines ? "true" : "false");
     else if (key == "crt_flick") snprintf(hdr, sizeof(hdr), "\"key\":\"crt_flick\",\"value\":%s", cfg.crt_flicker ? "true" : "false");
     else if (key == "allow_pcap") snprintf(hdr, sizeof(hdr), "\"key\":\"allow_pcap\",\"value\":%s", cfg.allow_pcap ? "true" : "false");
@@ -2048,6 +2049,9 @@ static void th_cmd_cfg_set(const String &args) {
     } else if (key == "ss_leds") {
         if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
         cfg.ss_leds_off = bval; cfg_save_ss_leds_off();
+    } else if (key == "ss_clock") {
+        if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
+        cfg.ss_clock = bval; cfg_save_ss_clock();
     } else if (key == "crt_scan") {
         if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
         cfg.crt_scanlines = bval; cfg_save_crt_scanlines();

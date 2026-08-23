@@ -16,6 +16,7 @@
 //   ss_style    (uint8)  - screensaver style (0=Clip-Boy, 1=Blank, 2=Flying Clippy)
 //   ss_bright   (uint8)  - 1-100 (Clip-Boy screensaver dimness, percent of full)
 //   ss_leds     (bool)   - turn off LEDs during screensaver
+//   ss_clock    (bool)   - show the idle clock on the screensaver
 //   crt_scan    (bool)   - CRT scanline overlay
 //   crt_flick   (bool)   - CRT flicker effect
 //   help_btn    (bool)   - show '?' help button in the status bar
@@ -45,6 +46,7 @@
 #define CFG_DEF_SS_STYLE        0     // 0=Clip-Boy, 1=Blank, 2=Flying Clippy
 #define CFG_DEF_SS_BRIGHTNESS   10    // Clip-Boy screensaver dimness (1-100%)
 #define CFG_DEF_SS_LEDS_OFF    false  // Keep LEDs running during screensaver by default
+#define CFG_DEF_SS_CLOCK       true   // Idle clock on by default: it is the reason the badge runs NTP at all
 #define CFG_DEF_LED_RUBBER_DUCK false // Rubber Duck LED theme off by default
 #define CFG_DEF_CRT_SCANLINES  true   // on by default — the CRT look is core to the aesthetic
 #define CFG_DEF_CRT_FLICKER    true
@@ -95,6 +97,7 @@ struct ClipBoyConfig {
     uint8_t ss_style;       // 0=Clip-Boy, 1=Blank, 2=Flying Clippy
     uint8_t ss_brightness;  // Clip-Boy screensaver dimness (1-100%)
     bool    ss_leds_off;    // Turn off LEDs when screensaver activates
+    bool    ss_clock;       // Show the idle clock in the screensaver corner
     bool    led_rubber_duck; // Rubber Duck LED theme active (global chase effect)
     bool    crt_scanlines;  // CRT scanline overlay
     bool    crt_flicker;    // CRT flicker effect
@@ -193,6 +196,7 @@ static void cfg_load(void) {
     cfg.ss_style = cfg_prefs.getUChar("ss_style", CFG_DEF_SS_STYLE);
     cfg.ss_brightness = cfg_prefs.getUChar("ss_bright", CFG_DEF_SS_BRIGHTNESS);
     cfg.ss_leds_off = cfg_prefs.getBool("ss_leds", CFG_DEF_SS_LEDS_OFF);
+    cfg.ss_clock = cfg_prefs.getBool("ss_clock", CFG_DEF_SS_CLOCK);
     cfg.led_rubber_duck = cfg_prefs.getBool("rubduck", CFG_DEF_LED_RUBBER_DUCK);
     cfg.crt_scanlines = cfg_prefs.getBool("crt_scan", CFG_DEF_CRT_SCANLINES);
     cfg.crt_flicker   = cfg_prefs.getBool("crt_flick", CFG_DEF_CRT_FLICKER);
@@ -326,6 +330,12 @@ static void cfg_save_ss_leds_off(void) {
     cfg_prefs.end();
 }
 
+static void cfg_save_ss_clock(void) {
+    cfg_prefs.begin(CFG_NAMESPACE, false);
+    cfg_prefs.putBool("ss_clock", cfg.ss_clock);
+    cfg_prefs.end();
+}
+
 static void cfg_save_led_rubber_duck(void) {
     cfg_prefs.begin(CFG_NAMESPACE, false);
     cfg_prefs.putBool("rubduck", cfg.led_rubber_duck);
@@ -446,6 +456,7 @@ static void cfg_save_all(void) {
     cfg_prefs.putUChar("ss_style",   cfg.ss_style);
     cfg_prefs.putUChar("ss_bright",  cfg.ss_brightness);
     cfg_prefs.putBool ("ss_leds",   cfg.ss_leds_off);
+    cfg_prefs.putBool ("ss_clock",  cfg.ss_clock);
     cfg_prefs.putBool ("rubduck",   cfg.led_rubber_duck);
     cfg_prefs.putBool ("crt_scan",  cfg.crt_scanlines);
     cfg_prefs.putBool ("crt_flick", cfg.crt_flicker);
@@ -529,6 +540,7 @@ static void cfg_factory_reset(void) {
     cfg.ss_style = CFG_DEF_SS_STYLE;
     cfg.ss_brightness = CFG_DEF_SS_BRIGHTNESS;
     cfg.ss_leds_off = CFG_DEF_SS_LEDS_OFF;
+    cfg.ss_clock = CFG_DEF_SS_CLOCK;
     cfg.led_rubber_duck = CFG_DEF_LED_RUBBER_DUCK;
     cfg.crt_scanlines = CFG_DEF_CRT_SCANLINES;
     cfg.crt_flicker   = CFG_DEF_CRT_FLICKER;

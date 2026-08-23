@@ -160,6 +160,8 @@ static lv_obj_t *ss_dim_switch       = NULL;
 static lv_obj_t *ss_bright_row_label = NULL;
 static lv_obj_t *ss_bright_slider    = NULL;
 static lv_obj_t *ss_bright_readout   = NULL;
+static lv_obj_t *ss_clock_row_label  = NULL;
+static lv_obj_t *ss_clock_switch     = NULL;
 
 // disp_off dropdown index 5 = "Never" -- screensaver won't fire at all, so
 // every row that depends on the screensaver firing is moot.
@@ -171,6 +173,7 @@ static void ss_settings_update_enables(void) {
     bool style_enabled  = ss_will_fire;
     bool dim_enabled    = ss_will_fire;
     bool bright_enabled = ss_will_fire && lit_style;
+    bool clock_enabled  = ss_will_fire && lit_style;  // no clock on Blank: backlight is at zero
 
     if (ss_style_row_label)
         lv_obj_set_style_text_color(ss_style_row_label,
@@ -178,6 +181,14 @@ static void ss_settings_update_enables(void) {
     if (ss_style_dropdown) {
         if (style_enabled) lv_obj_add_flag(ss_style_dropdown, LV_OBJ_FLAG_CLICKABLE);
         else               lv_obj_remove_flag(ss_style_dropdown, LV_OBJ_FLAG_CLICKABLE);
+    }
+
+    if (ss_clock_row_label)
+        lv_obj_set_style_text_color(ss_clock_row_label,
+            clock_enabled ? pip_primary() : pip_disabled(), 0);
+    if (ss_clock_switch) {
+        if (clock_enabled) lv_obj_remove_state(ss_clock_switch, LV_STATE_DISABLED);
+        else               lv_obj_add_state(ss_clock_switch, LV_STATE_DISABLED);
     }
 
     if (ss_dim_row_label)
@@ -9841,8 +9852,11 @@ static void screensaver_activate(void) {
     // unlock label and bar leaves it in the corner, same trick the sprites use.
     // Created after them so it draws on top. Skipped on Blank (ss_style 1),
     // which runs the backlight at zero: a clock nobody can see is just a timer
-    // waking the CPU every second in a state that exists to save power.
-    if (cfg.ss_style != 1) {
+    // waking the CPU every second in a state that exists to save power. The
+    // cfg.ss_clock opt-out is read here rather than inside the tick, so turning
+    // it off costs no timer at all -- and it takes effect on the next activation
+    // rather than live, since Settings is unreachable while the saver is up.
+    if (cfg.ss_style != 1 && cfg.ss_clock) {
         ss_clock_lbl = lv_label_create(screensaver_overlay);
         lv_obj_add_flag(ss_clock_lbl, LV_OBJ_FLAG_IGNORE_LAYOUT);
         lv_obj_set_pos(ss_clock_lbl, 8, 6);
@@ -10553,9 +10567,10 @@ static const HelpItem help_settings[] = {
     { "Tap Sounds", "Click feedback when you tap buttons and controls. Turn off to silence taps while keeping theremin, geiger and other audio. Mute overrides this." },
     { "Scanning Sounds", "Plays an ambient tone bed while the Collectibles HR-code scanner is searching, so you can tell it's working without watching the screen. Turn off to scan silently. Respects Volume and Mute." },
     { "Unlock Tone", "Plays a rising tone while you hold to unlock the screensaver, so you know the badge heard you. Pitch climbs as the bar fills, with a chirp when it unlocks. Respects Volume and Mute." },
-    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Dim LEDs, and the CRT effects." },
+    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Idle Clock, Dim LEDs, and the CRT effects." },
     { "Screensaver", "Two rows: 'Screensaver' is the timeout (15s to Never), 'Screensaver Style' picks Clip-Boy mascot or Blank." },
     { "Idle Brightness", "Slider (1-100%) sets how dim the Clip-Boy mascot gets when the screensaver is up. Default 10%. Has no effect when Style is Blank (which always goes fully dark)." },
+    { "Idle Clock", "When on, the screensaver shows the time in its top-left corner. On by default. Greys out when Style is Blank, where the backlight is off and nothing would be readable. The badge has no clock chip, so the time is set over the network the first time you join WiFi; until then the face reads --:-- . It survives a reboot but not a power cycle." },
     { "Dim LEDs When Idle", "When on, the NeoPixels turn off as the screensaver activates. They come back when you wake the screen. Off by default -- the badge looks more alive on a shelf with the LEDs running through the screensaver." },
     { "CRT Scanlines", "Adds semi-transparent horizontal lines over the display for a retro CRT look. Toggle on/off." },
     { "CRT V-Roll", "Occasionally the display slips vertically like a CRT losing V-sync, then snaps back. Random 1-10 min intervals." },
@@ -10603,6 +10618,7 @@ static const HelpItem help_screensaver[] = {
     { "Timeout", "Settings > Screensaver (the timeout dropdown, top of the screensaver block) controls how long the screen stays bright before the saver kicks in. Options: 15s, 30s, 60s, 2m, 5m, or Never." },
     { "Styles", "Settings > Screensaver Style: Clip-Boy shows a dim mascot; Blank goes fully dark." },
     { "Idle Brightness", "Settings > Idle Brightness sets how dim the Clip-Boy mascot gets (1-100%, default 10%). The slider greys out when Style is Blank since it has no effect there." },
+    { "Idle Clock", "Settings > Idle Clock puts the time in the top-left corner of the screensaver. There is no clock chip on this board: the time comes from the network on your first WiFi join and reads --:-- until then. Off on the Blank style, which runs the backlight at zero." },
     { "Wake Up", "Tap and HOLD for 2 seconds to unlock. The progress bar fills as you hold. The hold prevents accidental pocket wakes." },
     { "LED Behavior", "By default, the NeoPixels keep running through the screensaver. Enable Settings > Dim LEDs when idle if you'd rather have them turn off with the screen and restore on wake." },
 };
@@ -11289,6 +11305,8 @@ static void build_data_settings(lv_obj_t *cont) {
     ss_bright_row_label = NULL;
     ss_bright_slider    = NULL;
     ss_bright_readout   = NULL;
+    ss_clock_row_label  = NULL;
+    ss_clock_switch     = NULL;
     for (int i = 0; i < 6; i++) settings_jump_hdr[i] = NULL;
 
     // Helper: pad before a 40px switch so it right-aligns with slider readout.
@@ -11515,6 +11533,27 @@ static void build_data_settings(lv_obj_t *cont) {
         ss_bright_readout = settings_add_readout(row, cfg.ss_brightness);
         lv_obj_add_event_cb(ss_bright_slider, ss_bright_slider_cb,
                             LV_EVENT_VALUE_CHANGED, ss_bright_readout);
+    }
+
+    // --- Idle Clock (top-left of the screensaver; needs a lit saver) ---
+    // Custom row rather than add_switch_row so the enable cascade can capture
+    // the label and switch and grey them out when the saver never fires.
+    {
+        lv_obj_t *row = make_uniform_settings_row(cont);
+        ss_clock_row_label = settings_label(row, "Idle Clock");
+        settings_gap(row, 6);
+        settings_gap(row, SETTINGS_CONTROL_W - 40);
+        ss_clock_switch = lv_switch_create(row);
+        lv_obj_set_size(ss_clock_switch, 40, 20);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_border(), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_primary(), LV_PART_INDICATOR | LV_STATE_CHECKED);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_highlight(), LV_PART_KNOB);
+        if (cfg.ss_clock) lv_obj_add_state(ss_clock_switch, LV_STATE_CHECKED);
+        lv_obj_add_event_cb(ss_clock_switch, [](lv_event_t *e) {
+            lv_obj_t *sw = (lv_obj_t *)lv_event_get_target(e);
+            cfg.ss_clock = lv_obj_has_state(sw, LV_STATE_CHECKED);
+            cfg_save_ss_clock();
+        }, LV_EVENT_VALUE_CHANGED, NULL);
     }
 
     // --- Dim LEDs when idle ---
