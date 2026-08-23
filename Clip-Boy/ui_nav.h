@@ -162,6 +162,8 @@ static lv_obj_t *ss_bright_slider    = NULL;
 static lv_obj_t *ss_bright_readout   = NULL;
 static lv_obj_t *ss_clock_row_label  = NULL;
 static lv_obj_t *ss_clock_switch     = NULL;
+static lv_obj_t *tz_row_label        = NULL;
+static lv_obj_t *tz_dropdown         = NULL;
 
 // disp_off dropdown index 5 = "Never" -- screensaver won't fire at all, so
 // every row that depends on the screensaver firing is moot.
@@ -174,6 +176,7 @@ static void ss_settings_update_enables(void) {
     bool dim_enabled    = ss_will_fire;
     bool bright_enabled = ss_will_fire && lit_style;
     bool clock_enabled  = ss_will_fire && lit_style;  // no clock on Blank: backlight is at zero
+    bool tz_enabled     = clock_enabled && cfg.ss_clock;  // a zone with no clock to render is moot
 
     if (ss_style_row_label)
         lv_obj_set_style_text_color(ss_style_row_label,
@@ -189,6 +192,14 @@ static void ss_settings_update_enables(void) {
     if (ss_clock_switch) {
         if (clock_enabled) lv_obj_remove_state(ss_clock_switch, LV_STATE_DISABLED);
         else               lv_obj_add_state(ss_clock_switch, LV_STATE_DISABLED);
+    }
+
+    if (tz_row_label)
+        lv_obj_set_style_text_color(tz_row_label,
+            tz_enabled ? pip_primary() : pip_disabled(), 0);
+    if (tz_dropdown) {
+        if (tz_enabled) lv_obj_add_flag(tz_dropdown, LV_OBJ_FLAG_CLICKABLE);
+        else            lv_obj_remove_flag(tz_dropdown, LV_OBJ_FLAG_CLICKABLE);
     }
 
     if (ss_dim_row_label)
@@ -308,10 +319,54 @@ static const float clippy_speed[3] = { 4.2f, 2.9f, 1.9f };  // parallax: near fl
 
 #define SCREENSAVER_HOLD_MS  2000
 
-// POSIX timezone for the idle clock, US Central with the DST changeover rules
-// baked in, so it follows the switch without anyone editing a number twice a
-// year. configTzTime() reads this format directly.
-#define CB_TZ_POSIX          "CST6CDT,M3.2.0,M11.1.0"
+// ── Time zones for the idle clock ────────────────────────────────────────────
+// POSIX TZ strings, the format configTzTime() and tzset() both read directly.
+// Each carries its own DST changeover rules, so a zone follows the switch on its
+// own and nobody edits a number twice a year. Zones that do not observe DST
+// (Arizona, Hawaii, Japan) are a bare offset with no rule, which is the point.
+//
+// Sign convention is the POSIX one and it is backwards from what you expect:
+// the number is hours to ADD to local time to reach UTC, so the Americas are
+// positive and Europe/Asia are negative.
+//
+// cfg.tz stores the INDEX into this table, so the order is part of the saved
+// format: APPEND ONLY. Inserting in the middle silently moves every badge that
+// already picked a zone.
+struct CbTimeZone { const char *name; const char *posix; };
+static const CbTimeZone cb_timezones[] = {
+    { "UTC",            "UTC0" },
+    { "US Eastern",     "EST5EDT,M3.2.0,M11.1.0" },
+    { "US Central",     "CST6CDT,M3.2.0,M11.1.0" },
+    { "US Mountain",    "MST7MDT,M3.2.0,M11.1.0" },
+    { "US Arizona",     "MST7" },                          // no DST
+    { "US Pacific",     "PST8PDT,M3.2.0,M11.1.0" },
+    { "US Alaska",      "AKST9AKDT,M3.2.0,M11.1.0" },
+    { "Hawaii",         "HST10" },                         // no DST
+    { "UK",             "GMT0BST,M3.5.0/1,M10.5.0" },
+    { "Central Europe", "CET-1CEST,M3.5.0,M10.5.0/3" },
+    { "Japan",          "JST-9" },                         // no DST
+    { "Australia East", "AEST-10AEDT,M10.1.0,M4.1.0/3" },  // southern-hemisphere DST
+};
+#define CB_TZ_COUNT ((int)(sizeof(cb_timezones) / sizeof(cb_timezones[0])))
+// ui_config.h defines CFG_DEF_TZ as a bare literal because it is included first
+// and cannot see this table. This is the assert that keeps the two honest.
+static_assert(CFG_DEF_TZ < CB_TZ_COUNT, "CFG_DEF_TZ is past the end of cb_timezones[]");
+
+// Out-of-range falls back to the default rather than reading off the end. That
+// is not paranoia: downgrading to a build with a shorter table leaves a saved
+// index pointing at nothing.
+static const char *cb_tz_posix(void) {
+    return cb_timezones[cfg.tz < CB_TZ_COUNT ? cfg.tz : CFG_DEF_TZ].posix;
+}
+
+// Push the chosen zone into the C library. NTP delivers UTC and this string is
+// the whole of what turns it into local time, so it has to be set before the
+// first render and again on every change. No network, no NTP round trip: picking
+// a zone re-renders the clock from the seconds the badge already has.
+static void cb_tz_apply(void) {
+    setenv("TZ", cb_tz_posix(), 1);
+    tzset();
+}
 // Unlock-hold progress tone: a soft sine that sweeps A3->E5 (log/perceptual) as
 // the bar fills, then a short E6 chirp on completion. Gentle, mute+toggle gated.
 #define SS_TONE_LO_HZ      220.0f   // A3 - hold start
@@ -5754,7 +5809,7 @@ static void show_tool_text(const ToolItem *wi, int32_t encoded) {
             // the first packet lands. With no RTC the time does survive a soft
             // reboot and a WiFi teardown, but not a power cycle, so this fires
             // on every join rather than once.
-            if (ok) configTzTime(CB_TZ_POSIX, "pool.ntp.org", "time.nist.gov");
+            if (ok) configTzTime(cb_tz_posix(), "pool.ntp.org", "time.nist.gov");
 
             audio_resume();
 
@@ -10567,10 +10622,11 @@ static const HelpItem help_settings[] = {
     { "Tap Sounds", "Click feedback when you tap buttons and controls. Turn off to silence taps while keeping theremin, geiger and other audio. Mute overrides this." },
     { "Scanning Sounds", "Plays an ambient tone bed while the Collectibles HR-code scanner is searching, so you can tell it's working without watching the screen. Turn off to scan silently. Respects Volume and Mute." },
     { "Unlock Tone", "Plays a rising tone while you hold to unlock the screensaver, so you know the badge heard you. Pitch climbs as the bar fills, with a chirp when it unlocks. Respects Volume and Mute." },
-    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Idle Clock, Dim LEDs, and the CRT effects." },
+    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Idle Clock, Time Zone, Dim LEDs, and the CRT effects." },
     { "Screensaver", "Two rows: 'Screensaver' is the timeout (15s to Never), 'Screensaver Style' picks Clip-Boy mascot or Blank." },
     { "Idle Brightness", "Slider (1-100%) sets how dim the Clip-Boy mascot gets when the screensaver is up. Default 10%. Has no effect when Style is Blank (which always goes fully dark)." },
     { "Idle Clock", "When on, the screensaver shows the time in its top-left corner. On by default. Greys out when Style is Blank, where the backlight is off and nothing would be readable. The badge has no clock chip, so the time is set over the network the first time you join WiFi; until then the face reads --:-- . It survives a reboot but not a power cycle." },
+    { "Time Zone", "Sets the zone the Idle Clock renders in. Twelve options, from UTC through the US zones to UK, Central Europe, Japan and Australia East. Each one knows its own daylight-saving rules, and the zones that do not observe DST (Arizona, Hawaii, Japan) correctly never shift. Changing it takes effect instantly -- the badge already has the right time, the zone only decides how it is displayed. Greys out when the Idle Clock is off." },
     { "Dim LEDs When Idle", "When on, the NeoPixels turn off as the screensaver activates. They come back when you wake the screen. Off by default -- the badge looks more alive on a shelf with the LEDs running through the screensaver." },
     { "CRT Scanlines", "Adds semi-transparent horizontal lines over the display for a retro CRT look. Toggle on/off." },
     { "CRT V-Roll", "Occasionally the display slips vertically like a CRT losing V-sync, then snaps back. Random 1-10 min intervals." },
@@ -10619,6 +10675,7 @@ static const HelpItem help_screensaver[] = {
     { "Styles", "Settings > Screensaver Style: Clip-Boy shows a dim mascot; Blank goes fully dark." },
     { "Idle Brightness", "Settings > Idle Brightness sets how dim the Clip-Boy mascot gets (1-100%, default 10%). The slider greys out when Style is Blank since it has no effect there." },
     { "Idle Clock", "Settings > Idle Clock puts the time in the top-left corner of the screensaver. There is no clock chip on this board: the time comes from the network on your first WiFi join and reads --:-- until then. Off on the Blank style, which runs the backlight at zero." },
+    { "Time Zone", "Settings > Time Zone picks the zone the clock displays. Default is US Central. Travelling to a con in another zone? Change it here and the clock corrects immediately, with no need to rejoin WiFi -- the badge keeps time in UTC internally and the zone is only applied when drawing it." },
     { "Wake Up", "Tap and HOLD for 2 seconds to unlock. The progress bar fills as you hold. The hold prevents accidental pocket wakes." },
     { "LED Behavior", "By default, the NeoPixels keep running through the screensaver. Enable Settings > Dim LEDs when idle if you'd rather have them turn off with the screen and restore on wake." },
 };
@@ -11307,6 +11364,8 @@ static void build_data_settings(lv_obj_t *cont) {
     ss_bright_readout   = NULL;
     ss_clock_row_label  = NULL;
     ss_clock_switch     = NULL;
+    tz_row_label        = NULL;
+    tz_dropdown         = NULL;
     for (int i = 0; i < 6; i++) settings_jump_hdr[i] = NULL;
 
     // Helper: pad before a 40px switch so it right-aligns with slider readout.
@@ -11553,6 +11612,35 @@ static void build_data_settings(lv_obj_t *cont) {
             lv_obj_t *sw = (lv_obj_t *)lv_event_get_target(e);
             cfg.ss_clock = lv_obj_has_state(sw, LV_STATE_CHECKED);
             cfg_save_ss_clock();
+            ss_settings_update_enables();   // the Time Zone row greys out with it
+        }, LV_EVENT_VALUE_CHANGED, NULL);
+    }
+
+    // --- Time Zone (the idle clock is the only consumer) ---
+    // Custom row for the same reason as the others here: the cascade needs the
+    // label ref to grey it. Options are built from cb_timezones[] so the table
+    // stays the single source of truth for both the names and the TZ strings.
+    {
+        lv_obj_t *row = make_uniform_settings_row(cont);
+        tz_row_label = settings_label(row, "Time Zone");
+        settings_gap(row, 6);
+        String tz_opts;
+        for (int i = 0; i < CB_TZ_COUNT; i++) {
+            if (i) tz_opts += "\n";
+            tz_opts += cb_timezones[i].name;
+        }
+        tz_dropdown = make_dropdown(row, tz_opts.c_str());
+        lv_dropdown_set_selected(tz_dropdown, cfg.tz < CB_TZ_COUNT ? cfg.tz : CFG_DEF_TZ);
+        lv_obj_set_width(tz_dropdown, SETTINGS_CONTROL_W);
+        lv_obj_add_event_cb(tz_dropdown, [](lv_event_t *e) {
+            lv_obj_t *dd = (lv_obj_t *)lv_event_get_target(e);
+            int idx = (int)lv_dropdown_get_selected(dd);
+            if (idx < 0 || idx >= CB_TZ_COUNT) return;
+            cfg.tz = (uint8_t)idx;
+            cfg_save_tz();
+            // Applied immediately. The badge already holds the correct UTC seconds,
+            // so a zone change is pure formatting -- no re-join, no NTP round trip.
+            cb_tz_apply();
         }, LV_EVENT_VALUE_CHANGED, NULL);
     }
 
