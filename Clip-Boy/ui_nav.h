@@ -1461,6 +1461,9 @@ static const ListItem sao_items[] = {
     // not the troll detail. Rendered ENABLED (the rest are dimmed). Sits near the
     // top (index 1) so players find it. Never tagged "secret": discovery IS the find.
     { "Whether Radio",   "Whether it's a radio or not, you'll never know. Drags 'broadcasts' out of the RF noise floor. Allegedly." },
+    // Also NOT a troll SAO -- tapping this one opens Radroach Ronin
+    // (radroach_menu_open), same deal as Whether Radio above. Rendered ENABLED.
+    { "Radroach Ronin",  "Wasteland swordsmanship for people with a touchscreen and no dignity. Swipe to cut the roaches, spare the rad-barrels. Cut five and the katana lights up -- then wave a hand at the ToF sensor for the whirlwind." },
     { "Quantum SAO",     "Collapses your badge state just by observing it. Schrodinger approved." },
     { "Coffee Maker",    "Brews espresso via I2C. Requires external water and 240V SAO header." },
     { "AI Girlfriend",   "She's very understanding. Runs on 4 bits of RAM. Still ghosted you." },
@@ -1471,6 +1474,10 @@ static const ListItem sao_items[] = {
 };
 #define NUM_SAOS  (sizeof(sao_items) / sizeof(sao_items[0]))
 #define RADIO_SAO_IDX  1   // the "Whether Radio" entry (slot #2) → show_radio
+#define GAME_SAO_IDX   2   // the "Radroach Ronin" entry (slot #3) → radroach_menu_open
+// Defined in game_radroach.h, which is included AFTER this file (it needs the
+// VL53 globals + pip theme from here), so the SAO tap handler needs the decl.
+void radroach_menu_open(void);
 
 // Indexed by PHYSICAL LED index (matches cfg.leds[] / the WS2812B chain). The
 // labels are intentionally NOT in index order: the UI names each LED by its
@@ -7268,13 +7275,16 @@ static void list_item_tap_cb(lv_event_t *e) {
     else if (cur_div == 1 && cur_tab == 2) {
         if (idx == RADIO_SAO_IDX)
             show_radio(content_obj);          // the secret-real SAO opens the radio
+        else if (idx == GAME_SAO_IDX)
+            radroach_menu_open();             // ...and this one opens the game
         else
             show_item_detail(sao_items, NUM_SAOS, idx);
     }
 }
 
 static void build_split_pane(lv_obj_t *cont, const ListItem *items, int count,
-                             bool dim_items, int enabled_idx = -1) {
+                             bool dim_items, int enabled_idx = -1,
+                             int enabled_idx2 = -1) {
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_pad_all(cont, 0, 0);
     lv_obj_set_style_pad_gap(cont, 0, 0);
@@ -7282,9 +7292,10 @@ static void build_split_pane(lv_obj_t *cont, const ListItem *items, int count,
     left_pane = create_left_list(cont);
 
     for (int i = 0; i < count; i++) {
-        // enabled_idx (e.g. the real "Whether Radio" SAO) renders NOT-dim even in
-        // an otherwise-dimmed list, so the one real entry reads as tappable.
-        if (dim_items && i != enabled_idx)
+        // enabled_idx / enabled_idx2 (the real "Whether Radio" + "Radroach Ronin"
+        // SAOs) render NOT-dim even in an otherwise-dimmed list, so the entries
+        // that actually do something read as tappable.
+        if (dim_items && i != enabled_idx && i != enabled_idx2)
             make_list_btn_dim(left_pane, items[i].name,
                               list_item_tap_cb, (void *)(intptr_t)i);
         else
@@ -10754,7 +10765,7 @@ static const HelpItem help_workflows[] = {
 // SAOs: dim items are intentional jokes about gear that doesn't exist. Help
 // users so they don't think the badge is broken.
 static const HelpItem help_jokes[] = {
-    { "SAOs", "The dim items under ITEMS > SAOs are jokes about gear that doesn't exist -- enjoy the descriptions. The one exception is 'Whether Radio' (not dimmed): tap it to open a simulated radio -- styled stations playing pre-recorded audio, not a real receiver. See the Simulated Radio section." },
+    { "SAOs", "The dim items under ITEMS > SAOs are jokes about gear that doesn't exist -- enjoy the descriptions. The two exceptions are not dimmed. 'Whether Radio' opens a simulated radio -- styled stations playing pre-recorded audio, not a real receiver; see the Simulated Radio section. 'Radroach Ronin' opens a slicing game: swipe the screen to cut roaches and avoid the rad-barrels. Every five cuts light the katana, and waving a hand at the ToF sensor then unleashes a whirlwind that clears the screen -- barrels included, harmlessly." },
     { "SAO Port", "Clip-Boy supports real SAOs compliant with v1.69bis via the SAO port on the right side of the enclosure. 3V3, GND, SDA and SCL are active; GPIO 1 & 2 are not." },
 };
 
@@ -12784,7 +12795,8 @@ static void rebuild_content() {
         switch (cur_tab) {
             case 0: build_items_tools(content_obj); break;
             case 1: build_items_collectibles(content_obj); break;
-            case 2: build_split_pane(content_obj, sao_items, NUM_SAOS, true, RADIO_SAO_IDX); break;
+            case 2: build_split_pane(content_obj, sao_items, NUM_SAOS, true,
+                                     RADIO_SAO_IDX, GAME_SAO_IDX); break;
         }
     } else if (cur_div == 2) {
         switch (cur_tab) {

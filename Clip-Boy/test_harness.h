@@ -1833,6 +1833,252 @@ static void th_cmd_theremin_stop() {
     th_send_ok("theremin_stop");
 }
 
+// ─── Radroach Ronin ────────────────────────────────────────────────────────
+// The game owns the whole screen, so these are how a test drives it with no
+// finger and no hand: open it, cut along a segment, force the whirlwind, read
+// score/charge/hiscore, bail out. The whirlwind GESTURE is exercised separately
+// by feeding two `sensor_mock` frames with the hand in different columns --
+// radro_lidar_cb honours the same mock gate theremin_poll_timer_cb uses, so no
+// ToF daughter board is needed.
+// Count lv_button_class widgets on the play surface. Must stay 0: anything of
+// that class gets a tap sound from the global input-device hook, which is what
+// radro_flat_btn() exists to avoid. Cheap -- the game screen is ~30 objects.
+static int th_radro_btn_count(lv_obj_t *o) {
+    if (!o) return 0;
+    int n = lv_obj_has_class(o, &lv_button_class) ? 1 : 0;
+    uint32_t kids = lv_obj_get_child_count(o);
+    for (uint32_t i = 0; i < kids; i++) n += th_radro_btn_count(lv_obj_get_child(o, i));
+    return n;
+}
+
+static void th_radroach_state_json(char *buf, size_t n) {
+    snprintf(buf, n,
+             "\"open\":%s,\"score\":%d,\"lives\":%d,\"over\":%s,\"roaches\":%d,"
+             "\"charge\":%d,\"charged\":%s,\"hiscore\":%u,\"sensor_ok\":%s,"
+             "\"claimed\":%s,\"mocked\":%s,\"frozen\":%s,\"go_card\":%s,\"btns\":%d",
+             radro_scr ? "true" : "false",
+             radro_score, radro_lives, radro_over ? "true" : "false",
+             radro_live_count(), radro_charge, radro_charged ? "true" : "false",
+             (unsigned)radro_hiscore, radro_sensor_ok ? "true" : "false",
+             radro_claimed ? "true" : "false",
+             th_sensor_mock ? "true" : "false",
+             radro_frozen ? "true" : "false",
+             radro_go_panel ? "true" : "false",
+             th_radro_btn_count(radro_scr));
+}
+
+// radroach_open [menu]  -- no argument starts a run, "menu" shows the title card
+static void th_cmd_radroach_open(const String &args) {
+    String m = args; m.trim(); m.toLowerCase();
+    if (m == "menu") { radroach_menu_open(); th_send_ok("radroach_open"); return; }
+    if (m.length()) { th_send_err("radroach_open", "only arg is menu"); return; }
+    radroach_open();
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_open", j);
+}
+
+static void th_cmd_radroach_state() {
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_state", j);
+}
+
+static void th_cmd_radroach_exit() {
+    if (radro_scr)           radro_exit();
+    else if (radro_menu_scr) radro_menu_close();
+    th_send_ok("radroach_exit");
+}
+
+// radroach_spawn [n] [roach|barrel]   -- type defaults to the normal 12% roll
+static void th_cmd_radroach_spawn(const String &args) {
+    if (!radro_scr || radro_over) { th_send_err("radroach_spawn", "game not running"); return; }
+    String a = args; a.trim(); a.toLowerCase();
+    int sp = a.indexOf(' ');
+    String kind = (sp >= 0) ? a.substring(sp + 1) : String("");
+    if (sp >= 0) a = a.substring(0, sp);
+    kind.trim();
+    int force = -1;
+    if (kind == "roach")       force = 0;
+    else if (kind == "barrel") force = 1;
+    else if (kind.length() && kind != "any") {
+        th_send_err("radroach_spawn", "type must be roach|barrel|any");
+        return;
+    }
+    int n = a.length() ? a.toInt() : 1;
+    if (n < 1) n = 1;
+    if (n > RADRO_MAX_ROACH) n = RADRO_MAX_ROACH;
+    for (int i = 0; i < n; i++) radro_spawn(force);
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_spawn", j);
+}
+
+// radroach_cut <x1> <y1> <x2> <y2>  -- a finger swipe along that segment. Same
+// entry point radro_touch_cb uses once it clears the speed gate, so this feeds
+// the charge meter exactly like a real cut does.
+static void th_cmd_radroach_cut(const String &args) {
+    if (!radro_scr || radro_over) { th_send_err("radroach_cut", "game not running"); return; }
+    float x1, y1, x2, y2;
+    if (sscanf(args.c_str(), "%f %f %f %f", &x1, &y1, &x2, &y2) != 4) {
+        th_send_err("radroach_cut", "need x1 y1 x2 y2");
+        return;
+    }
+    // Time the whole cut. A cut that SCORES fires the hit SFX; one that misses
+    // does not, so the difference between the two is the audio path's cost on
+    // the caller -- which is the hitch you feel mid-swipe.
+    uint32_t t0 = micros();
+    int scored = radro_cut(x1, y1, x2, y2);
+    uint32_t cut_us = micros() - t0;
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    char extra[480];
+    snprintf(extra, sizeof extra, "\"scored\":%d,\"cut_us\":%lu,%s",
+             scored, (unsigned long)cut_us, j);
+    th_send_ok_json("radroach_cut", extra);
+}
+
+// radroach_whirlwind -- fire the special directly, skipping the hand gesture.
+// "fired" is false when the katana is not lit, or when the screen is empty and
+// the charge is deliberately kept.
+static void th_cmd_radroach_whirlwind() {
+    if (!radro_scr || radro_over) { th_send_err("radroach_whirlwind", "game not running"); return; }
+    bool fired = radro_whirlwind();
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    char extra[440];
+    snprintf(extra, sizeof extra, "\"fired\":%s,%s", fired ? "true" : "false", j);
+    th_send_ok_json("radroach_whirlwind", extra);
+}
+
+static void th_cmd_radroach_charge(const String &args) {
+    // Jump the meter so a test reaches the whirlwind without 5 real cuts.
+    int n = args.length() ? args.toInt() : RADRO_CHARGE_KILLS;
+    if (n < 0) n = 0;
+    if (n >= RADRO_CHARGE_KILLS) { radro_charge = RADRO_CHARGE_KILLS; radro_charged = true; }
+    else                         { radro_charge = n;                  radro_charged = false; }
+    radro_charge_hud();
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_charge", j);
+}
+
+// radroach_reset -- soft restart: wipe the field and the counters WITHOUT
+// re-opening, so no sensor re-claim. A script needs this because the 1.2 s spawn
+// timer usually drops a roach on screen during the open handshake, and then no
+// count assertion afterwards is deterministic.
+static void th_cmd_radroach_reset() {
+    if (!radro_scr) { th_send_err("radroach_reset", "game not running"); return; }
+    for (int i = 0; i < RADRO_MAX_ROACH; i++) radro_kill(i, false);
+    radro_score     = 0;
+    radro_lives     = RADRO_START_LIVES;
+    radro_over      = false;
+    radro_charge    = 0;
+    radro_charged   = false;
+    radro_spawn_acc = 0;
+    if (radro_lbl_score) lv_label_set_text(radro_lbl_score, "0");
+    if (radro_lbl_lives) lv_label_set_text_fmt(radro_lbl_lives, "%d", radro_lives);
+    radro_charge_hud();
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_reset", j);
+}
+
+// radroach_timing <indev_ms> <refr_ms> -- retune LVGL's touch-sampling and
+// screen-refresh periods live, so input latency can be swept on hardware
+// without a reflash per candidate. radroach_open resets them to the
+// RADRO_INDEV_MS / RADRO_REFR_MS defaults, and radro_exit puts the badge back
+// to LV_DEF_REFR_PERIOD either way.
+// NOTE: this command reliably APPLIES but its reply can land after a host-side
+// 5 s timeout -- the new periods take effect before the response is written, so
+// the badge answers from inside the very stall being configured. A caller that
+// treats the timeout as failure will desync by one response and then read every
+// later reply one command behind. Resync (ping until the echo matches) after
+// calling this, rather than trusting the next answer.
+static void th_cmd_radroach_timing(const String &args) {
+    // Must have a run on screen. These periods are GLOBAL to LVGL and only
+    // radro_exit() puts them back, so setting them with the game closed strands
+    // the whole badge at the test value -- observed: a stray 5/16 left the main
+    // UI at 18 main-loop turns/sec instead of 138, and every later measurement
+    // in that session was garbage.
+    if (!radro_scr) { th_send_err("radroach_timing", "game not running"); return; }
+    int indev_ms = 0, refr_ms = 0;
+    if (sscanf(args.c_str(), "%d %d", &indev_ms, &refr_ms) != 2) {
+        th_send_err("radroach_timing", "need indev_ms refr_ms");
+        return;
+    }
+    if (indev_ms < 1 || indev_ms > 200 || refr_ms < 1 || refr_ms > 200) {
+        th_send_err("radroach_timing", "periods must be 1..200 ms");
+        return;
+    }
+    radro_set_lv_timing((uint32_t)indev_ms, (uint32_t)refr_ms);
+    char j[96];
+    snprintf(j, sizeof j, "\"indev_ms\":%d,\"refr_ms\":%d", indev_ms, refr_ms);
+    th_send_ok_json("radroach_timing", j);
+}
+
+// radroach_restart -- what the game-over card's PLAY AGAIN button does: a fresh
+// run on the SAME screen, keeping the sensor claim and the decoded hit SFX.
+static void th_cmd_radroach_restart() {
+    if (!radro_scr) { th_send_err("radroach_restart", "game not running"); return; }
+    radro_restart();
+    char j[360]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_restart", j);
+}
+
+// radroach_score <n> -- force the score, so a test can reach a difficulty tier
+// without grinding kills. The spawn ramp is a function of score, and it used to
+// underflow past 60.
+static void th_cmd_radroach_score(const String &args) {
+    if (!radro_scr) { th_send_err("radroach_score", "game not running"); return; }
+    String a = args; a.trim();
+    if (!a.length()) { th_send_err("radroach_score", "need a score"); return; }
+    int v = a.toInt();
+    if (v < 0) v = 0;
+    radro_score = v;
+    if (radro_lbl_score) lv_label_set_text_fmt(radro_lbl_score, "%d", radro_score);
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_score", j);
+}
+
+// radroach_step [n] -- advance n physics frames with the spawn timer OFF.
+// Needed because radro_spawn() launches sprites from BELOW the screen
+// (y = SCREEN_H + r), so under a freeze they never rise into view and no cut
+// can reach them. Stepping also makes the fall-off-the-bottom miss path
+// testable without waiting on wall-clock.
+// radroach_step [n] [spawn]  -- "spawn" lets the spawn timer run during the
+// stepped frames, which is how a test can exercise the difficulty ramp.
+static void th_cmd_radroach_step(const String &args) {
+    if (!radro_scr) { th_send_err("radroach_step", "game not running"); return; }
+    String a = args; a.trim(); a.toLowerCase();
+    bool allow_spawn = false;
+    int sp = a.indexOf(' ');
+    if (sp >= 0) {
+        String w = a.substring(sp + 1); w.trim();
+        allow_spawn = (w == "spawn");
+        a = a.substring(0, sp);
+    }
+    int n = a.length() ? a.toInt() : 1;
+    if (n < 1)   n = 1;
+    if (n > 600) n = 600;
+    for (int i = 0; i < n; i++) radro_step(allow_spawn);
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_step", j);
+}
+
+// radroach_freeze [0|1] -- hold spawn/physics/miss so a script can assert exact
+// counts without racing the spawn timer. Default 1.
+static void th_cmd_radroach_freeze(const String &args) {
+    if (!radro_scr) { th_send_err("radroach_freeze", "game not running"); return; }
+    String a = args; a.trim();
+    radro_frozen = (a.length() == 0) ? true : (a.toInt() != 0);
+    char j[384]; th_radroach_state_json(j, sizeof j);
+    th_send_ok_json("radroach_freeze", j);
+}
+
+static void th_cmd_radroach_hiscore(const String &args) {
+    String a = args; a.trim(); a.toLowerCase();
+    if (a == "clear")    radro_hiscore_store(0);
+    else if (a.length()) radro_hiscore_store((uint16_t)a.toInt());
+    else { radro_hi_loaded = false; radro_hiscore_load(); }   // force a re-read from NVS
+    char j[48];
+    snprintf(j, sizeof j, "\"hiscore\":%u", (unsigned)radro_hiscore);
+    th_send_ok_json("radroach_hiscore", j);
+}
+
 static void th_cmd_hr_feed(const String &args) {
     // Feed mock VL53L5CX data to the HR scanner (if scanning).
     // Format: 64 comma-separated distance values
@@ -2570,6 +2816,20 @@ static void th_dispatch(const String &line) {
     else if (cmd == "hr_scan_stop")   th_cmd_hr_scan_stop();
     else if (cmd == "theremin_start") th_cmd_theremin_start();
     else if (cmd == "theremin_stop")  th_cmd_theremin_stop();
+    else if (cmd == "radroach_open")      th_cmd_radroach_open(args);
+    else if (cmd == "radroach_state")     th_cmd_radroach_state();
+    else if (cmd == "radroach_exit")      th_cmd_radroach_exit();
+    else if (cmd == "radroach_spawn")     th_cmd_radroach_spawn(args);
+    else if (cmd == "radroach_cut")       th_cmd_radroach_cut(args);
+    else if (cmd == "radroach_whirlwind") th_cmd_radroach_whirlwind();
+    else if (cmd == "radroach_charge")    th_cmd_radroach_charge(args);
+    else if (cmd == "radroach_reset")     th_cmd_radroach_reset();
+    else if (cmd == "radroach_restart")   th_cmd_radroach_restart();
+    else if (cmd == "radroach_score")     th_cmd_radroach_score(args);
+    else if (cmd == "radroach_step")      th_cmd_radroach_step(args);
+    else if (cmd == "radroach_timing")    th_cmd_radroach_timing(args);
+    else if (cmd == "radroach_freeze")    th_cmd_radroach_freeze(args);
+    else if (cmd == "radroach_hiscore")   th_cmd_radroach_hiscore(args);
     else if (cmd == "hr_feed")        th_cmd_hr_feed(args);
     else if (cmd == "hr_anchor")      th_cmd_hr_anchor(args);
     else if (cmd == "hr_lockpolicy")  th_cmd_hr_lockpolicy(args);

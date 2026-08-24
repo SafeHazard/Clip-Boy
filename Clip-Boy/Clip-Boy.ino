@@ -80,6 +80,9 @@ CommandLine cli_obj;
 // ─── Navigation + all UI code ───────────────────────────────────────────────
 #include "ui_nav.h"
 
+// ─── Radroach Ronin (after ui_nav for the VL53 globals + pip theme/fonts) ───
+#include "game_radroach.h"
+
 // ─── DC34 ARG: clipcli dispatcher + puzzle modules (after ui_nav for UI use) ──
 #include "arg_clipcli.h"
 #include "arg_p2_hack.h"
