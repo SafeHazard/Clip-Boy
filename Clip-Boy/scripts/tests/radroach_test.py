@@ -73,13 +73,25 @@ def st(h):
     return ask(h, "radroach_state")
 
 
-def start(h, reset=True):
+# An all-far mocked frame: no zone is inside RADRO_HAND_MAX_MM, so the gesture
+# detector sees nvalid < 2 and can never fire.
+QUIET_FRAME = ",".join(["2000"] * 64)
+
+
+def start(h, reset=True, quiet=True):
     """Open a run and wait until the session is answering in step.
 
     The first open after boot uploads ~84KB of VL53L5CX firmware and blocks the
     main loop for seconds, so its own reply can arrive after the host has given
     up on it. Drain until radroach_state answers as itself.
     """
+    # quiet: pin the sensor to a mocked empty frame FIRST. Otherwise these runs
+    # claim the real VL53L5CX, and anything moving in front of the badge -- a
+    # hand, someone walking past -- is a valid whirlwind gesture. It fired
+    # mid-test and cleared a screen the test had just populated, which showed up
+    # as unrelated checks failing at random.
+    if quiet:
+        h.cmd(f"sensor_mock {QUIET_FRAME}")
     h.cmd("radroach_open")          # may answer late; ask() below absorbs that
     for _ in range(12):
         try:
@@ -114,8 +126,9 @@ def mock_hand(h, col):
 
 def test_opens_and_exits(h):
     print("[1] the game opens clean and exits")
-    s = start(h)
+    s = start(h, quiet=False)       # real sensor here, to cover the claim path
     check("open", s.get("open") is True, s)
+    check("real sensor claimed", s.get("claimed") is True, s)
     check("full lives", s.get("lives") == 3, s)
     check("zero score", s.get("score") == 0, s)
     check("empty meter", s.get("charge") == 0, s)
@@ -201,7 +214,11 @@ def test_cutting_a_barrel_ends_the_run(h):
     h.cmd("radroach_spawn 1 barrel")
     toss(h)
     cut_everything(h)
-    check("lives zeroed by the barrel", st(h).get("lives") <= 0)
+    s = st(h)
+    check("lives zeroed by the barrel", s.get("lives") <= 0, s)
+    # The HUD used to keep showing 3 while lives was already 0, so the run ended
+    # with no visible reason. The counter must agree with reality.
+    check("death cause recorded as barrel", s.get("by_barrel") is True, s)
     h.cmd("radroach_step 1")        # one frame for the tick to raise game-over
     s = st(h)
     check("game over", s.get("over") is True, s)
@@ -238,6 +255,7 @@ def test_missed_roach_costs_a_life(h):
     check("roach is gone", s.get("roaches") == 0, s)
     check("one life lost", s.get("lives") == 2, s)
     check("nothing scored", s.get("score") == 0, s)
+    check("a miss is NOT blamed on a barrel", s.get("by_barrel") is False, s)
 
     # A rad-barrel falling off is NOT a miss -- you were right to let it go.
     h.cmd("radroach_spawn 1 barrel")
@@ -251,7 +269,7 @@ def test_missed_roach_costs_a_life(h):
 def test_hand_wave_triggers_whirlwind(h):
     print("[7] a mocked hand wave fires the whirlwind (no ToF board needed)")
     mock_hand(h, "L")               # mock BEFORE opening, so the claim is skipped
-    start(h)
+    start(h, quiet=False)           # keep OUR frame; quiet=True would erase the hand
     s = st(h)
     check("harness frames in use", s.get("mocked") is True, s)
     check("real sensor NOT claimed", s.get("claimed") is False, s)

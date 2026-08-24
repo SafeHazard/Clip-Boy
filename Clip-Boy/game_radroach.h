@@ -151,6 +151,7 @@ static size_t          radro_sfx_frames = 0;
 static Preferences     radro_prefs;
 static uint16_t        radro_hiscore   = 0;
 static bool            radro_new_hi    = false;
+static bool            radro_died_on_barrel = false;   // how the run ended
 static bool            radro_hi_loaded = false;
 static bool            radro_claimed   = false;    // WE claimed the VL53
 static bool            radro_sensor_ok = false;    // whirlwind is available
@@ -244,7 +245,14 @@ static bool radro_kill(int i, bool by_player, bool barrels_safe = false) {
     bool scored = false;
     if (by_player) {
         if (r->hazard) {
-            if (!barrels_safe) radro_lives = 0;   // cut a barrel = run over
+            if (!barrels_safe) {
+                radro_lives = 0;                  // cut a barrel = run over
+                radro_died_on_barrel = true;
+                // The miss path below updates this label; this one used to not,
+                // so the HUD kept reading "3" while lives was already 0 and the
+                // run ended for no visible reason. Owner hit it on hardware.
+                if (radro_lbl_lives) lv_label_set_text(radro_lbl_lives, "0");
+            }
         } else {
             radro_score++;
             scored = true;
@@ -550,6 +558,7 @@ static void radro_restart(void) {
     radro_score = 0; radro_lives = RADRO_START_LIVES; radro_over = false;
     radro_spawn_acc = 0; radro_have_prev_pt = false; radro_last_touch_ms = 0;
     radro_charge = 0; radro_charged = false; radro_new_hi = false;
+    radro_died_on_barrel = false;
     radro_hand = false; radro_col = radro_prevcol = 0;
     radro_armed = true; radro_last_gesture_ms = 0;
     if (radro_lbl_score) lv_label_set_text(radro_lbl_score, "0");
@@ -593,13 +602,26 @@ static void radro_show_game_over(void) {
     lv_label_set_text(t, "GAME OVER");
     lv_obj_set_style_text_font(t, &ui_font_pipboy_20, 0);
     lv_obj_set_style_text_color(t, pip_highlight(), 0);
-    lv_obj_align(t, LV_ALIGN_TOP_MID, 0, 10);
+    lv_obj_align(t, LV_ALIGN_TOP_MID, 0, 8);
+
+    // Why the run ended. Without this a barrel death is indistinguishable from
+    // running out of lives, which reads as the game quitting on you.
+    lv_obj_t *why = lv_label_create(radro_go_panel);
+    if (radro_died_on_barrel) {
+        lv_label_set_text(why, "SLICED A RAD-BARREL");
+        lv_obj_set_style_text_color(why, lv_color_hex(0xff6060), 0);
+    } else {
+        lv_label_set_text(why, "OUT OF LIVES");
+        lv_obj_set_style_text_color(why, pip_primary(), 0);
+    }
+    lv_obj_set_style_text_font(why, &ui_font_pipboy_14, 0);
+    lv_obj_align(why, LV_ALIGN_TOP_MID, 0, 34);
 
     lv_obj_t *sc = lv_label_create(radro_go_panel);
     lv_label_set_text_fmt(sc, "SCORE  %d", radro_score);
     lv_obj_set_style_text_font(sc, &ui_font_pipboy_18, 0);
     lv_obj_set_style_text_color(sc, pip_primary(), 0);
-    lv_obj_align(sc, LV_ALIGN_TOP_MID, 0, 44);
+    lv_obj_align(sc, LV_ALIGN_TOP_MID, 0, 54);
 
     lv_obj_t *bs = lv_label_create(radro_go_panel);
     if (radro_new_hi) {
@@ -610,7 +632,7 @@ static void radro_show_game_over(void) {
         lv_obj_set_style_text_color(bs, pip_primary(), 0);
     }
     lv_obj_set_style_text_font(bs, &ui_font_pipboy_14, 0);
-    lv_obj_align(bs, LV_ALIGN_TOP_MID, 0, 74);
+    lv_obj_align(bs, LV_ALIGN_TOP_MID, 0, 80);
 
     radro_go_btn(radro_go_panel, "PLAY AGAIN", LV_ALIGN_BOTTOM_LEFT, 8, -10, 132,
         [](lv_event_t *e){ (void)e; lv_async_call(radro_restart_async, NULL); });
@@ -748,6 +770,7 @@ void radroach_open(void) {
     radro_hand = false; radro_col = radro_prevcol = 0;
     radro_armed = true; radro_last_gesture_ms = 0; radro_last_touch_ms = 0;
     radro_charge = 0; radro_charged = false; radro_new_hi = false;
+    radro_died_on_barrel = false;
     radro_frozen = false; radro_sensor_ok = false; radro_go_panel = NULL;
     radro_flurry_tmr = NULL; radro_flurry_step = 0;
     for (int i = 0; i < RADRO_FLURRY_N; i++) radro_flurry[i] = NULL;

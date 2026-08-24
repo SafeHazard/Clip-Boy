@@ -1855,7 +1855,7 @@ static void th_radroach_state_json(char *buf, size_t n) {
     snprintf(buf, n,
              "\"open\":%s,\"score\":%d,\"lives\":%d,\"over\":%s,\"roaches\":%d,"
              "\"charge\":%d,\"charged\":%s,\"hiscore\":%u,\"sensor_ok\":%s,"
-             "\"claimed\":%s,\"mocked\":%s,\"frozen\":%s,\"go_card\":%s,\"btns\":%d",
+             "\"claimed\":%s,\"mocked\":%s,\"frozen\":%s,\"go_card\":%s,\"btns\":%d,\"by_barrel\":%s",
              radro_scr ? "true" : "false",
              radro_score, radro_lives, radro_over ? "true" : "false",
              radro_live_count(), radro_charge, radro_charged ? "true" : "false",
@@ -1864,7 +1864,8 @@ static void th_radroach_state_json(char *buf, size_t n) {
              th_sensor_mock ? "true" : "false",
              radro_frozen ? "true" : "false",
              radro_go_panel ? "true" : "false",
-             th_radro_btn_count(radro_scr));
+             th_radro_btn_count(radro_scr),
+             radro_died_on_barrel ? "true" : "false");
 }
 
 // radroach_open [menu]  -- no argument starts a run, "menu" shows the title card
