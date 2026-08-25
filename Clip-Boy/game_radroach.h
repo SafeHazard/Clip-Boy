@@ -83,6 +83,13 @@
 #define RADRO_SWEEP_VCOL      0.06f   // frac-column/tick that STARTS a wave
 #define RADRO_REARM_VCOL      0.02f   // must fall below this to re-arm
 #define RADRO_GESTURE_COOL_MS 400     // floor between accepted waves
+// The hand that swipes the screen is INSIDE the sensor cone, so a cut looks
+// exactly like a wave to the gesture detector. Without this the whirlwind fired
+// on the very frame it was earned: the fifth cut lit the katana, and that same
+// still-moving hand was read as the wave that spends it. The gesture is
+// therefore ignored while the screen is being touched and for this long after,
+// which forces the wave to be a separate, deliberate motion.
+#define RADRO_GESTURE_QUIET_MS 400
 
 // Charge-up: N finger kills light the katana.
 #define RADRO_CHARGE_KILLS    5
@@ -122,6 +129,10 @@ static lv_point_precise_t radro_blade_pts[2];      // [L1]
 static bool            radro_have_prev_pt = false;
 static float           radro_px = 0, radro_py = 0; // previous touch point
 static uint32_t        radro_last_touch_ms = 0;    // for px/s, not px/sample
+// Last moment a finger was on the play surface. Unlike radro_last_touch_ms this
+// is NOT cleared on release -- the gesture detector needs to know how long ago
+// the hand was over the screen, not whether a drag is in progress.
+static uint32_t        radro_touch_activity_ms = 0;
 
 // lidar centroid tracking + wave edge detection
 static float           radro_col     = 0;          // fractional column 0..3
@@ -287,7 +298,7 @@ static void radro_charge_hud(void) {
         lv_label_set_text(radro_lbl_chg, "NO SENSOR - NO WHIRLWIND");
         lv_obj_set_style_text_color(radro_lbl_chg, lv_color_hex(0xff6060), 0);
     } else if (radro_charged) {
-        lv_label_set_text(radro_lbl_chg, "WHIRLWIND READY - WAVE A HAND");
+        lv_label_set_text(radro_lbl_chg, "WHIRLWIND READY - LIFT OFF AND WAVE");
         lv_obj_set_style_text_color(radro_lbl_chg, pip_highlight(), 0);
     } else {
         lv_label_set_text_fmt(radro_lbl_chg, "KATANA %d/%d",
@@ -363,6 +374,9 @@ static void radro_flurry_fire(void) {
 // meter -- the whirlwind is the payout, not another earner.
 // Returns how many roaches it scored.
 static int radro_cut(float ax, float ay, float bx, float by) {
+    // Stamped here rather than only in radro_touch_cb so the harness's
+    // radroach_cut exercises the same interlock a real finger does.
+    radro_touch_activity_ms = millis();
     int scored = 0;
     for (int i = 0; i < RADRO_MAX_ROACH; i++) {
         if (!radro_roach[i].obj) continue;
@@ -421,6 +435,7 @@ static void radro_touch_cb(lv_event_t *e) {
     uint32_t now = millis();
     uint32_t dt  = now - radro_last_touch_ms;
     radro_last_touch_ms = now;
+    radro_touch_activity_ms = now;      // a slow drag still puts a hand in the cone
 
     if (radro_have_prev_pt && dt > 0) {
         float dx = p.x - radro_px, dy = p.y - radro_py;
@@ -441,6 +456,7 @@ static void radro_touch_release_cb(lv_event_t *e) {
     (void)e;
     radro_have_prev_pt = false;
     radro_last_touch_ms = 0;
+    radro_touch_activity_ms = millis();  // the quiet window starts at LIFT-OFF
     if (radro_blade) lv_obj_add_flag(radro_blade, LV_OBJ_FLAG_HIDDEN);
 }
 
@@ -490,9 +506,14 @@ static void radro_lidar_cb(lv_timer_t *t) {
         bool was_hand = radro_hand; radro_hand = true;
         uint32_t now = millis();
 
-        if (vcol < RADRO_REARM_VCOL) radro_armed = true;   // hand settled
+        // Was the screen quiet long enough for this to be a deliberate wave?
+        bool quiet = (now - radro_touch_activity_ms) >= RADRO_GESTURE_QUIET_MS;
+        // While a finger is in play the detector stays disarmed, so the tail of
+        // a swipe can never roll straight into a wave once the screen goes idle.
+        if (!quiet)                        radro_armed = false;
+        else if (vcol < RADRO_REARM_VCOL)  radro_armed = true;   // hand settled
 
-        if (was_hand && radro_armed && vcol >= RADRO_SWEEP_VCOL &&
+        if (was_hand && quiet && radro_armed && vcol >= RADRO_SWEEP_VCOL &&
             (now - radro_last_gesture_ms) >= RADRO_GESTURE_COOL_MS) {
             radro_armed = false;
             // Only spend the cooldown on a wave that actually did something, so
@@ -560,7 +581,7 @@ static void radro_restart(void) {
     radro_charge = 0; radro_charged = false; radro_new_hi = false;
     radro_died_on_barrel = false;
     radro_hand = false; radro_col = radro_prevcol = 0;
-    radro_armed = true; radro_last_gesture_ms = 0;
+    radro_armed = true; radro_last_gesture_ms = 0; radro_touch_activity_ms = 0;
     if (radro_lbl_score) lv_label_set_text(radro_lbl_score, "0");
     if (radro_lbl_lives) lv_label_set_text_fmt(radro_lbl_lives, "%d", radro_lives);
     radro_charge_hud();
@@ -769,6 +790,7 @@ void radroach_open(void) {
     radro_spawn_acc = 0; radro_have_prev_pt = false;
     radro_hand = false; radro_col = radro_prevcol = 0;
     radro_armed = true; radro_last_gesture_ms = 0; radro_last_touch_ms = 0;
+    radro_touch_activity_ms = 0;
     radro_charge = 0; radro_charged = false; radro_new_hi = false;
     radro_died_on_barrel = false;
     radro_frozen = false; radro_sensor_ok = false; radro_go_panel = NULL;

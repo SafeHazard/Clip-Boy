@@ -290,8 +290,41 @@ def test_hand_wave_triggers_whirlwind(h):
     h.cmd("sensor_real")
 
 
+def test_swipe_does_not_fire_the_whirlwind(h):
+    print("[8] the whirlwind waits for a deliberate wave, not the cut that earned it")
+    # The swiping hand is inside the sensor cone, so a cut and a wave look the
+    # same to the detector. On hardware the whirlwind fired the instant it was
+    # earned. A cut must disarm the gesture until the screen has been quiet.
+    mock_hand(h, "L")
+    start(h, quiet=False)               # keep our own frame
+    h.cmd("radroach_freeze 1")
+    h.cmd("radroach_reset")
+    h.cmd("radroach_charge 5")
+    h.cmd("radroach_spawn 3 roach")
+    h.cmd("radroach_step 8")
+
+    # A cut that hits nothing, purely to stamp "a finger was just here".
+    ask(h, "radroach_cut 0 5 320 5")
+    mock_hand(h, "R")                   # wave immediately after the swipe
+    h.wait(150)
+    s = st(h)
+    check("wave ignored right after a cut", s.get("charged") is True, s)
+    check("screen untouched by the ignored wave", s.get("roaches") == 3, s)
+
+    # Now let the screen go quiet and wave properly.
+    mock_hand(h, "L")
+    h.wait(700)                         # past RADRO_GESTURE_QUIET_MS, hand settles
+    mock_hand(h, "R")
+    h.wait(300)
+    s = st(h)
+    check("wave accepted once the screen is quiet", s.get("charged") is False, s)
+    check("and it cleared the screen", s.get("roaches") == 0, s)
+    h.cmd("radroach_exit")
+    h.cmd("sensor_real")
+
+
 def test_spawning_survives_the_ramp(h):
-    print("[8] roaches keep spawning at every score")
+    print("[9] roaches keep spawning at every score")
     # spawn_every = 1200 - score*20, floored at 350. As uint32_t that wrapped at
     # score 61 (1200-1220) to ~4.29e9, and the game stopped spawning for the rest
     # of the run. Walk the tier boundary and well past it.
@@ -313,7 +346,7 @@ def test_spawning_survives_the_ramp(h):
 
 
 def test_hiscore_persists(h):
-    print("[9] high score round-trips through NVS")
+    print("[10] high score round-trips through NVS")
     before = ask(h, "radroach_hiscore").get("hiscore")
     h.cmd("radroach_hiscore 1234")
     check("write took", ask(h, "radroach_hiscore").get("hiscore") == 1234)
@@ -338,6 +371,7 @@ def main():
                   test_cutting_a_barrel_ends_the_run,
                   test_missed_roach_costs_a_life,
                   test_hand_wave_triggers_whirlwind,
+                  test_swipe_does_not_fire_the_whirlwind,
                   test_spawning_survives_the_ramp,
                   test_hiscore_persists):
             t(h)
