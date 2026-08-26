@@ -1478,6 +1478,8 @@ static const ListItem sao_items[] = {
 // Defined in game_radroach.h, which is included AFTER this file (it needs the
 // VL53 globals + pip theme from here), so the SAO tap handler needs the decl.
 void radroach_menu_open(void);
+// True while the game owns the display. The CRT V-roll asks this before firing.
+bool radroach_owns_screen(void);
 
 // Indexed by PHYSICAL LED index (matches cfg.leds[] / the WS2812B chain). The
 // labels are intentionally NOT in index order: the UI names each LED by its
@@ -13203,6 +13205,12 @@ static void crt_flicker_fire_cb(lv_timer_t *t) {
     // aud_theremin_active for the ~100 ms of a tap click, and sampling the render flag in
     // that window would let a V-roll fire while the user is watching the bars.
     if (hr_scanning || audio_theremin_wants_active()) goto reschedule;
+    // Same reasoning, and worse: the game owns the whole display, and the
+    // snapshot below is taken of scr_main rather than the ACTIVE screen. So a
+    // roll during a run rendered the Pip-Boy nav UI over the top of the game,
+    // rolled that, then tore it down -- it read as the badge flipping to another
+    // screen and back mid-swipe. Reported from hardware.
+    if (radroach_owns_screen()) goto reschedule;
 
     {
         // Snapshot the current screen into PSRAM-backed RGB565 buffer

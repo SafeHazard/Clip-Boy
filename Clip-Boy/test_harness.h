@@ -2020,6 +2020,26 @@ static void th_cmd_radroach_restart() {
     th_send_ok_json("radroach_restart", j);
 }
 
+// crt_vroll_fire -- run the CRT V-roll timer callback on demand and report
+// whether a roll actually started. Needs cfg.crt_flicker on, because the
+// callback reschedules crt_flicker_timer on its way out and that pointer is
+// NULL while the effect is disabled.
+//
+// A test that only asserts "no roll during the game" would pass just as well if
+// the trigger were broken, so pair it with a firing outside the game.
+static void th_cmd_crt_vroll_fire() {
+    if (!crt_flicker_timer) {
+        th_send_err("crt_vroll_fire", "crt flicker disabled (cfg_set crt_flick true)");
+        return;
+    }
+    crt_flicker_fire_cb(NULL);
+    bool rolling = crt_vroll_active;
+    if (rolling) crt_vroll_abort();      // do not leave an animation running
+    char j[64];
+    snprintf(j, sizeof j, "\"rolling\":%s", rolling ? "true" : "false");
+    th_send_ok_json("crt_vroll_fire", j);
+}
+
 // radroach_score <n> -- force the score, so a test can reach a difficulty tier
 // without grinding kills. The spawn ramp is a function of score, and it used to
 // underflow past 60.
@@ -2826,6 +2846,7 @@ static void th_dispatch(const String &line) {
     else if (cmd == "radroach_charge")    th_cmd_radroach_charge(args);
     else if (cmd == "radroach_reset")     th_cmd_radroach_reset();
     else if (cmd == "radroach_restart")   th_cmd_radroach_restart();
+    else if (cmd == "crt_vroll_fire")     th_cmd_crt_vroll_fire();
     else if (cmd == "radroach_score")     th_cmd_radroach_score(args);
     else if (cmd == "radroach_step")      th_cmd_radroach_step(args);
     else if (cmd == "radroach_timing")    th_cmd_radroach_timing(args);

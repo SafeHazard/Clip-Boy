@@ -818,6 +818,11 @@ void radroach_open(void) {
     lv_obj_clear_flag(radro_scr, LV_OBJ_FLAG_SCROLLABLE);
     lv_screen_load(radro_scr);
 
+    // A V-roll already in flight lives on lv_layer_top(), so it would ride over
+    // the game we just loaded. Suppression (see crt_flicker_fire_cb) stops new
+    // ones; this clears one that started a moment before we opened.
+    crt_vroll_abort();
+
     radro_set_lv_timing(RADRO_INDEV_MS, RADRO_REFR_MS);
 
     // finger blade trail (hidden until the first swipe)
@@ -986,4 +991,11 @@ void radroach_menu_open(void) {
         [](lv_event_t *e){ (void)e; radro_menu_close(); radroach_open(); });
     radro_menu_btn(radro_menu_scr, "Back", 92,
         [](lv_event_t *e){ (void)e; radro_menu_close(); });
+}
+
+// Declared in ui_nav.h. The CRT V-roll effect calls this before firing so it
+// never interrupts a run. Covers the title card too: the roll snapshots
+// scr_main, so it would render the nav UI over whatever the game has up.
+bool radroach_owns_screen(void) {
+    return radro_scr != NULL || radro_menu_scr != NULL;
 }

@@ -323,8 +323,34 @@ def test_swipe_does_not_fire_the_whirlwind(h):
     h.cmd("sensor_real")
 
 
+def test_crt_vroll_does_not_interrupt(h):
+    print("[9] the CRT V-roll never fires during a run")
+    # The badge rolls the screen like an old CRT every 60-600 s. It snapshots
+    # scr_main, not the active screen, so during a game it rendered the nav UI
+    # over the top, rolled that, and tore it down -- the badge appeared to flip
+    # to another screen and back mid-swipe.
+    was = ask(h, "cfg_get crt_flick").get("value")
+    h.cmd("cfg_set crt_flick true")
+
+    start(h)
+    r = ask(h, "crt_vroll_fire")
+    check("no V-roll while the game is up", r.get("rolling") is False, r)
+    check("game still on screen", st(h).get("open") is True)
+
+    h.cmd("radroach_exit")
+    h.wait(400)
+    # Paired positive: proves the check above means something. If the trigger
+    # were broken, the negative case would pass for the wrong reason.
+    r = ask(h, "crt_vroll_fire")
+    check("V-roll DOES fire outside the game", r.get("rolling") is True, r)
+
+    if was is False:
+        h.cmd("cfg_set crt_flick false")     # put the setting back
+        print("  ..    restored crt_flick=false")
+
+
 def test_spawning_survives_the_ramp(h):
-    print("[9] roaches keep spawning at every score")
+    print("[10] roaches keep spawning at every score")
     # spawn_every = 1200 - score*20, floored at 350. As uint32_t that wrapped at
     # score 61 (1200-1220) to ~4.29e9, and the game stopped spawning for the rest
     # of the run. Walk the tier boundary and well past it.
@@ -346,7 +372,7 @@ def test_spawning_survives_the_ramp(h):
 
 
 def test_hiscore_persists(h):
-    print("[10] high score round-trips through NVS")
+    print("[11] high score round-trips through NVS")
     before = ask(h, "radroach_hiscore").get("hiscore")
     h.cmd("radroach_hiscore 1234")
     check("write took", ask(h, "radroach_hiscore").get("hiscore") == 1234)
@@ -372,6 +398,7 @@ def main():
                   test_missed_roach_costs_a_life,
                   test_hand_wave_triggers_whirlwind,
                   test_swipe_does_not_fire_the_whirlwind,
+                  test_crt_vroll_does_not_interrupt,
                   test_spawning_survives_the_ramp,
                   test_hiscore_persists):
             t(h)
