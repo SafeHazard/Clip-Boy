@@ -7,6 +7,7 @@ scripts/tests/overnight_results/
 
 # Local tooling / per-machine state (not shared)
 .claude/settings.json
+.claude/worktrees/
 .superpowers/
 
 # Windows Explorer folder metadata

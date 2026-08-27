@@ -89,6 +89,9 @@ static volatile size_t                 aud_mp3_frames  = 0;     // stereo frames
 static volatile size_t                 aud_mp3_pos     = 0;     // current stereo frame
 static volatile bool                   aud_mp3_loop    = false;
 static volatile bool                   aud_mp3_active  = false;
+// false = aud_mp3_pcm is BORROWED from a caller that owns and outlives it, so
+// audio_mp3_stop() must not free it. See audio_pcm16_play().
+static volatile bool                   aud_mp3_owns_pcm = true;
 
 static bool   aud_initialized = false;
 
@@ -1042,13 +1045,15 @@ static void audio_mp3_stop(void) {
     // Let the task finish any in-flight write before we free the PCM buffer.
     vTaskDelay(pdMS_TO_TICKS(30));
     xSemaphoreTake(aud_mp3_mutex, portMAX_DELAY);
-    int16_t *old = aud_mp3_pcm;
+    int16_t *old   = aud_mp3_pcm;
+    bool     owned = aud_mp3_owns_pcm;
     aud_mp3_pcm    = NULL;
     aud_mp3_frames = 0;
     aud_mp3_pos    = 0;
     aud_mp3_loop   = false;
+    aud_mp3_owns_pcm = true;          // back to the default for the next player
     xSemaphoreGive(aud_mp3_mutex);
-    if (old) free(old);
+    if (old && owned) free(old);      // a borrowed buffer belongs to its caller
     CB_LOGLN("[AUD] MP3 stopped");
 }
 
@@ -1122,10 +1127,42 @@ static void audio_mp3_play(const uint8_t *data, size_t len, bool loop, float gai
     aud_mp3_frames = frames;
     aud_mp3_pos    = 0;
     aud_mp3_loop   = loop;
+    aud_mp3_owns_pcm = true;   // we decoded it, so we free it
     aud_mp3_active = true;  // set last so the task sees consistent state
     xSemaphoreGive(aud_mp3_mutex);
     CB_LOGF("[AUD] MP3 play (%u frames, loop=%d)\n",
                   (unsigned)frames, loop);
+}
+
+// Play an ALREADY-DECODED stereo PCM buffer that the CALLER owns and keeps
+// alive for the duration. Retriggering just rewinds to frame 0.
+//
+// This exists because audio_mp3_play() is far too expensive to fire on a game
+// event: it calls audio_mp3_stop() first (a hard vTaskDelay(30 ms) on the
+// caller, so the audio task can finish reading before the buffer is freed) and
+// then decodes the whole clip with a ps_malloc/ps_realloc loop. Measured on
+// hardware, one hit sound cost 233 ms of blocked main loop -- a visible freeze
+// mid-swipe. Decode once, then come through here: no decode, no allocation, no
+// stop(), no free. Nothing is freed on this path at all, so the audio task can
+// never be left holding a dead pointer.
+//
+// The CALLER must call audio_mp3_stop() before freeing its buffer. That clears
+// the pointer and waits out any in-flight write, and the ownership flag keeps
+// it from freeing memory it did not allocate.
+static void audio_pcm16_play(const int16_t *pcm, size_t frames) {
+    if (!aud_initialized || !pcm || !frames) return;
+    // A driver-owned buffer still installed must go through the normal path so
+    // it actually gets freed. Costs the 30 ms once, not once per shot.
+    if (aud_mp3_owns_pcm && aud_mp3_pcm) audio_mp3_stop();
+    if (aud_theremin_active) audio_theremin_stop();
+    xSemaphoreTake(aud_mp3_mutex, portMAX_DELAY);
+    aud_mp3_pcm      = (int16_t *)pcm;
+    aud_mp3_frames   = frames;
+    aud_mp3_pos      = 0;
+    aud_mp3_loop     = false;
+    aud_mp3_owns_pcm = false;         // borrowed: never free this one
+    aud_mp3_active   = true;          // set last so the task sees consistent state
+    xSemaphoreGive(aud_mp3_mutex);
 }
 
 static bool audio_mp3_is_playing(void) {

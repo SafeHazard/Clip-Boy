@@ -16,6 +16,8 @@
 //   ss_style    (uint8)  - screensaver style (0=Clip-Boy, 1=Blank, 2=Flying Clippy)
 //   ss_bright   (uint8)  - 1-100 (Clip-Boy screensaver dimness, percent of full)
 //   ss_leds     (bool)   - turn off LEDs during screensaver
+//   ss_clock    (bool)   - show the idle clock on the screensaver
+//   tz          (uint8)  - time zone index into cb_timezones[] (ui_nav.h)
 //   crt_scan    (bool)   - CRT scanline overlay
 //   crt_flick   (bool)   - CRT flicker effect
 //   help_btn    (bool)   - show '?' help button in the status bar
@@ -45,6 +47,13 @@
 #define CFG_DEF_SS_STYLE        0     // 0=Clip-Boy, 1=Blank, 2=Flying Clippy
 #define CFG_DEF_SS_BRIGHTNESS   10    // Clip-Boy screensaver dimness (1-100%)
 #define CFG_DEF_SS_LEDS_OFF    false  // Keep LEDs running during screensaver by default
+#define CFG_DEF_SS_CLOCK       true   // Idle clock on by default: it is the reason the badge runs NTP at all
+// Index into cb_timezones[] in ui_nav.h. Kept as a bare literal because
+// ui_config.h is included FIRST and must not depend on ui_nav.h; ui_nav.h
+// static_asserts it against the real table size at the definition site.
+// 2 = US Central, the zone the clock was hardcoded to before it was a setting,
+// so an existing badge that never opens the picker behaves exactly as it did.
+#define CFG_DEF_TZ             2
 #define CFG_DEF_LED_RUBBER_DUCK false // Rubber Duck LED theme off by default
 #define CFG_DEF_CRT_SCANLINES  true   // on by default — the CRT look is core to the aesthetic
 #define CFG_DEF_CRT_FLICKER    true
@@ -95,6 +104,8 @@ struct ClipBoyConfig {
     uint8_t ss_style;       // 0=Clip-Boy, 1=Blank, 2=Flying Clippy
     uint8_t ss_brightness;  // Clip-Boy screensaver dimness (1-100%)
     bool    ss_leds_off;    // Turn off LEDs when screensaver activates
+    bool    ss_clock;       // Show the idle clock in the screensaver corner
+    uint8_t tz;             // Time zone: index into cb_timezones[] (ui_nav.h)
     bool    led_rubber_duck; // Rubber Duck LED theme active (global chase effect)
     bool    crt_scanlines;  // CRT scanline overlay
     bool    crt_flicker;    // CRT flicker effect
@@ -193,6 +204,11 @@ static void cfg_load(void) {
     cfg.ss_style = cfg_prefs.getUChar("ss_style", CFG_DEF_SS_STYLE);
     cfg.ss_brightness = cfg_prefs.getUChar("ss_bright", CFG_DEF_SS_BRIGHTNESS);
     cfg.ss_leds_off = cfg_prefs.getBool("ss_leds", CFG_DEF_SS_LEDS_OFF);
+    cfg.ss_clock = cfg_prefs.getBool("ss_clock", CFG_DEF_SS_CLOCK);
+    // Not range-clamped here: the table it indexes lives in ui_nav.h. cb_tz_posix()
+    // falls back to CFG_DEF_TZ on an out-of-range value, which is what a downgrade
+    // to a build with a shorter table would produce.
+    cfg.tz = cfg_prefs.getUChar("tz", CFG_DEF_TZ);
     cfg.led_rubber_duck = cfg_prefs.getBool("rubduck", CFG_DEF_LED_RUBBER_DUCK);
     cfg.crt_scanlines = cfg_prefs.getBool("crt_scan", CFG_DEF_CRT_SCANLINES);
     cfg.crt_flicker   = cfg_prefs.getBool("crt_flick", CFG_DEF_CRT_FLICKER);
@@ -326,6 +342,18 @@ static void cfg_save_ss_leds_off(void) {
     cfg_prefs.end();
 }
 
+static void cfg_save_ss_clock(void) {
+    cfg_prefs.begin(CFG_NAMESPACE, false);
+    cfg_prefs.putBool("ss_clock", cfg.ss_clock);
+    cfg_prefs.end();
+}
+
+static void cfg_save_tz(void) {
+    cfg_prefs.begin(CFG_NAMESPACE, false);
+    cfg_prefs.putUChar("tz", cfg.tz);
+    cfg_prefs.end();
+}
+
 static void cfg_save_led_rubber_duck(void) {
     cfg_prefs.begin(CFG_NAMESPACE, false);
     cfg_prefs.putBool("rubduck", cfg.led_rubber_duck);
@@ -446,6 +474,8 @@ static void cfg_save_all(void) {
     cfg_prefs.putUChar("ss_style",   cfg.ss_style);
     cfg_prefs.putUChar("ss_bright",  cfg.ss_brightness);
     cfg_prefs.putBool ("ss_leds",   cfg.ss_leds_off);
+    cfg_prefs.putBool ("ss_clock",  cfg.ss_clock);
+    cfg_prefs.putUChar("tz",        cfg.tz);
     cfg_prefs.putBool ("rubduck",   cfg.led_rubber_duck);
     cfg_prefs.putBool ("crt_scan",  cfg.crt_scanlines);
     cfg_prefs.putBool ("crt_flick", cfg.crt_flicker);
@@ -529,6 +559,8 @@ static void cfg_factory_reset(void) {
     cfg.ss_style = CFG_DEF_SS_STYLE;
     cfg.ss_brightness = CFG_DEF_SS_BRIGHTNESS;
     cfg.ss_leds_off = CFG_DEF_SS_LEDS_OFF;
+    cfg.ss_clock = CFG_DEF_SS_CLOCK;
+    cfg.tz = CFG_DEF_TZ;
     cfg.led_rubber_duck = CFG_DEF_LED_RUBBER_DUCK;
     cfg.crt_scanlines = CFG_DEF_CRT_SCANLINES;
     cfg.crt_flicker   = CFG_DEF_CRT_FLICKER;

@@ -2,6 +2,7 @@
 #include <lvgl.h>
 #include <esp_heap_caps.h>
 #include <Wire.h>
+#include "drone_store.h"   // Remote ID (drone) detector store + decoder
 #include <SparkFun_VL53L5CX_Library.h>
 #include <HRScanner.h>
 #include <HRScanIMU.h>
@@ -159,6 +160,10 @@ static lv_obj_t *ss_dim_switch       = NULL;
 static lv_obj_t *ss_bright_row_label = NULL;
 static lv_obj_t *ss_bright_slider    = NULL;
 static lv_obj_t *ss_bright_readout   = NULL;
+static lv_obj_t *ss_clock_row_label  = NULL;
+static lv_obj_t *ss_clock_switch     = NULL;
+static lv_obj_t *tz_row_label        = NULL;
+static lv_obj_t *tz_dropdown         = NULL;
 
 // disp_off dropdown index 5 = "Never" -- screensaver won't fire at all, so
 // every row that depends on the screensaver firing is moot.
@@ -170,6 +175,8 @@ static void ss_settings_update_enables(void) {
     bool style_enabled  = ss_will_fire;
     bool dim_enabled    = ss_will_fire;
     bool bright_enabled = ss_will_fire && lit_style;
+    bool clock_enabled  = ss_will_fire && lit_style;  // no clock on Blank: backlight is at zero
+    bool tz_enabled     = clock_enabled && cfg.ss_clock;  // a zone with no clock to render is moot
 
     if (ss_style_row_label)
         lv_obj_set_style_text_color(ss_style_row_label,
@@ -177,6 +184,22 @@ static void ss_settings_update_enables(void) {
     if (ss_style_dropdown) {
         if (style_enabled) lv_obj_add_flag(ss_style_dropdown, LV_OBJ_FLAG_CLICKABLE);
         else               lv_obj_remove_flag(ss_style_dropdown, LV_OBJ_FLAG_CLICKABLE);
+    }
+
+    if (ss_clock_row_label)
+        lv_obj_set_style_text_color(ss_clock_row_label,
+            clock_enabled ? pip_primary() : pip_disabled(), 0);
+    if (ss_clock_switch) {
+        if (clock_enabled) lv_obj_remove_state(ss_clock_switch, LV_STATE_DISABLED);
+        else               lv_obj_add_state(ss_clock_switch, LV_STATE_DISABLED);
+    }
+
+    if (tz_row_label)
+        lv_obj_set_style_text_color(tz_row_label,
+            tz_enabled ? pip_primary() : pip_disabled(), 0);
+    if (tz_dropdown) {
+        if (tz_enabled) lv_obj_add_flag(tz_dropdown, LV_OBJ_FLAG_CLICKABLE);
+        else            lv_obj_remove_flag(tz_dropdown, LV_OBJ_FLAG_CLICKABLE);
     }
 
     if (ss_dim_row_label)
@@ -267,6 +290,12 @@ static lv_obj_t    *screensaver_overlay = NULL;
 static lv_obj_t    *screensaver_bar     = NULL;
 static lv_obj_t    *screensaver_lbl     = NULL;
 static lv_timer_t  *screensaver_timer   = NULL;
+// Idle clock, top-left of the screensaver. There is no RTC on this board, so
+// the time is only ever as good as the last NTP sync -- see the configTzTime()
+// call on the WiFi join path. getLocalTime() reports false until that lands,
+// which IS the "never set" state, so no separate have-we-synced flag exists.
+static lv_obj_t    *ss_clock_lbl       = NULL;
+static lv_timer_t  *ss_clock_timer     = NULL;
 static uint32_t     screensaver_hold_start = 0;
 
 // ── Flying-Clippy screensaver sprites (ARG-complete reward, cfg.ss_style==2) ──
@@ -289,6 +318,55 @@ static const float clippy_speed[3] = { 4.2f, 2.9f, 1.9f };  // parallax: near fl
 #define CLIPPY_SIN 0.09150f   // sin 5.25 deg  (rise up)
 
 #define SCREENSAVER_HOLD_MS  2000
+
+// ── Time zones for the idle clock ────────────────────────────────────────────
+// POSIX TZ strings, the format configTzTime() and tzset() both read directly.
+// Each carries its own DST changeover rules, so a zone follows the switch on its
+// own and nobody edits a number twice a year. Zones that do not observe DST
+// (Arizona, Hawaii, Japan) are a bare offset with no rule, which is the point.
+//
+// Sign convention is the POSIX one and it is backwards from what you expect:
+// the number is hours to ADD to local time to reach UTC, so the Americas are
+// positive and Europe/Asia are negative.
+//
+// cfg.tz stores the INDEX into this table, so the order is part of the saved
+// format: APPEND ONLY. Inserting in the middle silently moves every badge that
+// already picked a zone.
+struct CbTimeZone { const char *name; const char *posix; };
+static const CbTimeZone cb_timezones[] = {
+    { "UTC",            "UTC0" },
+    { "US Eastern",     "EST5EDT,M3.2.0,M11.1.0" },
+    { "US Central",     "CST6CDT,M3.2.0,M11.1.0" },
+    { "US Mountain",    "MST7MDT,M3.2.0,M11.1.0" },
+    { "US Arizona",     "MST7" },                          // no DST
+    { "US Pacific",     "PST8PDT,M3.2.0,M11.1.0" },
+    { "US Alaska",      "AKST9AKDT,M3.2.0,M11.1.0" },
+    { "Hawaii",         "HST10" },                         // no DST
+    { "UK",             "GMT0BST,M3.5.0/1,M10.5.0" },
+    { "Central Europe", "CET-1CEST,M3.5.0,M10.5.0/3" },
+    { "Japan",          "JST-9" },                         // no DST
+    { "Australia East", "AEST-10AEDT,M10.1.0,M4.1.0/3" },  // southern-hemisphere DST
+};
+#define CB_TZ_COUNT ((int)(sizeof(cb_timezones) / sizeof(cb_timezones[0])))
+// ui_config.h defines CFG_DEF_TZ as a bare literal because it is included first
+// and cannot see this table. This is the assert that keeps the two honest.
+static_assert(CFG_DEF_TZ < CB_TZ_COUNT, "CFG_DEF_TZ is past the end of cb_timezones[]");
+
+// Out-of-range falls back to the default rather than reading off the end. That
+// is not paranoia: downgrading to a build with a shorter table leaves a saved
+// index pointing at nothing.
+static const char *cb_tz_posix(void) {
+    return cb_timezones[cfg.tz < CB_TZ_COUNT ? cfg.tz : CFG_DEF_TZ].posix;
+}
+
+// Push the chosen zone into the C library. NTP delivers UTC and this string is
+// the whole of what turns it into local time, so it has to be set before the
+// first render and again on every change. No network, no NTP round trip: picking
+// a zone re-renders the clock from the seconds the badge already has.
+static void cb_tz_apply(void) {
+    setenv("TZ", cb_tz_posix(), 1);
+    tzset();
+}
 // Unlock-hold progress tone: a soft sine that sweeps A3->E5 (log/perceptual) as
 // the bar fills, then a short E6 chirp on completion. Gentle, mute+toggle gated.
 #define SS_TONE_LO_HZ      220.0f   // A3 - hold start
@@ -1150,6 +1228,7 @@ static const ToolItem cat_detect[] = {
                           "themselves usually are not -- see More Info.",                     TAT_SIMPLE },
     { "Rogue AP",         "Flag APs that answer probes for SSIDs they shouldn't know.",      TAT_SIMPLE },
     { "Evil Twin",        "Flag duplicate SSIDs across multiple BSSIDs (evil-twin signal).", TAT_SIMPLE },
+    { "Drone ID",         "Detect drone Remote ID (ASTM F3411) over WiFi and Bluetooth.",   TAT_SIMPLE },
 };
 
 // --- id1 Scan ---
@@ -1196,6 +1275,7 @@ static const ToolItem cat_utilities[] = {
     { "Select AP",            "Select an AP from scan results for targeting.",               TAT_AP },
     { "Clear All",            "Clear all scanned data (APs, stations, SSIDs).",              TAT_IMMEDIATE },
     { "Set Channel",          "Set WiFi monitor channel (1 to 14, or Auto).",                TAT_CHANNEL },
+    { "List Drones",          "View Drone ID contacts. Tap one for position and pilot.",     TAT_LIST_VIEW },
 };
 
 // --- id5 Network ---
@@ -1306,6 +1386,7 @@ static inline bool tool_is_bluetooth(const ToolItem *wi) {
     // Bluetooth-only tool -- on every shipped badge. Rename a tool, grep its old name.
     static const char * const bt_tools[] = {
         "AirTag", "Skimmer Check", "Flipper Zero", "Flock Batteries",
+        "Drone ID",
         "BT Devices", "BLE Adverts",
         "List BT Devices", "List AirTags", "List Flippers",
 #ifdef CLIPBOY_RES34RCH  // BLE Spam tools exist only in Res34rch; their names
@@ -1380,6 +1461,9 @@ static const ListItem sao_items[] = {
     // not the troll detail. Rendered ENABLED (the rest are dimmed). Sits near the
     // top (index 1) so players find it. Never tagged "secret": discovery IS the find.
     { "Whether Radio",   "Whether it's a radio or not, you'll never know. Drags 'broadcasts' out of the RF noise floor. Allegedly." },
+    // Also NOT a troll SAO -- tapping this one opens Radroach Ronin
+    // (radroach_menu_open), same deal as Whether Radio above. Rendered ENABLED.
+    { "Radroach Ronin",  "Wasteland swordsmanship for people with a touchscreen and no dignity. Swipe to cut the roaches, spare the rad-barrels. Cut five and the katana lights up -- then wave a hand at the ToF sensor for the whirlwind." },
     { "Quantum SAO",     "Collapses your badge state just by observing it. Schrodinger approved." },
     { "Coffee Maker",    "Brews espresso via I2C. Requires external water and 240V SAO header." },
     { "AI Girlfriend",   "She's very understanding. Runs on 4 bits of RAM. Still ghosted you." },
@@ -1390,6 +1474,12 @@ static const ListItem sao_items[] = {
 };
 #define NUM_SAOS  (sizeof(sao_items) / sizeof(sao_items[0]))
 #define RADIO_SAO_IDX  1   // the "Whether Radio" entry (slot #2) → show_radio
+#define GAME_SAO_IDX   2   // the "Radroach Ronin" entry (slot #3) → radroach_menu_open
+// Defined in game_radroach.h, which is included AFTER this file (it needs the
+// VL53 globals + pip theme from here), so the SAO tap handler needs the decl.
+void radroach_menu_open(void);
+// True while the game owns the display. The CRT V-roll asks this before firing.
+bool radroach_owns_screen(void);
 
 // Indexed by PHYSICAL LED index (matches cfg.leds[] / the WS2812B chain). The
 // labels are intentionally NOT in index order: the UI names each LED by its
@@ -2244,6 +2334,7 @@ static void dispatch_clipboy_action(uint8_t cat, uint8_t item) {
                 case 3: cb.btScanFlock();     break;  // Flock Batteries
                 case 4: cb.sniffPinescan();   break;  // Rogue AP
                 case 5: cb.sniffMultiSSID();  break;  // Evil Twin
+                case 6: cb.btScanRemoteID();  break;  // Remote ID (drone)
             } break;
         case 1: // Scan
             switch (item) {
@@ -2293,6 +2384,7 @@ static void dispatch_clipboy_action(uint8_t cat, uint8_t item) {
                     cb.clearSSIDs();
                     break;
                 case 11: /* Set Channel - handled via dropdown */ break;
+                case 12: /* List Drones - handled in UI */       break;
             } break;
         case 5: // Network
             switch (item) {
@@ -2834,6 +2926,8 @@ static void cb_scan_poll_cb(lv_timer_t *t) {
             snprintf(sbuf, sizeof(sbuf), "%d rogue", cb.getPinescanCount());
         } else if (sc == 0 && sii == 5) {   // Detect > Evil Twin (multi-SSID)
             snprintf(sbuf, sizeof(sbuf), "%d multi-SSID", cb.getMultiSSIDCount());
+        } else if (sc == 0 && sii == 6) {   // Detect > Remote ID (drones)
+            snprintf(sbuf, sizeof(sbuf), "%d drones", drone_count());
         } else if (sc == 1 && sii == 4) {   // Scan > BLE Adverts (frame counter)
             snprintf(sbuf, sizeof(sbuf), "%d BLE pkts", cb.getBTFrames());
         } else if (sc == 2 && sii == 1) {   // Monitor > Packet Rate (total frames)
@@ -4037,6 +4131,76 @@ static void cb_poll_flock(void) {
     }
 }
 
+// Remote ID (drone) poller. The drone store recycles/updates slots in place
+// (keyed by UAS serial), so we log each slot's contact once when it first
+// appears and reset the flag when the slot frees. Status bar shows live count.
+static uint8_t  cb_drone_logged[DRONE_MAX] = {0};
+static uint8_t  cb_drone_logged_fix[DRONE_MAX] = {0};
+static uint32_t cb_drone_tag[DRONE_MAX] = {0};
+
+static uint32_t cb_drone_id_hash(const char *s) {
+    uint32_t h = 2166136261u;                 // FNV-1a, same shape as the badge's
+    while (*s) { h ^= (uint8_t)*s++; h *= 16777619u; }
+    return h;
+}
+
+static void cb_poll_drone(void) {
+    for (int i = 0; i < DRONE_MAX; i++) {
+        const DroneRec *d = drone_get(i);
+        if (!d) {
+            cb_drone_logged[i] = 0; cb_drone_logged_fix[i] = 0; cb_drone_tag[i] = 0;
+            continue;
+        }
+
+        // A slot can be handed to a DIFFERENT drone without ever going free --
+        // the store recycles the oldest record when the table is full. Keyed
+        // only on "have I logged slot i", the new arrival would inherit the old
+        // one's flag and never be announced at all. Tag each slot with a hash of
+        // the ID it was logged under and treat a change as a fresh contact.
+        uint32_t tag = cb_drone_id_hash(d->uasId);
+        if (cb_drone_tag[i] != tag) {
+            cb_drone_tag[i] = tag;
+            cb_drone_logged[i] = 0;
+            cb_drone_logged_fix[i] = 0;
+        }
+
+        // Contacts arrive in pieces: over BLE each advertisement carries one
+        // message, so a drone announced from its Basic ID has no altitude yet
+        // and its first line reads "alt?". Log once on sighting, then ONCE more
+        // when a position or altitude actually lands, rather than freezing the
+        // first snapshot on screen forever. Anything past that is noise -- the
+        // full record is a tap away in Utilities > List Drones.
+        bool has_fix = (d->altGeo > INV_ALT) || (d->height > INV_ALT) ||
+                       (d->lat != 0.0) || (d->lon != 0.0);
+        bool first   = !cb_drone_logged[i];
+        if (!first && (!has_fix || cb_drone_logged_fix[i])) continue;
+        cb_drone_logged[i] = 1;
+        if (has_fix) cb_drone_logged_fix[i] = 1;
+
+        char alt[16];
+        if (d->altGeo > INV_ALT)       snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
+        else if (d->height > INV_ALT)  snprintf(alt, sizeof(alt), "%.0fm", d->height);
+        else                           snprintf(alt, sizeof(alt), "alt?");
+        // channel 0 means the contact arrived over Bluetooth; anything else is
+        // the WiFi channel it was beaconing on.
+        char src[8];
+        if (d->channel) snprintf(src, sizeof(src), "ch%u", d->channel);
+        else            snprintf(src, sizeof(src), "BT");
+        // The serial arrives off the air from an unauthenticated transmitter,
+        // so it goes through cb_safe() like every other received string in this
+        // UI. Sanitising can expand each byte to a 3-byte marker, hence 104.
+        char idbuf[104];
+        strncpy(idbuf, cb_safe(d->uasId), sizeof(idbuf) - 1);
+        idbuf[sizeof(idbuf) - 1] = '\0';
+        // "+" marks the follow-up so two lines for one drone do not read as two
+        // drones. The status bar count stays authoritative either way.
+        char line[160];
+        snprintf(line, sizeof(line), "DRONE%s %s %s %ddBm %s\n",
+                 first ? ":" : "+", idbuf, alt, d->rssi, src);
+        cb_log_append(line);
+    }
+}
+
 static void cb_poll_pwnagotchi(void) {
     int count = cb.getPwnagotchiCount();
     while (cb_output_last_pwna < count) {
@@ -4357,6 +4521,7 @@ static void cb_output_poll_cb(lv_timer_t *timer) {
                 case 3: cb_poll_flock(); break;
                 case 4: cb_poll_pinescan(); break;          // Rogue AP (Pineapple)
                 case 5: cb_poll_multissid(); break;         // Evil Twin (Multi-SSID)
+                case 6: cb_poll_drone(); break;             // Remote ID (drone)
                 default: cb_poll_aps(); break;
             }
             break;
@@ -4576,6 +4741,12 @@ static void cb_tool_start_stop_cb(lv_event_t *e) {
             cb_output_last_airtag  = cb.getAirTagCount();
             cb_output_last_flipper = cb.getFlipperCount();
             cb_output_last_flock   = 0;
+            drone_clear();
+            for (int _di = 0; _di < DRONE_MAX; _di++) {
+                cb_drone_logged[_di] = 0;
+                cb_drone_logged_fix[_di] = 0;
+                cb_drone_tag[_di] = 0;
+            }
             cb_output_last_pwna    = 0;
             cb_output_last_pine    = cb.getPinescanCount();
             cb_output_last_multi   = cb.getMultiSSIDCount();
@@ -5642,6 +5813,13 @@ static void show_tool_text(const ToolItem *wi, int32_t encoded) {
             bool ok = cb.joinWiFi(String(wifi_join_ssid), String(wifi_join_pw));
             CB_LOGF("[CB] joinWiFi -> %s\n", ok ? "OK" : "FAIL");
 
+            // Only time source the badge has. SNTP runs in the background from
+            // here and sets the system clock; the idle clock shows --:-- until
+            // the first packet lands. With no RTC the time does survive a soft
+            // reboot and a WiFi teardown, but not a power cycle, so this fires
+            // on every join rather than once.
+            if (ok) configTzTime(cb_tz_posix(), "pool.ntp.org", "time.nist.gov");
+
             audio_resume();
 
             if (wifi_status_label)
@@ -5715,6 +5893,146 @@ static void tool_page_reshow(void) {
         show_tool_detail(tool_cat(tool_page_return_enc), tool_item(tool_page_return_enc));
     else
         rebuild_content();   // not on a tool page -> the old behaviour is correct
+}
+
+// ── Drone ID detail panel (Utilities > List Drones) ──────────────────────────
+// The store decodes far more than the live log line has room for: position,
+// the pilot's location, speed, heading, operator registration. List rows are
+// tappable and this prints the whole record. Anything the drone did not
+// broadcast reads "unknown" rather than 0, because 0,0 is a real place in the
+// Atlantic and a confident-looking zero is worse than an admission.
+static const char *drone_status_name(uint8_t s) {
+    switch (s) {
+        case ODID_STATUS_GROUND:    return "GROUND";
+        case ODID_STATUS_AIRBORNE:  return "AIRBORNE";
+        case ODID_STATUS_EMERGENCY: return "EMERGENCY";
+        case ODID_STATUS_REMOTE_ID_SYSTEM_FAILURE: return "RID FAIL";
+    }
+    return "UNKNOWN";
+}
+static const char *drone_ua_type_name(uint8_t t) {
+    switch (t) {
+        case ODID_UATYPE_AEROPLANE:                return "Fixed-wing";
+        case ODID_UATYPE_HELICOPTER_OR_MULTIROTOR: return "Multirotor";
+        case ODID_UATYPE_GYROPLANE:                return "Gyroplane";
+        case ODID_UATYPE_HYBRID_LIFT:              return "Hybrid";
+        case ODID_UATYPE_FREE_BALLOON:
+        case ODID_UATYPE_CAPTIVE_BALLOON:          return "Balloon";
+        case ODID_UATYPE_AIRSHIP:                  return "Airship";
+        case ODID_UATYPE_FREE_FALL_PARACHUTE:      return "Parachute";
+        case ODID_UATYPE_ROCKET:                   return "Rocket";
+        case ODID_UATYPE_GROUND_OBSTACLE:          return "Obstacle";
+    }
+    return "Unknown";
+}
+
+static void drone_detail_show(int idx) {
+    const DroneRec *d = drone_get(idx);
+    if (!d) return;   // slot freed or recycled between the tap and here
+
+    char pos[48], alt[64], spd[48], pilot[48], link[40], mac[20];
+    if (d->lat != 0.0 || d->lon != 0.0)
+        snprintf(pos, sizeof(pos), "%.5f, %.5f", d->lat, d->lon);
+    else snprintf(pos, sizeof(pos), "unknown");
+    if (d->opLat != 0.0 || d->opLon != 0.0)
+        snprintf(pilot, sizeof(pilot), "%.5f, %.5f", d->opLat, d->opLon);
+    else snprintf(pilot, sizeof(pilot), "unknown");
+    if (d->altGeo > INV_ALT)
+        snprintf(alt, sizeof(alt), "%.0fm MSL / %.0fm AGL",
+                 d->altGeo, d->height > INV_ALT ? d->height : 0.0f);
+    else snprintf(alt, sizeof(alt), "unknown");
+    if (d->speedH < INV_SPEED_H)
+        snprintf(spd, sizeof(spd), "%.1f m/s  hdg %.0f",
+                 d->speedH, d->direction < INV_DIR ? d->direction : 0.0f);
+    else snprintf(spd, sizeof(spd), "unknown");
+    snprintf(mac, sizeof(mac), "%02X:%02X:%02X:%02X:%02X:%02X",
+             d->mac[0], d->mac[1], d->mac[2], d->mac[3], d->mac[4], d->mac[5]);
+    if (d->channel) snprintf(link, sizeof(link), "WiFi ch%u  %ddBm",
+                             (unsigned)d->channel, d->rssi);
+    else            snprintf(link, sizeof(link), "Bluetooth  %ddBm", d->rssi);
+
+    // ID / operator / description arrive off the air from an unauthenticated
+    // transmitter, so they go through cb_safe() -- and into LOCALS first.
+    // cb_safe() hands back one of four rotating static buffers, so three live
+    // calls inside one snprintf argument list would be at the mercy of
+    // unspecified evaluation order. Same trap the Saved Networks rows document.
+    char id[104], oper[104], desc[104];
+    strncpy(id,   cb_safe(d->uasId),      sizeof(id)   - 1); id[sizeof(id) - 1]     = '\0';
+    strncpy(oper, cb_safe(d->operatorId), sizeof(oper) - 1); oper[sizeof(oper) - 1] = '\0';
+    strncpy(desc, cb_safe(d->selfDesc),   sizeof(desc) - 1); desc[sizeof(desc) - 1] = '\0';
+
+    // Every line has to earn its place. There are 240 pixels of screen, and a
+    // field pushed below the fold reads as a field that does not exist -- so
+    // TYPE and STAT share a line, OPER and DESC appear only when the drone
+    // actually sent them, and the ID line stops repeating the MAC. When no
+    // serial has arrived the store names the contact after its MAC, so ID and
+    // MAC printed the identical string and burned a line at exactly the moment
+    // lines were scarce.
+    char buf[640];
+    int n = 0;
+    n += snprintf(buf + n, sizeof(buf) - n, "ID    %s\n",
+                  d->hasSerial ? id : "none broadcast yet");
+    n += snprintf(buf + n, sizeof(buf) - n, "TYPE  %s   STAT %s\n",
+                  drone_ua_type_name(d->uaType), drone_status_name(d->status));
+    n += snprintf(buf + n, sizeof(buf) - n, "MAC   %s\n", mac);
+    n += snprintf(buf + n, sizeof(buf) - n, "POS   %s\n", pos);
+    n += snprintf(buf + n, sizeof(buf) - n, "ALT   %s\n", alt);
+    n += snprintf(buf + n, sizeof(buf) - n, "SPD   %s\n", spd);
+    n += snprintf(buf + n, sizeof(buf) - n, "PILOT %s\n", pilot);
+    if (oper[0]) n += snprintf(buf + n, sizeof(buf) - n, "OPER  %s\n", oper);
+    if (desc[0]) n += snprintf(buf + n, sizeof(buf) - n, "DESC  %s\n", desc);
+    n += snprintf(buf + n, sizeof(buf) - n, "LINK  %s\n", link);
+    snprintf(buf + n, sizeof(buf) - n, "PKTS  %u   AGE %us",
+             (unsigned)d->packets,
+             (unsigned)((millis() - d->lastSeenMs) / 1000));
+
+    lv_obj_t *modal = lv_obj_create(lv_screen_active());
+    lv_obj_remove_style_all(modal);
+    lv_obj_set_size(modal, SCREEN_W, SCREEN_H);
+    lv_obj_set_style_bg_color(modal, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(modal, LV_OPA_80, 0);
+    lv_obj_remove_flag(modal, LV_OBJ_FLAG_SCROLLABLE);
+
+    lv_obj_t *box = lv_obj_create(modal);
+    lv_obj_remove_style_all(box);
+    lv_obj_set_size(box, 300, 226);
+    lv_obj_center(box);
+    lv_obj_set_style_bg_color(box, pip_bg(), 0);
+    lv_obj_set_style_bg_opa(box, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(box, pip_highlight(), 0);
+    lv_obj_set_style_border_width(box, 2, 0);
+    lv_obj_set_style_pad_all(box, 6, 0);
+    lv_obj_set_flex_flow(box, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_gap(box, 4, 0);
+    lv_obj_remove_flag(box, LV_OBJ_FLAG_SCROLLABLE);
+
+    make_label(box, "DRONE DETAIL", &ui_font_pipboy_16, pip_highlight());
+
+    // The record is taller than the box, so the text scrolls inside its own
+    // container and the Close button stays put below the fold-free zone --
+    // the same mistake "+ Add Network" had to be lifted out of.
+    lv_obj_t *txt_area = lv_obj_create(box);
+    lv_obj_remove_style_all(txt_area);
+    lv_obj_set_size(txt_area, lv_pct(100), 158);
+    lv_obj_set_flex_flow(txt_area, LV_FLEX_FLOW_COLUMN);
+    lv_obj_add_style(txt_area, &style_scrollbar, LV_PART_SCROLLBAR);
+
+    lv_obj_t *txt = make_label(txt_area, buf, &ui_font_pipboy_14, pip_primary());
+    lv_label_set_long_mode(txt, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(txt, lv_pct(100));
+
+    make_small_btn(box, "Close", [](lv_event_t *e) {
+        lv_obj_t *b = (lv_obj_t *)lv_event_get_target(e);
+        lv_obj_t *bx = lv_obj_get_parent(b);          // the box
+        lv_obj_delete(lv_obj_get_parent(bx));         // the modal backdrop
+        crt_scanlines_raise();
+    }, NULL);
+
+    crt_scanlines_raise();
+}
+
+static void drone_row_click_cb(lv_event_t *e) {
+    drone_detail_show((int)(intptr_t)lv_event_get_user_data(e));
 }
 
 // Build right pane for TAT_LIST_VIEW: Description + scrollable read-only list
@@ -5893,6 +6211,37 @@ static void show_tool_list_view(const ToolItem *wi, uint8_t cat_idx, uint8_t ite
         // The "+ Add Network" button is built ABOVE list_area (see the top of this function),
         // so it can never be pushed below the fold by a growing list.
         has_data = true;  // the Add button above is always available
+    } else if (item_idx == 12) {  // List Drones (Drone ID contacts)
+        for (int i = 0; i < DRONE_MAX; i++) {
+            const DroneRec *d = drone_get(i);
+            if (!d) continue;
+            char src[10];
+            if (d->channel) snprintf(src, sizeof(src), "ch%u", (unsigned)d->channel);
+            else            snprintf(src, sizeof(src), "BT");
+            char alt[16];
+            if (d->altGeo > INV_ALT)      snprintf(alt, sizeof(alt), "%.0fm", d->altGeo);
+            else if (d->height > INV_ALT) snprintf(alt, sizeof(alt), "%.0fm", d->height);
+            else                          snprintf(alt, sizeof(alt), "alt?");
+            char idbuf[104];
+            strncpy(idbuf, cb_safe(d->uasId), sizeof(idbuf) - 1);
+            idbuf[sizeof(idbuf) - 1] = '\0';
+            bool id_warn = cb_safe_had_hostile;
+            char buf[160];
+            snprintf(buf, sizeof(buf), "%s  %s  %ddBm %s", idbuf, alt, d->rssi, src);
+
+            // Carry the REAL slot index on the row rather than its position in
+            // the list: this loop skips free slots, so the two diverge the
+            // moment a contact ages out, and you would open a detail panel for
+            // a different drone than you tapped.
+            lv_obj_t *row_btn = make_small_btn(list_area, buf, drone_row_click_cb,
+                                               (void *)(intptr_t)i);
+            lv_obj_set_width(row_btn, lv_pct(100));
+            if (id_warn) {
+                lv_obj_t *rl = lv_obj_get_child(row_btn, 0);
+                if (rl) lv_obj_set_style_text_color(rl, lv_color_hex(CB_WARN_RGB), 0);
+            }
+            has_data = true;
+        }
     }
     if (!has_data)
         make_label(list_area, "No data - run a scan first", &ui_font_pipboy_14, pip_dim());
@@ -6928,13 +7277,16 @@ static void list_item_tap_cb(lv_event_t *e) {
     else if (cur_div == 1 && cur_tab == 2) {
         if (idx == RADIO_SAO_IDX)
             show_radio(content_obj);          // the secret-real SAO opens the radio
+        else if (idx == GAME_SAO_IDX)
+            radroach_menu_open();             // ...and this one opens the game
         else
             show_item_detail(sao_items, NUM_SAOS, idx);
     }
 }
 
 static void build_split_pane(lv_obj_t *cont, const ListItem *items, int count,
-                             bool dim_items, int enabled_idx = -1) {
+                             bool dim_items, int enabled_idx = -1,
+                             int enabled_idx2 = -1) {
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_pad_all(cont, 0, 0);
     lv_obj_set_style_pad_gap(cont, 0, 0);
@@ -6942,9 +7294,10 @@ static void build_split_pane(lv_obj_t *cont, const ListItem *items, int count,
     left_pane = create_left_list(cont);
 
     for (int i = 0; i < count; i++) {
-        // enabled_idx (e.g. the real "Whether Radio" SAO) renders NOT-dim even in
-        // an otherwise-dimmed list, so the one real entry reads as tappable.
-        if (dim_items && i != enabled_idx)
+        // enabled_idx / enabled_idx2 (the real "Whether Radio" + "Radroach Ronin"
+        // SAOs) render NOT-dim even in an otherwise-dimmed list, so the entries
+        // that actually do something read as tappable.
+        if (dim_items && i != enabled_idx && i != enabled_idx2)
             make_list_btn_dim(left_pane, items[i].name,
                               list_item_tap_cb, (void *)(intptr_t)i);
         else
@@ -9463,6 +9816,37 @@ static void clippy_cleanup_cb(lv_event_t *e) {
     for (int i = 0; i < CLIPPY_N; i++) clippy_spr[i] = NULL;
 }
 
+// ─── Idle clock ───────────────────────────────────────────────────────────────
+// Redrawn once a second while the screensaver is up. Cheap, and only alive for
+// as long as the overlay is.
+static void ss_clock_update(void) {
+    if (!ss_clock_lbl) return;
+    struct tm t;
+    // Zero timeout on purpose: this runs on the UI task, and the default 5000ms
+    // would stall the whole interface waiting for a sync that may never arrive
+    // (no network, no RTC). False simply means "not set yet", and saying so is
+    // better than showing a confident 00:00 that is wrong.
+    if (getLocalTime(&t, 0)) {
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%02d:%02d", t.tm_hour, t.tm_min);
+        lv_label_set_text(ss_clock_lbl, buf);
+    } else {
+        lv_label_set_text(ss_clock_lbl, "--:--");
+    }
+}
+
+static void ss_clock_tick_cb(lv_timer_t *t) { (void)t; ss_clock_update(); }
+
+// Same discipline as clippy_cleanup_cb, and for the same reason: this timer
+// writes into a label owned by the overlay, so it has to die on EVERY
+// overlay-delete path (dismiss, nav rebuild, live theme switch) or it outlives
+// its target. That is the project's LVGL-timer UAF trap.
+static void ss_clock_cleanup_cb(lv_event_t *e) {
+    (void)e;
+    if (ss_clock_timer) { lv_timer_delete(ss_clock_timer); ss_clock_timer = NULL; }
+    ss_clock_lbl = NULL;
+}
+
 static void screensaver_activate(void) {
     if (screensaver_active) return;
     // Flying-Clippy is an ARG reward; if progress was reset, fall back to Clip-Boy.
@@ -9530,6 +9914,25 @@ static void screensaver_activate(void) {
         }
         lv_obj_add_event_cb(screensaver_overlay, clippy_cleanup_cb, LV_EVENT_DELETE, NULL);
         clippy_timer = lv_timer_create(clippy_anim_cb, 70, NULL);
+    }
+
+    // Idle clock, top left. IGNORE_LAYOUT so the flex centering that owns the
+    // unlock label and bar leaves it in the corner, same trick the sprites use.
+    // Created after them so it draws on top. Skipped on Blank (ss_style 1),
+    // which runs the backlight at zero: a clock nobody can see is just a timer
+    // waking the CPU every second in a state that exists to save power. The
+    // cfg.ss_clock opt-out is read here rather than inside the tick, so turning
+    // it off costs no timer at all -- and it takes effect on the next activation
+    // rather than live, since Settings is unreachable while the saver is up.
+    if (cfg.ss_style != 1 && cfg.ss_clock) {
+        ss_clock_lbl = lv_label_create(screensaver_overlay);
+        lv_obj_add_flag(ss_clock_lbl, LV_OBJ_FLAG_IGNORE_LAYOUT);
+        lv_obj_set_pos(ss_clock_lbl, 8, 6);
+        lv_obj_set_style_text_font(ss_clock_lbl, &ui_font_pipboy_16, 0);
+        lv_obj_set_style_text_color(ss_clock_lbl, pip_primary(), 0);
+        ss_clock_update();   // paint immediately; the timer only handles changes
+        lv_obj_add_event_cb(screensaver_overlay, ss_clock_cleanup_cb, LV_EVENT_DELETE, NULL);
+        ss_clock_timer = lv_timer_create(ss_clock_tick_cb, 1000, NULL);
     }
 
     screensaver_lbl = lv_label_create(screensaver_overlay);
@@ -10232,9 +10635,11 @@ static const HelpItem help_settings[] = {
     { "Tap Sounds", "Click feedback when you tap buttons and controls. Turn off to silence taps while keeping theremin, geiger and other audio. Mute overrides this." },
     { "Scanning Sounds", "Plays an ambient tone bed while the Collectibles HR-code scanner is searching, so you can tell it's working without watching the screen. Turn off to scan silently. Respects Volume and Mute." },
     { "Unlock Tone", "Plays a rising tone while you hold to unlock the screensaver, so you know the badge heard you. Pitch climbs as the bar fills, with a chirp when it unlocks. Respects Volume and Mute." },
-    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Dim LEDs, and the CRT effects." },
+    { "-- SCREEN & CRT --", "Idle + retro-display behavior: Screensaver timeout/style, Idle Brightness, Idle Clock, Time Zone, Dim LEDs, and the CRT effects." },
     { "Screensaver", "Two rows: 'Screensaver' is the timeout (15s to Never), 'Screensaver Style' picks Clip-Boy mascot or Blank." },
     { "Idle Brightness", "Slider (1-100%) sets how dim the Clip-Boy mascot gets when the screensaver is up. Default 10%. Has no effect when Style is Blank (which always goes fully dark)." },
+    { "Idle Clock", "When on, the screensaver shows the time in its top-left corner. On by default. Greys out when Style is Blank, where the backlight is off and nothing would be readable. The badge has no clock chip, so the time is set over the network the first time you join WiFi; until then the face reads --:-- . It survives a reboot but not a power cycle." },
+    { "Time Zone", "Sets the zone the Idle Clock renders in. Twelve options, from UTC through the US zones to UK, Central Europe, Japan and Australia East. Each one knows its own daylight-saving rules, and the zones that do not observe DST (Arizona, Hawaii, Japan) correctly never shift. Changing it takes effect instantly -- the badge already has the right time, the zone only decides how it is displayed. Greys out when the Idle Clock is off." },
     { "Dim LEDs When Idle", "When on, the NeoPixels turn off as the screensaver activates. They come back when you wake the screen. Off by default -- the badge looks more alive on a shelf with the LEDs running through the screensaver." },
     { "CRT Scanlines", "Adds semi-transparent horizontal lines over the display for a retro CRT look. Toggle on/off." },
     { "CRT V-Roll", "Occasionally the display slips vertically like a CRT losing V-sync, then snaps back. Random 1-10 min intervals." },
@@ -10282,6 +10687,8 @@ static const HelpItem help_screensaver[] = {
     { "Timeout", "Settings > Screensaver (the timeout dropdown, top of the screensaver block) controls how long the screen stays bright before the saver kicks in. Options: 15s, 30s, 60s, 2m, 5m, or Never." },
     { "Styles", "Settings > Screensaver Style: Clip-Boy shows a dim mascot; Blank goes fully dark." },
     { "Idle Brightness", "Settings > Idle Brightness sets how dim the Clip-Boy mascot gets (1-100%, default 10%). The slider greys out when Style is Blank since it has no effect there." },
+    { "Idle Clock", "Settings > Idle Clock puts the time in the top-left corner of the screensaver. There is no clock chip on this board: the time comes from the network on your first WiFi join and reads --:-- until then. Off on the Blank style, which runs the backlight at zero." },
+    { "Time Zone", "Settings > Time Zone picks the zone the clock displays. Default is US Central. Travelling to a con in another zone? Change it here and the clock corrects immediately, with no need to rejoin WiFi -- the badge keeps time in UTC internally and the zone is only applied when drawing it." },
     { "Wake Up", "Tap and HOLD for 2 seconds to unlock. The progress bar fills as you hold. The hold prevents accidental pocket wakes." },
     { "LED Behavior", "By default, the NeoPixels keep running through the screensaver. Enable Settings > Dim LEDs when idle if you'd rather have them turn off with the screen and restore on wake." },
 };
@@ -10360,7 +10767,7 @@ static const HelpItem help_workflows[] = {
 // SAOs: dim items are intentional jokes about gear that doesn't exist. Help
 // users so they don't think the badge is broken.
 static const HelpItem help_jokes[] = {
-    { "SAOs", "The dim items under ITEMS > SAOs are jokes about gear that doesn't exist -- enjoy the descriptions. The one exception is 'Whether Radio' (not dimmed): tap it to open a simulated radio -- styled stations playing pre-recorded audio, not a real receiver. See the Simulated Radio section." },
+    { "SAOs", "The dim items under ITEMS > SAOs are jokes about gear that doesn't exist -- enjoy the descriptions. The two exceptions are not dimmed. 'Whether Radio' opens a simulated radio -- styled stations playing pre-recorded audio, not a real receiver; see the Simulated Radio section. 'Radroach Ronin' opens a slicing game: swipe the screen to cut roaches and avoid the rad-barrels. Every five cuts light the katana, and waving a hand at the ToF sensor then unleashes a whirlwind that clears the screen -- barrels included, harmlessly." },
     { "SAO Port", "Clip-Boy supports real SAOs compliant with v1.69bis via the SAO port on the right side of the enclosure. 3V3, GND, SDA and SCL are active; GPIO 1 & 2 are not." },
 };
 
@@ -10968,6 +11375,10 @@ static void build_data_settings(lv_obj_t *cont) {
     ss_bright_row_label = NULL;
     ss_bright_slider    = NULL;
     ss_bright_readout   = NULL;
+    ss_clock_row_label  = NULL;
+    ss_clock_switch     = NULL;
+    tz_row_label        = NULL;
+    tz_dropdown         = NULL;
     for (int i = 0; i < 6; i++) settings_jump_hdr[i] = NULL;
 
     // Helper: pad before a 40px switch so it right-aligns with slider readout.
@@ -11194,6 +11605,56 @@ static void build_data_settings(lv_obj_t *cont) {
         ss_bright_readout = settings_add_readout(row, cfg.ss_brightness);
         lv_obj_add_event_cb(ss_bright_slider, ss_bright_slider_cb,
                             LV_EVENT_VALUE_CHANGED, ss_bright_readout);
+    }
+
+    // --- Idle Clock (top-left of the screensaver; needs a lit saver) ---
+    // Custom row rather than add_switch_row so the enable cascade can capture
+    // the label and switch and grey them out when the saver never fires.
+    {
+        lv_obj_t *row = make_uniform_settings_row(cont);
+        ss_clock_row_label = settings_label(row, "Idle Clock");
+        settings_gap(row, 6);
+        settings_gap(row, SETTINGS_CONTROL_W - 40);
+        ss_clock_switch = lv_switch_create(row);
+        lv_obj_set_size(ss_clock_switch, 40, 20);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_border(), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_primary(), LV_PART_INDICATOR | LV_STATE_CHECKED);
+        lv_obj_set_style_bg_color(ss_clock_switch, pip_highlight(), LV_PART_KNOB);
+        if (cfg.ss_clock) lv_obj_add_state(ss_clock_switch, LV_STATE_CHECKED);
+        lv_obj_add_event_cb(ss_clock_switch, [](lv_event_t *e) {
+            lv_obj_t *sw = (lv_obj_t *)lv_event_get_target(e);
+            cfg.ss_clock = lv_obj_has_state(sw, LV_STATE_CHECKED);
+            cfg_save_ss_clock();
+            ss_settings_update_enables();   // the Time Zone row greys out with it
+        }, LV_EVENT_VALUE_CHANGED, NULL);
+    }
+
+    // --- Time Zone (the idle clock is the only consumer) ---
+    // Custom row for the same reason as the others here: the cascade needs the
+    // label ref to grey it. Options are built from cb_timezones[] so the table
+    // stays the single source of truth for both the names and the TZ strings.
+    {
+        lv_obj_t *row = make_uniform_settings_row(cont);
+        tz_row_label = settings_label(row, "Time Zone");
+        settings_gap(row, 6);
+        String tz_opts;
+        for (int i = 0; i < CB_TZ_COUNT; i++) {
+            if (i) tz_opts += "\n";
+            tz_opts += cb_timezones[i].name;
+        }
+        tz_dropdown = make_dropdown(row, tz_opts.c_str());
+        lv_dropdown_set_selected(tz_dropdown, cfg.tz < CB_TZ_COUNT ? cfg.tz : CFG_DEF_TZ);
+        lv_obj_set_width(tz_dropdown, SETTINGS_CONTROL_W);
+        lv_obj_add_event_cb(tz_dropdown, [](lv_event_t *e) {
+            lv_obj_t *dd = (lv_obj_t *)lv_event_get_target(e);
+            int idx = (int)lv_dropdown_get_selected(dd);
+            if (idx < 0 || idx >= CB_TZ_COUNT) return;
+            cfg.tz = (uint8_t)idx;
+            cfg_save_tz();
+            // Applied immediately. The badge already holds the correct UTC seconds,
+            // so a zone change is pure formatting -- no re-join, no NTP round trip.
+            cb_tz_apply();
+        }, LV_EVENT_VALUE_CHANGED, NULL);
     }
 
     // --- Dim LEDs when idle ---
@@ -12336,7 +12797,8 @@ static void rebuild_content() {
         switch (cur_tab) {
             case 0: build_items_tools(content_obj); break;
             case 1: build_items_collectibles(content_obj); break;
-            case 2: build_split_pane(content_obj, sao_items, NUM_SAOS, true, RADIO_SAO_IDX); break;
+            case 2: build_split_pane(content_obj, sao_items, NUM_SAOS, true,
+                                     RADIO_SAO_IDX, GAME_SAO_IDX); break;
         }
     } else if (cur_div == 2) {
         switch (cur_tab) {
@@ -12743,6 +13205,12 @@ static void crt_flicker_fire_cb(lv_timer_t *t) {
     // aud_theremin_active for the ~100 ms of a tap click, and sampling the render flag in
     // that window would let a V-roll fire while the user is watching the bars.
     if (hr_scanning || audio_theremin_wants_active()) goto reschedule;
+    // Same reasoning, and worse: the game owns the whole display, and the
+    // snapshot below is taken of scr_main rather than the ACTIVE screen. So a
+    // roll during a run rendered the Pip-Boy nav UI over the top of the game,
+    // rolled that, then tore it down -- it read as the badge flipping to another
+    // screen and back mid-swipe. Reported from hardware.
+    if (radroach_owns_screen()) goto reschedule;
 
     {
         // Snapshot the current screen into PSRAM-backed RGB565 buffer

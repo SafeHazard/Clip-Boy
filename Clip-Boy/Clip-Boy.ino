@@ -80,6 +80,9 @@ CommandLine cli_obj;
 // ─── Navigation + all UI code ───────────────────────────────────────────────
 #include "ui_nav.h"
 
+// ─── Radroach Ronin (after ui_nav for the VL53 globals + pip theme/fonts) ───
+#include "game_radroach.h"
+
 // ─── DC34 ARG: clipcli dispatcher + puzzle modules (after ui_nav for UI use) ──
 #include "arg_clipcli.h"
 #include "arg_p2_hack.h"
@@ -137,6 +140,10 @@ void setup() {
 
     // Load saved settings from NVS
     cfg_load();
+    // Apply the saved time zone before anything can render a clock. NTP has not
+    // run yet and may never run, but tzset() is local and free, and doing it here
+    // means the zone is already right whenever the first sync does land.
+    cb_tz_apply();
     hr_cal_load();      // restore per-zone LiDAR flat-field calibration
     cfg_prefs.begin(CFG_NAMESPACE, true);   // handle is closed after cfg_load(); open our own
     coll_filter_collected_only = cfg_prefs.getBool("collfilt", false);  // restore Collectibles All/Found view

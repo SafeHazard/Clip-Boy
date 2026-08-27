@@ -180,6 +180,24 @@ static const ToolInfoEntry tool_info_table[] = {
         "Detection only. False positives are common at scale, so don't accuse "
         "anyone in public based on a single hit - report to venue staff if needed."
     }},
+    { 0, 6, {
+        "Listens for drone Remote ID broadcasts (ASTM F3411 / Open Drone ID) over "
+        "WiFi and Bluetooth. US federal law requires most drones to broadcast their "
+        "serial, live position, altitude, and the operator's location in the clear - "
+        "this is a passive receiver for exactly that public broadcast. A hit means a "
+        "compliant drone is transmitting nearby.",
+        "WiFi and Bluetooth antennas enabled.",
+        "Output lists each drone by its UAS ID (serial) with altitude, signal "
+        "strength, and where it was heard - a WiFi channel, or BT for Bluetooth. "
+        "The status bar shows a live count. Utilities > List Drones has the full "
+        "record: tap a contact for its position, altitude, speed, and the "
+        "operator's own location, which drones are required to broadcast too. "
+        "One antenna serves both radios and the WiFi side hops channels, so a "
+        "drone can take a few seconds to appear, and it fills in over several "
+        "more. A quiet screen is not proof the sky is empty.",
+        "Receive only - it transmits nothing. Reading Remote ID is what the "
+        "broadcast is for; use what you see responsibly."
+    }},
 
     // ─── Scan (id 1): 0-2 WiFi, 3 BT Devices, 4 BLE Adverts ───────────────
     { 1, 0, {

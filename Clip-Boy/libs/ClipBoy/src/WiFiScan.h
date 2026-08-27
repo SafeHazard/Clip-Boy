@@ -157,6 +157,7 @@ struct CBDeauthEvent {
 #define BT_SCAN_AIRTAG_MON 70
 #define WIFI_SCAN_CHAN_ACT 71
 #define BT_SCAN_FLOCK 72
+#define BT_SCAN_REMOTE_ID 79
 #define BT_SCAN_SIMPLE 73
 #define BT_SCAN_SIMPLE_TWO 74
 #define BT_SCAN_FLOCK_WARDRIVE 75
