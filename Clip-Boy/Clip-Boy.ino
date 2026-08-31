@@ -137,6 +137,10 @@ void setup() {
 
     // Load saved settings from NVS
     cfg_load();
+    // Apply the saved time zone before anything can render a clock. NTP has not
+    // run yet and may never run, but tzset() is local and free, and doing it here
+    // means the zone is already right whenever the first sync does land.
+    cb_tz_apply();
     hr_cal_load();      // restore per-zone LiDAR flat-field calibration
     cfg_prefs.begin(CFG_NAMESPACE, true);   // handle is closed after cfg_load(); open our own
     coll_filter_collected_only = cfg_prefs.getBool("collfilt", false);  // restore Collectibles All/Found view

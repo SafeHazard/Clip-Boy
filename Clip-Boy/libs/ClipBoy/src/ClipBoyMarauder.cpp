@@ -342,6 +342,7 @@ void ClipBoyMarauder::btScanAirtags()       { wifi_scan_obj.StartScan(BT_SCAN_AI
 void ClipBoyMarauder::btScanAirtagMonitor() { wifi_scan_obj.StartScan(BT_SCAN_AIRTAG_MON, 0); }
 void ClipBoyMarauder::btScanFlippers()      { wifi_scan_obj.StartScan(BT_SCAN_FLIPPER, 0); }
 void ClipBoyMarauder::btScanFlock()         { wifi_scan_obj.StartScan(BT_SCAN_FLOCK, 0); }
+void ClipBoyMarauder::btScanRemoteID()      { wifi_scan_obj.StartScan(BT_SCAN_REMOTE_ID, 0); }
 #ifdef CLIPBOY_RES34RCH  // ACTIVE RESEARCH primitives (Res34rch-Boy only)
 void ClipBoyMarauder::btSpamApple()         { wifi_scan_obj.StartScan(BT_ATTACK_SOUR_APPLE, 0); }
 void ClipBoyMarauder::btSpamWindows()       { wifi_scan_obj.StartScan(BT_ATTACK_SWIFTPAIR_SPAM, 0); }
@@ -1137,6 +1138,7 @@ const char* ClipBoyMarauder::scanModeToString(uint8_t mode) {
         case BT_SCAN_AIRTAG_MON:            return "AirTag Monitor";
         case WIFI_SCAN_CHAN_ACT:            return "Channel Activity";
         case BT_SCAN_FLOCK:                return "Flock Scan";
+        case BT_SCAN_REMOTE_ID:            return "Drone ID";
         case BT_SCAN_SIMPLE:               return "BT Simple Scan";
         case BT_SCAN_SIMPLE_TWO:           return "BT Simple Scan 2";
         case BT_SCAN_FLOCK_WARDRIVE:       return "Flock War Drive";

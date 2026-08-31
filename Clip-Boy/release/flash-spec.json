@@ -1,6 +1,6 @@
 {
   "chipFamily": "ESP32-S3",
-  "version": "2026-07-31+ea2708d2",
+  "version": "2026-08-30+725c427",
   "variants": {
     "sn34k": {
       "active": false,
@@ -27,13 +27,13 @@
           "offset": 65536,
           "path": "clipboy-sn34k-app.bin",
           "role": "app",
-          "sha256": "b5e8d6bdfb54ee58b49c54dbdd868ff728b3e691f741680f4b680f2cf0afa6e7"
+          "sha256": "b655a6c7e9446f850a7eb2f5c72d9302bfbd1f67cd3a909c1417547ac073c54d"
         },
         {
           "offset": 9961472,
           "path": "clipboy-littlefs.bin",
           "role": "littlefs",
-          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+          "sha256": "185ccd563a6ab30c70f1f1dbc8aac969ad4e9e4235949e8e9b2607d9b208d390"
         }
       ]
     },
@@ -62,13 +62,13 @@
           "offset": 65536,
           "path": "clipboy-res34rch-app.bin",
           "role": "app",
-          "sha256": "a04c84f1f655a3eb08cb40a2a762e5654950006873cdf9d4a6b217d240b3f2fd"
+          "sha256": "6b4e8e70f2e5c72d39788698ac7ec765a3ad9b261bedf9bb510f27048ba12513"
         },
         {
           "offset": 9961472,
           "path": "clipboy-littlefs.bin",
           "role": "littlefs",
-          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+          "sha256": "185ccd563a6ab30c70f1f1dbc8aac969ad4e9e4235949e8e9b2607d9b208d390"
         }
       ]
     },
@@ -98,13 +98,13 @@
           "offset": 65536,
           "path": "clipboy-sn34k-rift-app.bin",
           "role": "app",
-          "sha256": "9a7ebba11f377a956be0f25ed1b2522439b8f0e958bce626e8e1f1f2c8363e2b"
+          "sha256": "f90b920d4c2e5ce6693c92e5c523db443a2362d1d1414ca3c452cd5649cf3f7c"
         },
         {
           "offset": 9961472,
           "path": "clipboy-littlefs.bin",
           "role": "littlefs",
-          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+          "sha256": "185ccd563a6ab30c70f1f1dbc8aac969ad4e9e4235949e8e9b2607d9b208d390"
         }
       ]
     },
@@ -134,16 +134,16 @@
           "offset": 65536,
           "path": "clipboy-res34rch-rift-app.bin",
           "role": "app",
-          "sha256": "a012e087dd77c7ae3df214007c6731e4b72b8b074c239947040eb81e1d2bab70"
+          "sha256": "482744e71df9239fd32b4c764e655917eff82aed4b062a2009edb52f4c1aa007"
         },
         {
           "offset": 9961472,
           "path": "clipboy-littlefs.bin",
           "role": "littlefs",
-          "sha256": "b9937f14089ecadf6c0163577bc3a8deab8bf34145cfb6bfa65caf2537dca150"
+          "sha256": "185ccd563a6ab30c70f1f1dbc8aac969ad4e9e4235949e8e9b2607d9b208d390"
         }
       ]
     }
   },
-  "contentVersion": "b9937f14089e"
+  "contentVersion": "185ccd563a6a"
 }

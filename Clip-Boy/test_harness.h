@@ -201,6 +201,52 @@ static void th_cmd_heap() {
     th_send_ok_json("heap", buf);
 }
 
+// ─── Drone Remote-ID fix verification (PR#6: B1 bounds guard, B2 stack) ─────
+// drone_feed <declared_len> <hex> -- feed a raw ODID message/pack into the SAME
+// decode entry (drone_ingest_odid) that rid_wifi_service() uses on the loopTask.
+// The physical buffer is hex/2 bytes; declared_len is the length we claim to the
+// decoder. A short declared_len over a buffer whose MsgPackSize byte says 9 is the
+// B1 over-read case: pre-guard the decoder reads 3+9*25=228 B regardless of declared_len;
+// the guard rejects when declared_len < 3+MsgPackSize*25. Reports ret (1=decoded/
+// contact, 0=rejected) + resulting drone_count so a host script can assert.
+static void th_cmd_drone_feed(const String &args) {
+    int sp = args.indexOf(' ');
+    if (sp <= 0) { th_send_err("drone_feed", "need <declared_len> <hex>"); return; }
+    long declared = args.substring(0, sp).toInt();
+    String hex = args.substring(sp + 1); hex.trim();
+    int nb = hex.length() / 2;
+    if (nb < 1 || nb > 512) { th_send_err("drone_feed", "hex 1..512 bytes"); return; }
+    static uint8_t buf[512];
+    for (int i = 0; i < nb; i++)
+        buf[i] = (uint8_t)strtol(hex.substring(i*2, i*2+2).c_str(), NULL, 16);
+    if (declared < 0) declared = 0;
+    if (declared > nb) declared = nb;   // can't declare more than we physically sent
+    uint8_t mac[6] = { 0xDE,0xAD,0xBE,0xEF,0x00,0x01 };
+    int ret = drone_ingest_odid(mac, -50, 0, buf, (uint16_t)declared);
+    char j[112];
+    snprintf(j, sizeof(j), "\"ret\":%d,\"declared\":%ld,\"buf\":%d,\"count\":%d",
+             ret, declared, nb, drone_count());
+    th_send_ok_json("drone_feed", j);
+}
+
+// drone_stack -- min-free stack (high-water) of the NimBLE host task, where the
+// BLE scan callback runs. Pre-fix the ~920 B ODID decode ran on this task; post-fix
+// only a cheap AD-walk extract does. Sample AFTER the emitter has driven adverts.
+static void th_cmd_drone_stack() {
+    TaskHandle_t h = xTaskGetHandle("nimble_host");
+    UBaseType_t hw = h ? uxTaskGetStackHighWaterMark(h) : 0;
+    char j[112];
+    snprintf(j, sizeof(j), "\"nimble_host\":%d,\"hw_words\":%lu,\"hw_bytes\":%lu",
+             h ? 1 : 0, (unsigned long)hw, (unsigned long)(hw * 4));
+    th_send_ok_json("drone_stack", j);
+}
+
+static void th_cmd_drone_count() {
+    char j[48]; snprintf(j, sizeof(j), "\"count\":%d", drone_count());
+    th_send_ok_json("drone_count", j);
+}
+static void th_cmd_drone_clear() { drone_clear(); th_send_ok("drone_clear"); }
+
 #include <esp_wifi.h>   // esp_wifi_get_ps() -- direct read of the power-save flag
 
 // Read the live WiFi power-save mode. Returns -1 if the driver is not up or the call fails --
@@ -1994,6 +2040,8 @@ static void th_cmd_cfg_get(const String &args) {
     else if (key == "ui_click") snprintf(hdr, sizeof(hdr), "\"key\":\"ui_click\",\"value\":%s", cfg.ui_click ? "true" : "false");
     else if (key == "ss_style") snprintf(hdr, sizeof(hdr), "\"key\":\"ss_style\",\"value\":%d", cfg.ss_style);
     else if (key == "ss_leds")  snprintf(hdr, sizeof(hdr), "\"key\":\"ss_leds\",\"value\":%s", cfg.ss_leds_off ? "true" : "false");
+    else if (key == "ss_clock") snprintf(hdr, sizeof(hdr), "\"key\":\"ss_clock\",\"value\":%s", cfg.ss_clock ? "true" : "false");
+    else if (key == "tz")       snprintf(hdr, sizeof(hdr), "\"key\":\"tz\",\"value\":%d", cfg.tz);
     else if (key == "crt_scan") snprintf(hdr, sizeof(hdr), "\"key\":\"crt_scan\",\"value\":%s", cfg.crt_scanlines ? "true" : "false");
     else if (key == "crt_flick") snprintf(hdr, sizeof(hdr), "\"key\":\"crt_flick\",\"value\":%s", cfg.crt_flicker ? "true" : "false");
     else if (key == "allow_pcap") snprintf(hdr, sizeof(hdr), "\"key\":\"allow_pcap\",\"value\":%s", cfg.allow_pcap ? "true" : "false");
@@ -2048,6 +2096,12 @@ static void th_cmd_cfg_set(const String &args) {
     } else if (key == "ss_leds") {
         if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
         cfg.ss_leds_off = bval; cfg_save_ss_leds_off();
+    } else if (key == "ss_clock") {
+        if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
+        cfg.ss_clock = bval; cfg_save_ss_clock();
+    } else if (key == "tz") {
+        if (ival < 0 || ival >= CB_TZ_COUNT) { th_send_err("cfg_set", "tz out of range"); return; }
+        cfg.tz = (uint8_t)ival; cfg_save_tz(); cb_tz_apply();
     } else if (key == "crt_scan") {
         if (!th_cfg_parse_bool(val, bval)) { th_send_err("cfg_set", "expect bool"); return; }
         cfg.crt_scanlines = bval; cfg_save_crt_scanlines();
@@ -2584,6 +2638,10 @@ static void th_dispatch(const String &line) {
     else if (cmd == "onboarding_accept") th_cmd_onboarding_accept();
     else if (cmd == "tour_step")      th_cmd_tour_step(args);
     else if (cmd == "reboot")         th_cmd_reboot();
+    else if (cmd == "drone_feed")     th_cmd_drone_feed(args);
+    else if (cmd == "drone_stack")    th_cmd_drone_stack();
+    else if (cmd == "drone_count")    th_cmd_drone_count();
+    else if (cmd == "drone_clear")    th_cmd_drone_clear();
     else th_send_err("unknown", cmd.c_str());
 }
 

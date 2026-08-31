@@ -27,10 +27,19 @@ firmware is GPLv3 (see `LICENSE.md` for why).
 | LinkedList | 1.3.3 | github.com/ivanseidel/LinkedList | MIT |
 | lz4-1.10.0 | 1.10.0 | github.com/lz4/lz4 (Arduino packaging) | BSD-2-Clause |
 | ClipBoy | 1.0.0 | fork of github.com/justcallmekoko/ESP32Marauder | MIT |
+| opendroneid-core-c | vendored source | github.com/opendroneid/opendroneid-core-c | Apache-2.0 |
 | ClipBoyTheremin | 1.0.0 | first-party (this project) | GPL-3.0 |
 | LovyanInit-Waveshare | 0.1.0 | first-party (this project) | GPL-3.0 |
 | HRCode4x4 | 1.0.0 | first-party (this project) | GPL-3.0 |
 | HRScanGuidance | 0.1.0 | first-party (this project) | GPL-3.0 |
+
+**opendroneid-core-c** (the ASTM F3411 / Open Drone ID decoder that powers the
+Detect ▸ Drone ID Remote-ID tool) is vendored as source *inside* the ClipBoy
+library — `libs/ClipBoy/src/odid_decode.c` + `opendroneid.h` — rather than as its
+own `libs/<name>/` directory. Its Apache-2.0 license text is kept beside those
+files at `libs/ClipBoy/src/LICENSE.opendroneid`, and each file retains its SPDX
+`Apache-2.0` header + `Copyright (C) 2019 Intel Corporation`. Apache-2.0 is
+one-way compatible with the combined GPLv3 firmware.
 
 `libs/lv_conf.h` is our LVGL configuration (LVGL reads it from the folder above
 `libs/lvgl/`). Notably `LV_USE_FS_ARDUINO_ESP_LITTLEFS = 0` — see CLAUDE.md.

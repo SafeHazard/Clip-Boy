@@ -238,6 +238,7 @@ public:
     void btScanAirtagMonitor();
     void btScanFlippers();
     void btScanFlock();
+    void btScanRemoteID();
     void btSpamApple();
     void btSpamWindows();
     void btSpamSamsung();

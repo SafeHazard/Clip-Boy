@@ -107,6 +107,12 @@ TRIM=(
     # build). Publishing the tree would re-distribute a non-free font; strip it. Our real fonts
     # are the generated ui_font_pipboy_*.c glyph headers + Noto Emoji (OFL). (2026-07-31)
     "$FW/libs/lvgl/src/libs/freetype/arial.ttf"
+    # drone-remoteid/ has its OWN canonical public repo (SafeHazard/drone-remoteid) --
+    # a standalone Remote ID TRANSMITTER toolkit. It stays in this monorepo only for the
+    # badge's test tooling (scripts/tests/test_drone_rid.py builds/flashes the dronesim),
+    # and is NOT republished with Clip-Boy to avoid two public copies of the same tree.
+    # (2026-08-30) To publish it here instead, drop this line + MD_ALLOW its README.
+    drone-remoteid
 )
 for p in "${TRIM[@]}"; do
     [[ -e "$OUTDIR/$p" ]] && { rm -rf "$OUTDIR/$p"; echo "[stage] trimmed: $p"; }
@@ -242,6 +248,13 @@ survivor soul, running on an ESP32-S3 with an LVGL touch UI.
 First-party code is also offered under MIT for audio-tools-free builds. Third-party
 components: `Clip-Boy/THIRD_PARTY.md`. AI disclosure: `Clip-Boy/AI-DISCLOSURE.md`.
 Acceptable use: `Clip-Boy/acceptable_use.md`.
+
+## Credits
+The **drone Remote-ID detector** (ASTM F3411 / Open Drone ID) was contributed by
+**[zenrandom](https://github.com/zenrandom)**; the companion transmitter/simulator
+toolkit lives at **[SafeHazard/drone-remoteid](https://github.com/SafeHazard/drone-remoteid)**.
+Full on-device credits are under **Settings > Credits**; third-party components in
+`Clip-Boy/THIRD_PARTY.md`.
 
 ## Build setup
 Versions are pinned for reproducibility:
