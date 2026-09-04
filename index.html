@@ -78,14 +78,14 @@
   Clip-Boy is an independent, original design. Not affiliated with or endorsed by any other company. &middot; <a href="./acceptable_use.md">Acceptable Use</a>
 </footer>
 <script>
-  // Hide "Get your own" once second-run pre-orders close: after 23:59 on
-  // 2026-09-13 in US Central (CDT, UTC-5) = 2026-09-14 05:00:00 UTC.
-  // Client-clock dependent (a wrong device clock will show/hide off-time).
+  // Once second-run pre-orders close -- after 23:59 on 2026-09-13 in US
+  // Central (CDT, UTC-5) = 2026-09-14 05:00:00 UTC -- reword the "Get your
+  // own" card. Client-clock dependent (a wrong device clock reacts off-time).
   (function(){
     var CLOSE_UTC = Date.UTC(2026, 8, 14, 5, 0, 0); // month 8 = September
     if (Date.now() >= CLOSE_UTC) {
-      var el = document.getElementById('getyourown');
-      if (el) el.remove();
+      var d = document.querySelector('#getyourown .d');
+      if (d) d.innerHTML = 'The second run closed 13 Sept 2026. Everything you need to build one is above &mdash; the firmware, the BOM, the Gerbers, and the enclosure files are all GPLv3.';
     }
   })();
 </script>
