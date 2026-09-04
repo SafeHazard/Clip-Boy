@@ -40,7 +40,7 @@
   <a class="card" href="https://github.com/SafeHazard/Clip-Boy">
     <div class="row"><span class="ic">&#128190;</span><div>
       <div class="t">Source</div>
-      <div class="d">Every line of the firmware, GPLv3 &mdash; read it, audit it, build it from scratch.</div>
+      <div class="d">Every line of the firmware, GPLv3 - read it, audit it, build it from scratch.</div>
     </div></div>
   </a>
   <a class="card" href="https://github.com/SafeHazard/Clip-Boy/tree/main/Clip-Boy/hardware">
@@ -64,13 +64,13 @@
   <a class="card" href="./help/">
     <div class="row"><span class="ic">&#128214;</span><div>
       <div class="t">Help</div>
-      <div class="d">The full badge manual, phone-friendly &mdash; searchable, with scan tips and a tool reference.</div>
+      <div class="d">The full badge manual, phone-friendly - searchable, with scan tips and a tool reference.</div>
     </div></div>
   </a>
   <a class="card" href="./postcon/">
     <div class="row"><span class="ic">&#129513;</span><div>
       <div class="t">Post-Con Companion</div>
-      <div class="d">Tag tracker + printable HR codes + puzzle-finale helper. Live now &mdash; browse tags, track your haul, finish the ARG.</div>
+      <div class="d">Tag tracker + printable HR codes + puzzle-finale helper. Live now - browse tags, track your haul, finish the ARG.</div>
     </div></div>
   </a>
 </main>
@@ -84,8 +84,10 @@
   (function(){
     var CLOSE_UTC = Date.UTC(2026, 8, 14, 5, 0, 0); // month 8 = September
     if (Date.now() >= CLOSE_UTC) {
+      var t = document.querySelector('#getyourown .t');
+      if (t) t.textContent = 'Missed the run?';
       var d = document.querySelector('#getyourown .d');
-      if (d) d.innerHTML = 'The second run closed 13 Sept 2026. Everything you need to build one is above &mdash; the firmware, the BOM, the Gerbers, and the enclosure files are all GPLv3.';
+      if (d) d.innerHTML = 'The second run closed 13 Sept 2026. Everything you need to build one is above - the firmware, the BOM, the Gerbers, and the enclosure files are all GPLv3.';
     }
   })();
 </script>
