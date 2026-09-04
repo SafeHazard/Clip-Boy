@@ -5,6 +5,13 @@ survivor soul, running on an ESP32-S3 with an LVGL touch UI.
 
 > **Want one?** https://brycebadges.com  -  Docs & help: https://safehazard.github.io/Clip-Boy
 
+## Who built this
+Clip-Boy is Bryce's project. He did the PCB design, the enclosure, and the
+firmware. Commits land under `tropicsquirrel` (his dad) because the build toolchain
+lives on that machine - it reflects where the work was committed from, not who did
+it. Claude is used heavily throughout; see `Clip-Boy/AI-DISCLOSURE.md`. Outside
+contributions are credited below and in the commit/PR history.
+
 ## Repository layout
 - **`Clip-Boy/`** - the firmware (Arduino sketch `Clip-Boy.ino` + sources, vendored
   `Clip-Boy/libs/`, build scripts in `Clip-Boy/scripts/`).
@@ -78,7 +85,7 @@ We don't host or vouch for these fonts - check the license for your use:
 monofonto https://www.dafont.com/monofonto.font  -  Trek https://font.download/font/trek
 
 ## Legal
-Clip-Boy is a fan-made parody project - **not affiliated with, endorsed by, or
-sponsored by** any property it references; all such properties remain (C) their
-respective owners. Use the badge's tools only on networks/devices you own or are
+Clip-Boy is an independent, original design. It is **not affiliated with, endorsed
+by, or sponsored by** any other company, and it is not a replica of any existing
+product. Use the badge's tools only on networks and devices you own or are
 authorized to test - see `Clip-Boy/acceptable_use.md`.
